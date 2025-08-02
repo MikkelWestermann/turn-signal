@@ -11,6 +11,7 @@ import {
   ChevronUp,
   Users,
   Building2,
+  Github,
 } from "lucide-react";
 
 import {
@@ -54,6 +55,11 @@ const menuData = {
       title: "Organization",
       url: "/admin/organization",
       icon: Building2,
+    },
+    {
+      title: "GitHub",
+      url: "/admin/organization/github",
+      icon: Github,
     },
     {
       title: "Settings",
