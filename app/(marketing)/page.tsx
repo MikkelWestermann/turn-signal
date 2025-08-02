@@ -523,6 +523,92 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Avoid Sudden Changes Section */}
+        <div className="mb-16 lg:mb-24">
+          <div className="text-center mb-12 lg:mb-16">
+            <h2 className="text-3xl lg:text-5xl font-black text-black dark:text-white mb-6 lg:mb-8">
+              Avoid Sudden Changes
+            </h2>
+            <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+              Just like in driving, sudden changes in your product roadmap can
+              lead to... well, let's just say it's not pretty.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+                    <span className="text-sm font-bold text-black dark:text-white">
+                      🚗
+                    </span>
+                  </div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
+                    The Drift Effect
+                  </h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400">
+                  When you make sudden changes to your roadmap without warning,
+                  your users go into full drift mode. They're spinning out,
+                  confused, and definitely not happy about the unexpected turn.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-yellow-200 dark:bg-yellow-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+                    <span className="text-sm font-bold text-black dark:text-white">
+                      ⚠️
+                    </span>
+                  </div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
+                    User Whiplash
+                  </h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400">
+                  "Wait, I thought you were building the mobile app next month?"
+                  "Why did you suddenly pivot to AI?" Your users need clear
+                  signals, not surprises.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-200 dark:bg-green-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+                    <span className="text-sm font-bold text-black dark:text-white">
+                      ✅
+                    </span>
+                  </div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
+                    Smooth Transitions
+                  </h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400">
+                  With Turn Signal, you give your users clear visibility into
+                  what's coming. No more sudden lane changes—just smooth,
+                  predictable progress.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-center">
+              <div className="relative">
+                <img
+                  src="/drift.png"
+                  alt="Famous drift meme showing a car in a dramatic drift with smoke"
+                  className="w-full max-w-md border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]"
+                />
+                <div className="absolute -top-4 -right-4 w-12 h-12 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center animate-bounce">
+                  <span className="text-lg font-bold text-black dark:text-white">
+                    💨
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <Card className="max-w-4xl mx-auto mb-16 lg:mb-24 bg-white dark:bg-gray-900 border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
           <CardHeader className="text-center pb-6">
             <CardTitle className="text-3xl lg:text-4xl font-black text-black dark:text-white mb-4">
