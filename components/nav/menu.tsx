@@ -3,7 +3,15 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Settings, User, LogOut, ChevronUp, Users } from "lucide-react";
+import {
+  Home,
+  Settings,
+  User,
+  LogOut,
+  ChevronUp,
+  Users,
+  Building2,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -37,9 +45,14 @@ const menuData = {
       icon: Home,
     },
     {
-      title: "Users",
-      url: "/admin/users",
+      title: "Members",
+      url: "/admin/members",
       icon: Users,
+    },
+    {
+      title: "Organization",
+      url: "/admin/organization",
+      icon: Building2,
     },
     {
       title: "Settings",

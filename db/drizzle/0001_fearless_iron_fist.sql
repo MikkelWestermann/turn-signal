@@ -1,0 +1,1 @@
+ALTER TABLE `sessions` ADD `active_organization_id` text;

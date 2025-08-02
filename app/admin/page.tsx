@@ -18,11 +18,18 @@ import {
   User,
   LogOut,
   Loader2,
+  Building2,
 } from "lucide-react";
 import { useState } from "react";
 
 export default function AdminPage() {
   const { data: session, isPending, refetch } = authClient.useSession();
+  const { data: activeOrganization, isPending: isLoadingOrg } =
+    authClient.useActiveOrganization();
+  // Get active member from the active organization data
+  const activeMember = activeOrganization?.members?.find(
+    (member) => member.user?.id === session?.user?.id
+  );
   const [isSigningOut, setIsSigningOut] = useState(false);
 
   const handleSignOut = async () => {
@@ -40,7 +47,7 @@ export default function AdminPage() {
     });
   };
 
-  if (isPending) {
+  if (isPending || isLoadingOrg) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="flex items-center space-x-2">
@@ -71,6 +78,23 @@ export default function AdminPage() {
     );
   }
 
+  if (!activeOrganization) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-center">
+              No Active Organization
+            </CardTitle>
+            <CardDescription className="text-center">
+              Please select an organization to access the admin dashboard.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
@@ -80,11 +104,11 @@ export default function AdminPage() {
             Welcome back, {session.user.name || session.user.email}!
           </h1>
           <p className="text-muted-foreground">
-            Here's what's happening with your application.
+            Managing {activeOrganization.name}
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Badge variant="secondary">Admin</Badge>
+          <Badge variant="secondary">{activeMember?.role || "Member"}</Badge>
           <Button
             variant="outline"
             size="sm"
@@ -98,33 +122,84 @@ export default function AdminPage() {
         </div>
       </div>
 
+      {/* Organization Info */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Building2 className="h-5 w-5" />
+            Organization Details
+          </CardTitle>
+          <CardDescription>
+            Information about your current organization
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium text-gray-500">
+                Organization Name
+              </label>
+              <p className="text-sm font-semibold">{activeOrganization.name}</p>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-500">
+                Organization Slug
+              </label>
+              <p className="text-sm font-mono">{activeOrganization.slug}</p>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-500">
+                Your Role
+              </label>
+              <p className="text-sm font-semibold capitalize">
+                {activeMember?.role || "Member"}
+              </p>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-500">
+                Created
+              </label>
+              <p className="text-sm">
+                {activeOrganization.createdAt
+                  ? new Date(activeOrganization.createdAt).toLocaleDateString()
+                  : "Unknown"}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Organization Members
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1,234</div>
-            <p className="text-xs text-muted-foreground">
-              +20.1% from last month
-            </p>
+            <div className="text-2xl font-bold">
+              {activeOrganization.members?.length || 0}
+            </div>
+            <p className="text-xs text-muted-foreground">Active members</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Active Sessions
+              Pending Invitations
             </CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">567</div>
-            <p className="text-xs text-muted-foreground">
-              +12.3% from last hour
-            </p>
+            <div className="text-2xl font-bold">
+              {activeOrganization.invitations?.filter(
+                (inv) => inv.status === "pending"
+              ).length || 0}
+            </div>
+            <p className="text-xs text-muted-foreground">Awaiting response</p>
           </CardContent>
         </Card>
 
