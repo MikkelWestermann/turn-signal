@@ -26,6 +26,7 @@ import { useState } from "react";
 import { useTRPC } from "@/lib/client";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { GitHubOnboarding } from "@/components/github-onboarding";
 
 export default function AdminPage() {
   const { data: session, isPending, refetch } = authClient.useSession();
@@ -125,6 +126,41 @@ export default function AdminPage() {
     roadmaps?.reduce((acc: number, roadmap: any) => {
       return acc + (roadmap.repositories?.length || 0);
     }, 0) || 0;
+
+  // Show onboarding if no GitHub installation
+  if (!isLoadingGithub && !githubInstallation) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">
+              Welcome back, {session.user.name || session.user.email}!
+            </h1>
+            <p className="text-muted-foreground">
+              Managing {activeOrganization.name}
+            </p>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Badge variant="secondary">{activeMember?.role || "Member"}</Badge>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSignOut}
+              disabled={isSigningOut}
+            >
+              {isSigningOut && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign Out
+            </Button>
+          </div>
+        </div>
+
+        <GitHubOnboarding />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
