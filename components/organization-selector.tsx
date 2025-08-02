@@ -21,16 +21,15 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Loader2, Plus, Building2, Check } from "lucide-react";
 import { toast } from "sonner";
 
 export function OrganizationSelector() {
-  const { data: organizations, isLoading } = authClient.useListOrganizations();
+  const { data: organizations, isPending: isLoading } =
+    authClient.useListOrganizations();
   const { data: activeOrganization, refetch: refetchActive } =
     authClient.useActiveOrganization();
   const [isCreating, setIsCreating] = useState(false);
-  const [isSettingActive, setIsSettingActive] = useState(false);
   const [newOrgName, setNewOrgName] = useState("");
   const [newOrgSlug, setNewOrgSlug] = useState("");
 
@@ -61,7 +60,6 @@ export function OrganizationSelector() {
   };
 
   const handleSetActiveOrganization = async (organizationId: string | null) => {
-    setIsSettingActive(true);
     try {
       await authClient.organization.setActive({
         organizationId,
@@ -71,8 +69,6 @@ export function OrganizationSelector() {
     } catch (error) {
       console.error("Error setting active organization:", error);
       toast.error("Failed to update active organization");
-    } finally {
-      setIsSettingActive(false);
     }
   };
 

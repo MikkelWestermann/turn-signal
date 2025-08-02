@@ -1,11 +1,14 @@
 import { RoadmapForm } from "../../_components/roadmap-form";
 
 interface EditRoadmapPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function EditRoadmapPage({ params }: EditRoadmapPageProps) {
-  return <RoadmapForm mode="edit" roadmapId={params.id} />;
+export default async function EditRoadmapPage({
+  params,
+}: EditRoadmapPageProps) {
+  const { id } = await params;
+  return <RoadmapForm mode="edit" roadmapId={id} />;
 }
