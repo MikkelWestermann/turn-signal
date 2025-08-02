@@ -1,6 +1,11 @@
+import { relations } from "drizzle-orm";
 import * as authSchema from "./auth.schema";
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { z } from "zod";
+
+// ********************************************************
+// Auth Schema
+// ********************************************************
 
 export const users = authSchema.users;
 export const sessions = authSchema.sessions;
@@ -10,14 +15,18 @@ export const organizations = authSchema.organizations;
 export const members = authSchema.members;
 export const invitations = authSchema.invitations;
 
-// GitHub Integration Schema
-export const githubInstallations = sqliteTable('github_installations', {
-  installationId: text('installation_id').primaryKey(),
-  organizationId: text('organization_id').notNull(),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+// ********************************************************
+// GitHub Integration
+// ********************************************************
+
+export const githubInstallations = sqliteTable("github_installations", {
+  installationId: text("installation_id").primaryKey(),
+  organizationId: text("organization_id").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
 });
 
-// Manual Zod schemas for GitHub installations
 export const insertGithubInstallationSchema = z.object({
   installationId: z.string(),
   organizationId: z.string(),
@@ -28,3 +37,90 @@ export const selectGithubInstallationSchema = z.object({
   organizationId: z.string(),
   createdAt: z.date(),
 });
+
+export const githubInstallationRelations = relations(
+  githubInstallations,
+  ({ one }) => ({
+    organization: one(organizations, {
+      fields: [githubInstallations.organizationId],
+      references: [organizations.id],
+    }),
+  })
+);
+
+export const organizationRelations = relations(organizations, ({ one }) => ({
+  githubInstallation: one(githubInstallations, {
+    fields: [organizations.id],
+    references: [githubInstallations.organizationId],
+  }),
+}));
+
+// ********************************************************
+// Roadmap
+// ********************************************************
+
+export const roadmaps = sqliteTable("roadmaps", {
+  id: text("id").primaryKey(),
+  organizationId: text("organization_id").notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  slug: text("slug").notNull().unique(),
+  tag: text("tag").notNull(),
+  plannedTag: text("planned_tag").default("planned"),
+  inProgressTag: text("in_progress_tag").default("in progress"),
+  doneTag: text("done_tag").default("done"),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});
+
+export const roadmapRepositories = sqliteTable("roadmap_repositories", {
+  id: text("id").primaryKey(),
+  roadmapId: text("roadmap_id").notNull(),
+  owner: text("owner").notNull(),
+  repo: text("repo").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});
+
+export const issueVotes = sqliteTable("issue_votes", {
+  id: text("id").primaryKey(),
+  organizationId: text("organization_id").notNull(),
+  roadmapId: text("roadmap_id").notNull(),
+  issueId: text("issue_id").notNull(),
+  ipAddress: text("ip_address").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});
+
+export const roadmapRelations = relations(roadmaps, ({ many, one }) => ({
+  repositories: many(roadmapRepositories),
+  issueVotes: many(issueVotes),
+  organization: one(organizations, {
+    fields: [roadmaps.organizationId],
+    references: [organizations.id],
+  }),
+}));
+
+export const roadmapRepositoryRelations = relations(
+  roadmapRepositories,
+  ({ one }) => ({
+    roadmap: one(roadmaps, {
+      fields: [roadmapRepositories.roadmapId],
+      references: [roadmaps.id],
+    }),
+  })
+);
+
+export const issueVotesRelations = relations(issueVotes, ({ one }) => ({
+  roadmap: one(roadmaps, {
+    fields: [issueVotes.roadmapId],
+    references: [roadmaps.id],
+  }),
+  organization: one(organizations, {
+    fields: [issueVotes.organizationId],
+    references: [organizations.id],
+  }),
+}));

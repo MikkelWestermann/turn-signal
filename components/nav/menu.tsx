@@ -12,6 +12,7 @@ import {
   Users,
   Building2,
   Github,
+  Map,
 } from "lucide-react";
 
 import {
@@ -45,6 +46,11 @@ const menuData = {
       title: "Dashboard",
       url: "/admin",
       icon: Home,
+    },
+    {
+      title: "Roadmaps",
+      url: "/admin/roadmaps",
+      icon: Map,
     },
     {
       title: "Members",

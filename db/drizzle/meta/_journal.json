@@ -29,6 +29,27 @@
       "when": 1754144412883,
       "tag": "0003_fast_legion",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1754148880950,
+      "tag": "0004_careful_sally_floyd",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1754148933049,
+      "tag": "0005_tan_ted_forrester",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1754150394075,
+      "tag": "0006_perfect_zaladane",
+      "breakpoints": true
     }
   ]
 }

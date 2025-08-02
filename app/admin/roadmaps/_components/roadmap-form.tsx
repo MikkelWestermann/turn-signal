@@ -1,0 +1,515 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/auth/client";
+import { useTRPC } from "@/lib/client";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Badge } from "@/components/ui/badge";
+import {
+  ArrowLeft,
+  Save,
+  Loader2,
+  Check,
+  ChevronsUpDown,
+  X,
+} from "lucide-react";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+
+interface RoadmapFormProps {
+  roadmapId?: string;
+  mode: "create" | "edit";
+}
+
+interface FormData {
+  name: string;
+  description: string;
+  slug: string;
+  tag: string;
+  plannedTag: string;
+  inProgressTag: string;
+  doneTag: string;
+}
+
+interface Repository {
+  owner: string;
+  repo: string;
+}
+
+export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
+  const { data: organization } = authClient.useActiveOrganization();
+  const trpc = useTRPC();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedRepositories, setSelectedRepositories] = useState<
+    Repository[]
+  >([]);
+  const [repositoryPopoverOpen, setRepositoryPopoverOpen] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    description: "",
+    slug: "",
+    tag: "",
+    plannedTag: "planned",
+    inProgressTag: "in progress",
+    doneTag: "done",
+  });
+
+  // Fetch roadmap data if editing
+  const { data: roadmap } = useQuery(
+    trpc.roadmap.getById.queryOptions({
+      id: roadmapId!,
+      organizationId: organization?.id || "",
+    })
+  );
+
+  // Fetch available repositories
+  const { data: availableRepositories } = useQuery(
+    trpc.github.getRepositories.queryOptions({
+      organizationId: organization?.id || "",
+    })
+  );
+
+  // Fetch current roadmap repositories if editing
+  const { data: currentRepositories } = useQuery({
+    ...trpc.roadmap.getRepositories.queryOptions({
+      roadmapId: roadmapId!,
+      organizationId: organization?.id || "",
+    }),
+    enabled: mode === "edit" && !!roadmapId,
+  });
+
+  const createRoadmap = useMutation(
+    trpc.roadmap.create.mutationOptions({
+      onSuccess: () => {
+        toast.success("Roadmap created successfully");
+        router.push("/admin/roadmaps");
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to create roadmap");
+        setIsLoading(false);
+      },
+    })
+  );
+
+  const updateRoadmap = useMutation(
+    trpc.roadmap.update.mutationOptions({
+      onSuccess: () => {
+        toast.success("Roadmap updated successfully");
+        router.push("/admin/roadmaps");
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to update roadmap");
+        setIsLoading(false);
+      },
+    })
+  );
+
+  const updateRepositories = useMutation(
+    trpc.roadmap.updateRepositories.mutationOptions({
+      onSuccess: () => {
+        toast.success("Repositories updated successfully");
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to update repositories");
+        setIsLoading(false);
+      },
+    })
+  );
+
+  // Load roadmap data when editing
+  useEffect(() => {
+    if (roadmap && mode === "edit") {
+      setFormData({
+        name: roadmap.name,
+        description: roadmap.description || "",
+        slug: roadmap.slug,
+        tag: roadmap.tag,
+        plannedTag: roadmap.plannedTag || "planned",
+        inProgressTag: roadmap.inProgressTag || "in progress",
+        doneTag: roadmap.doneTag || "done",
+      });
+    }
+  }, [roadmap, mode]);
+
+  // Load current repositories when editing
+  useEffect(() => {
+    if (currentRepositories && mode === "edit") {
+      setSelectedRepositories(
+        currentRepositories.map((repo) => ({
+          owner: repo.owner,
+          repo: repo.repo,
+        }))
+      );
+    }
+  }, [currentRepositories, mode]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!organization?.id) return;
+
+    setIsLoading(true);
+
+    try {
+      if (mode === "create") {
+        const newRoadmap = await createRoadmap.mutateAsync({
+          organizationId: organization.id,
+          ...formData,
+        });
+
+        // Update repositories for the new roadmap
+        if (selectedRepositories.length > 0) {
+          await updateRepositories.mutateAsync({
+            roadmapId: newRoadmap.id,
+            organizationId: organization.id,
+            repositories: selectedRepositories,
+          });
+        }
+      } else {
+        await updateRoadmap.mutateAsync({
+          id: roadmapId!,
+          organizationId: organization.id,
+          ...formData,
+        });
+
+        // Update repositories for the existing roadmap
+        await updateRepositories.mutateAsync({
+          roadmapId: roadmapId!,
+          organizationId: organization.id,
+          repositories: selectedRepositories,
+        });
+      }
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
+  const handleInputChange = (field: keyof FormData, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // Auto-generate slug from name
+  const handleNameChange = (name: string) => {
+    handleInputChange("name", name);
+    if (mode === "create") {
+      const slug = name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+      handleInputChange("slug", slug);
+    }
+  };
+
+  if (!organization) {
+    return (
+      <div className="container mx-auto py-8">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold">No organization selected</h1>
+          <p className="text-muted-foreground">
+            Please select an organization to manage roadmaps.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto py-8">
+      <div className="max-w-2xl mx-auto">
+        <div className="flex items-center gap-4 mb-8">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => router.push("/admin/roadmaps")}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Roadmaps
+          </Button>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              {mode === "create" ? "Create New Roadmap" : "Edit Roadmap"}
+            </CardTitle>
+            <CardDescription>
+              {mode === "create"
+                ? "Create a new roadmap to organize your project features."
+                : "Update your roadmap settings and configuration."}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name *</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => handleNameChange(e.target.value)}
+                  placeholder="Enter roadmap name"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) =>
+                    handleInputChange("description", e.target.value)
+                  }
+                  placeholder="Enter roadmap description"
+                  rows={3}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="slug">Slug *</Label>
+                <Input
+                  id="slug"
+                  value={formData.slug}
+                  onChange={(e) => handleInputChange("slug", e.target.value)}
+                  placeholder="roadmap-slug"
+                  required
+                />
+                <p className="text-xs text-muted-foreground">
+                  This will be used in the URL: /roadmap/{formData.slug}
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="tag">GitHub Label *</Label>
+                <Input
+                  id="tag"
+                  value={formData.tag}
+                  onChange={(e) => handleInputChange("tag", e.target.value)}
+                  placeholder="roadmap"
+                  required
+                />
+                <p className="text-xs text-muted-foreground">
+                  GitHub issues with this label will appear in the roadmap
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="plannedTag">Planned Label</Label>
+                  <Input
+                    id="plannedTag"
+                    value={formData.plannedTag}
+                    onChange={(e) =>
+                      handleInputChange("plannedTag", e.target.value)
+                    }
+                    placeholder="planned"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="inProgressTag">In Progress Label</Label>
+                  <Input
+                    id="inProgressTag"
+                    value={formData.inProgressTag}
+                    onChange={(e) =>
+                      handleInputChange("inProgressTag", e.target.value)
+                    }
+                    placeholder="in progress"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="doneTag">Done Label</Label>
+                  <Input
+                    id="doneTag"
+                    value={formData.doneTag}
+                    onChange={(e) =>
+                      handleInputChange("doneTag", e.target.value)
+                    }
+                    placeholder="done"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Repositories (Max 5)</Label>
+                <div className="space-y-3">
+                  {/* Selected repositories display */}
+                  {selectedRepositories.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedRepositories.map((repo, index) => (
+                        <Badge
+                          key={`${repo.owner}/${repo.repo}`}
+                          variant="secondary"
+                          className="flex items-center gap-1"
+                        >
+                          {repo.owner}/{repo.repo}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedRepositories(
+                                selectedRepositories.filter(
+                                  (_, i) => i !== index
+                                )
+                              );
+                            }}
+                            className="ml-1 hover:text-destructive"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Repository selector */}
+                  {availableRepositories?.data?.repositories ? (
+                    selectedRepositories.length < 5 && (
+                      <Popover
+                        open={repositoryPopoverOpen}
+                        onOpenChange={setRepositoryPopoverOpen}
+                      >
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={repositoryPopoverOpen}
+                            className="w-full justify-between"
+                          >
+                            Select repositories...
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0">
+                          <Command>
+                            <CommandInput placeholder="Search repositories..." />
+                            <CommandList>
+                              <CommandEmpty>
+                                No repositories found.
+                              </CommandEmpty>
+                              <CommandGroup>
+                                {availableRepositories.data.repositories.map(
+                                  (repo: any) => {
+                                    const isSelected =
+                                      selectedRepositories.some(
+                                        (selected) =>
+                                          selected.owner === repo.owner.login &&
+                                          selected.repo === repo.name
+                                      );
+                                    const isDisabled =
+                                      selectedRepositories.length >= 5 &&
+                                      !isSelected;
+
+                                    return (
+                                      <CommandItem
+                                        key={`${repo.owner.login}/${repo.name}`}
+                                        onSelect={() => {
+                                          if (isDisabled) return;
+
+                                          if (isSelected) {
+                                            setSelectedRepositories(
+                                              selectedRepositories.filter(
+                                                (selected) =>
+                                                  !(
+                                                    selected.owner ===
+                                                      repo.owner.login &&
+                                                    selected.repo === repo.name
+                                                  )
+                                              )
+                                            );
+                                          } else {
+                                            setSelectedRepositories([
+                                              ...selectedRepositories,
+                                              {
+                                                owner: repo.owner.login,
+                                                repo: repo.name,
+                                              },
+                                            ]);
+                                          }
+                                        }}
+                                        disabled={isDisabled}
+                                      >
+                                        <Check
+                                          className={cn(
+                                            "mr-2 h-4 w-4",
+                                            isSelected
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          )}
+                                        />
+                                        {repo.owner.login}/{repo.name}
+                                      </CommandItem>
+                                    );
+                                  }
+                                )}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    )
+                  ) : (
+                    <div className="text-sm text-muted-foreground">
+                      No GitHub repositories available. Please set up GitHub
+                      integration first.
+                    </div>
+                  )}
+
+                  {selectedRepositories.length >= 5 && (
+                    <p className="text-xs text-muted-foreground">
+                      Maximum of 5 repositories reached. Remove some to add
+                      more.
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <Button type="submit" disabled={isLoading} className="flex-1">
+                  {isLoading ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4 mr-2" />
+                  )}
+                  {mode === "create" ? "Create Roadmap" : "Update Roadmap"}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.push("/admin/roadmaps")}
+                  disabled={isLoading}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

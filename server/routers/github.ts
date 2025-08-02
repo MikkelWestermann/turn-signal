@@ -4,18 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { getDb } from "../../db";
 import { githubInstallations, members } from "../../db/schema";
 import { eq, and } from "drizzle-orm";
-import { Octokit } from "@octokit/rest";
-import { createAppAuth } from "@octokit/auth-app";
-
-const installationClient = (installationId: string) =>
-  new Octokit({
-    authStrategy: createAppAuth,
-    auth: {
-      appId: process.env.GITHUB_APP_ID,
-      privateKey: process.env.GITHUB_PRIVATE_KEY,
-      installationId,
-    },
-  });
+import { installationClient } from "@/lib/github";
 
 export const githubRouter = router({
   /**
