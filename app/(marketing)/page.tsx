@@ -94,29 +94,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 relative overflow-hidden">
       <BackgroundGrid />
-
-      <header className="relative z-20 flex items-center justify-between p-6 lg:p-8">
-        <div className="flex items-center space-x-4">
-          <Logo className="w-10 h-10 lg:w-12 lg:h-12" />
-          <div className="hidden sm:block">
-            <h1 className="text-2xl lg:text-3xl font-black tracking-wider text-black dark:text-white">
-              TURN SIGNAL
-            </h1>
-          </div>
-        </div>
-        <div className="flex items-center space-x-4">
-          <Link href="/login">
-            <Button
-              variant="outline"
-              className="font-bold border-2 border-black dark:border-white bg-white dark:bg-gray-900 hover:bg-orange-50 dark:hover:bg-orange-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
-            >
-              SIGN IN
-            </Button>
-          </Link>
-          <ModeToggle />
-        </div>
-      </header>
-
       <FloatingElement delay={0} duration={3} className="top-20 left-20">
         <div className="w-16 h-16 bg-orange-200 dark:bg-orange-800 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
           <Github className="w-8 h-8 text-black dark:text-white" />
