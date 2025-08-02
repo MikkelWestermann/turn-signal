@@ -18,9 +18,13 @@ import {
   TrendingUp,
   MessageSquare,
   Calendar,
+  Plus,
+  Check,
+  X,
 } from "lucide-react";
 import Logo from "@/components/logo";
 import { ModeToggle } from "@/components/mode-toggle";
+import { useState, useEffect } from "react";
 
 const TurnSignal = ({
   direction,
@@ -90,6 +94,285 @@ const FloatingElement = ({
   </div>
 );
 
+const AnimatedNotesApp = () => {
+  const [currentNote, setCurrentNote] = useState(0);
+  const notes = [
+    "Dark mode support",
+    "Mobile app",
+    "API rate limiting",
+    "User dashboard",
+    "Export functionality",
+    "Real-time notifications",
+    "Custom themes",
+    "Bulk operations",
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentNote((prev) => (prev + 1) % notes.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [notes.length]);
+
+  return (
+    <div className="w-64 h-80 bg-white dark:bg-gray-800 border-3 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] p-4">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-bold text-black dark:text-white">
+          Feature Requests
+        </h3>
+        <div className="w-6 h-6 bg-orange-200 dark:bg-orange-800 border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+          <Plus className="w-3 h-3 text-black dark:text-white" />
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        {notes.map((note, index) => (
+          <div
+            key={index}
+            className={`p-3 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] transition-all duration-500 ${
+              index === currentNote
+                ? "bg-orange-100 dark:bg-orange-900 scale-105"
+                : "bg-gray-50 dark:bg-gray-700"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span
+                className={`text-sm font-medium ${
+                  index === currentNote
+                    ? "text-black dark:text-white"
+                    : "text-gray-600 dark:text-gray-400"
+                }`}
+              >
+                {note}
+              </span>
+              <div className="flex space-x-1">
+                <div className="w-4 h-4 bg-green-200 dark:bg-green-800 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+                  <Check className="w-2 h-2 text-black dark:text-white" />
+                </div>
+                <div className="w-4 h-4 bg-red-200 dark:bg-red-800 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+                  <X className="w-2 h-2 text-black dark:text-white" />
+                </div>
+              </div>
+            </div>
+            <div className="mt-2 flex items-center justify-between">
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {Math.floor(Math.random() * 50) + 1} votes
+              </span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {Math.floor(Math.random() * 30) + 1}d ago
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 text-center">
+        <span className="text-xs text-gray-500 dark:text-gray-400">
+          {notes.length} requests • {Math.floor(Math.random() * 100) + 50} total
+          votes
+        </span>
+      </div>
+    </div>
+  );
+};
+
+const AnimatedMessagingApp = () => {
+  const [currentMessage, setCurrentMessage] = useState(0);
+  const messages = [
+    {
+      user: "When will dark mode be available?",
+      agent: "We're working on it! Should be ready in 2-3 weeks.",
+    },
+    {
+      user: "Can we get a mobile app?",
+      agent: "That's planned for Q2 this year.",
+    },
+    {
+      user: "The API needs rate limiting",
+      agent: "Yes, we're adding that in the next update.",
+    },
+    {
+      user: "User dashboard would be great",
+      agent: "It's on our roadmap for next month.",
+    },
+    {
+      user: "Export feature please!",
+      agent: "We expect to have it ready in 2 weeks.",
+    },
+    {
+      user: "Real-time notifications?",
+      agent: "That's coming in our next release.",
+    },
+    {
+      user: "Custom themes would be awesome",
+      agent: "We're considering this for a future update.",
+    },
+    { user: "Bulk operations needed", agent: "This is planned for Q3." },
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentMessage((prev) => (prev + 1) % messages.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [messages.length]);
+
+  return (
+    <div className="w-72 h-96 bg-white dark:bg-gray-800 border-3 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] flex flex-col">
+      {/* WhatsApp Header */}
+      <div className="bg-green-500 border-b-2 border-black dark:border-white px-3 py-2 flex items-center justify-between flex-shrink-0">
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 bg-red-500 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)]"></div>
+          <div className="w-3 h-3 bg-yellow-500 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)]"></div>
+          <div className="w-3 h-3 bg-green-500 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)]"></div>
+        </div>
+        <div className="text-sm font-medium text-white">Support Chat</div>
+        <div className="w-4"></div>
+      </div>
+
+      {/* Chat Messages */}
+      <div className="flex-1 p-3 bg-gray-100 dark:bg-gray-900 overflow-y-auto">
+        <div className="space-y-2">
+          {messages.map((message, index) => (
+            <div key={index}>
+              {/* User Message */}
+              <div className="flex justify-start mb-2">
+                <div
+                  className={`max-w-[200px] p-2 border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] transition-all duration-500 bg-white dark:bg-gray-800 ${
+                    index === currentMessage ? "scale-105" : ""
+                  }`}
+                >
+                  <div className="flex items-start space-x-1">
+                    <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)] rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-xs font-bold text-black dark:text-white">
+                        {String.fromCharCode(65 + (index % 26))}
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center space-x-1 mb-1">
+                        <span className="text-xs font-bold text-black dark:text-white truncate">
+                          User{index + 1}
+                        </span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                          {Math.floor(Math.random() * 60) + 1}m
+                        </span>
+                      </div>
+                      <p
+                        className={`text-xs break-words ${
+                          index === currentMessage
+                            ? "text-black dark:text-white"
+                            : "text-gray-800 dark:text-gray-200"
+                        }`}
+                      >
+                        {message.user}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Agent Response */}
+              <div className="flex justify-end mb-2">
+                <div
+                  className={`max-w-[200px] p-2 border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] transition-all duration-500 bg-green-400 dark:bg-green-600 ${
+                    index === currentMessage ? "scale-105" : ""
+                  }`}
+                >
+                  <p
+                    className={`text-xs break-words ${
+                      index === currentMessage
+                        ? "text-black dark:text-white"
+                        : "text-black dark:text-white"
+                    }`}
+                  >
+                    {message.agent}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Message Input */}
+      <div className="p-2 bg-gray-200 dark:bg-gray-700 border-t-2 border-black dark:border-white flex-shrink-0">
+        <div className="flex items-center space-x-2">
+          <div className="flex-1 h-7 bg-white dark:bg-gray-800 border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] px-2 flex items-center">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              Type a message...
+            </span>
+          </div>
+          <div className="w-7 h-7 bg-green-500 border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+            <ArrowRight className="w-3 h-3 text-white" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const SimpleNotesApp = () => {
+  const [currentNote, setCurrentNote] = useState(0);
+  const notes = [
+    "Dark mode support",
+    "Mobile app",
+    "API rate limiting",
+    "User dashboard",
+    "Export functionality",
+    "Real-time notifications",
+    "Custom themes",
+    "Bulk operations",
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentNote((prev) => (prev + 1) % notes.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [notes.length]);
+
+  return (
+    <div className="w-72 h-96 bg-white dark:bg-gray-800 border-3 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)]">
+      {/* Window Title Bar */}
+      <div className="bg-gray-200 dark:bg-gray-700 border-b-2 border-black dark:border-white px-3 py-2 flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 bg-red-500 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)]"></div>
+          <div className="w-3 h-3 bg-yellow-500 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)]"></div>
+          <div className="w-3 h-3 bg-green-500 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)]"></div>
+        </div>
+        <div className="text-sm font-medium text-black dark:text-white">
+          Notes
+        </div>
+        <div className="w-4"></div>
+      </div>
+
+      {/* App Content */}
+      <div className="p-4">
+        <div className="mb-4">
+          <h3 className="font-bold text-black dark:text-white text-lg">
+            Feature Requests
+          </h3>
+        </div>
+
+        <div className="space-y-2">
+          {notes.map((note, index) => (
+            <div
+              key={index}
+              className={`transition-all duration-500 ${
+                index === currentNote
+                  ? "text-black dark:text-white font-medium"
+                  : "text-gray-500 dark:text-gray-400"
+              }`}
+            >
+              {note}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 relative overflow-hidden">
@@ -155,6 +438,88 @@ export default function Home() {
                 SEE HOW IT WORKS
               </Button>
             </Link>
+          </div>
+        </div>
+
+        {/* Pain Point Section */}
+        <div className="mb-16 lg:mb-24">
+          <div className="text-center mb-12 lg:mb-16">
+            <h2 className="text-3xl lg:text-5xl font-black text-black dark:text-white mb-6 lg:mb-8">
+              Are you tired of keeping track of what users want?
+            </h2>
+            <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+              Feature requests scattered across notes, chats, and emails. It's
+              time to centralize everything in one beautiful roadmap.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+                    <X className="w-4 h-4 text-black dark:text-white" />
+                  </div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
+                    Scattered Requests
+                  </h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Feature requests buried in support tickets, chat messages, and
+                  random notes. Impossible to track what users actually want.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+                    <X className="w-4 h-4 text-black dark:text-white" />
+                  </div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
+                    No Prioritization
+                  </h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Hard to know which features matter most to your users.
+                  Building the wrong things because you can't see the big
+                  picture.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+                    <X className="w-4 h-4 text-black dark:text-white" />
+                  </div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
+                    Manual Updates
+                  </h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Constantly updating spreadsheets and documents. Time wasted on
+                  maintenance instead of building features.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center space-y-16">
+              <div className="relative">
+                <SimpleNotesApp />
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center animate-bounce">
+                  <span className="text-xs font-bold text-black dark:text-white">
+                    !
+                  </span>
+                </div>
+              </div>
+              <div className="relative">
+                <AnimatedMessagingApp />
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center animate-bounce">
+                  <span className="text-xs font-bold text-black dark:text-white">
+                    !
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
