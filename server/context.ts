@@ -1,11 +1,15 @@
 import * as trpcFetch from "@trpc/server/adapters/fetch";
-import { NextRequest } from "next/server";
+import { auth } from "../auth";
 
 export async function createContext(
   opts: trpcFetch.FetchCreateContextFnOptions
 ) {
-  // TODO: Add session
-  return {};
+  const session = await auth.api.getSession(opts.req);
+
+  return {
+    session,
+    user: session?.user || null,
+  };
 }
 
 export type Context = Awaited<ReturnType<typeof createContext>>;
