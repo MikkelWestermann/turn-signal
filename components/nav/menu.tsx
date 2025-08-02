@@ -67,11 +67,6 @@ const menuData = {
       url: "/admin/organization/github",
       icon: Github,
     },
-    {
-      title: "Settings",
-      url: "/admin/settings",
-      icon: Settings,
-    },
   ],
 };
 
@@ -156,12 +151,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Link href="/admin/profile">
                     <User className="mr-2 h-4 w-4" />
                     Profile
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/admin/settings">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

@@ -33,6 +33,10 @@ export const githubRouter = router({
         .where(eq(githubInstallations.organizationId, input.organizationId))
         .limit(1);
 
+      if (!installation[0]) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
       // Verify the installation is still valid
       const client = installationClient(installation[0].installationId);
       try {

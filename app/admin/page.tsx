@@ -13,24 +13,48 @@ import { Button } from "@/components/ui/button";
 import {
   Users,
   Settings,
-  BarChart3,
-  Shield,
-  User,
   LogOut,
   Loader2,
   Building2,
+  Map,
+  GitBranch,
+  Plus,
+  ExternalLink,
+  TrendingUp,
 } from "lucide-react";
 import { useState } from "react";
+import { useTRPC } from "@/lib/client";
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 
 export default function AdminPage() {
   const { data: session, isPending, refetch } = authClient.useSession();
   const { data: activeOrganization, isPending: isLoadingOrg } =
     authClient.useActiveOrganization();
-  // Get active member from the active organization data
+  const trpc = useTRPC();
+
   const activeMember = activeOrganization?.members?.find(
     (member) => member.user?.id === session?.user?.id
   );
   const [isSigningOut, setIsSigningOut] = useState(false);
+
+  const { data: roadmaps, isLoading: isLoadingRoadmaps } = useQuery(
+    trpc.roadmap.getAll.queryOptions({
+      organizationId: activeOrganization?.id || "",
+    })
+  );
+
+  const { data: githubInstallation, isLoading: isLoadingGithub } = useQuery(
+    trpc.github.getInstallation.queryOptions({
+      organizationId: activeOrganization?.id || "",
+    })
+  );
+
+  const { data: githubRepos, isLoading: isLoadingRepos } = useQuery(
+    trpc.github.getRepositories.queryOptions({
+      organizationId: activeOrganization?.id || "",
+    })
+  );
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
@@ -95,9 +119,15 @@ export default function AdminPage() {
     );
   }
 
+  const totalRoadmaps = roadmaps?.length || 0;
+  const totalRepos = githubRepos?.data?.repositories?.length || 0;
+  const connectedRepos =
+    roadmaps?.reduce((acc: number, roadmap: any) => {
+      return acc + (roadmap.repositories?.length || 0);
+    }, 0) || 0;
+
   return (
     <div className="space-y-6">
-      {/* Welcome Section */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">
@@ -122,7 +152,293 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Organization Info */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Roadmaps</CardTitle>
+            <Map className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalRoadmaps}</div>
+            <p className="text-xs text-muted-foreground">
+              {isLoadingRoadmaps ? "Loading..." : "Active roadmaps"}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">GitHub Repos</CardTitle>
+            <GitBranch className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalRepos}</div>
+            <p className="text-xs text-muted-foreground">
+              {isLoadingRepos ? "Loading..." : "Connected repositories"}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Connected</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{connectedRepos}</div>
+            <p className="text-xs text-muted-foreground">
+              Repos linked to roadmaps
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Organization Members
+            </CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {activeOrganization.members?.length || 0}
+            </div>
+            <p className="text-xs text-muted-foreground">Active members</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Map className="h-5 w-5" />
+                  Roadmaps
+                </CardTitle>
+                <CardDescription>Manage your product roadmaps</CardDescription>
+              </div>
+              <Button asChild size="sm">
+                <Link href="/admin/roadmaps/new">
+                  <Plus className="mr-2 h-4 w-4" />
+                  New Roadmap
+                </Link>
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {isLoadingRoadmaps ? (
+              <div className="flex items-center justify-center h-32">
+                <Loader2 className="h-6 w-6 animate-spin" />
+              </div>
+            ) : roadmaps && roadmaps.length > 0 ? (
+              <div className="space-y-3">
+                {roadmaps.slice(0, 5).map((roadmap) => (
+                  <div
+                    key={roadmap.id}
+                    className="flex items-center justify-between p-3 border rounded-lg"
+                  >
+                    <div>
+                      <h4 className="font-medium">{roadmap.name}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {roadmap.description || "No description"}
+                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Badge variant="outline" className="text-xs">
+                          {roadmap.tag}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button asChild variant="ghost" size="sm">
+                        <Link href={`/admin/roadmaps/${roadmap.id}/edit`}>
+                          <Settings className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                      <Button asChild variant="ghost" size="sm">
+                        <Link href={`/roadmap/${roadmap.slug}`}>
+                          <ExternalLink className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                {roadmaps.length > 5 && (
+                  <Button asChild variant="outline" className="w-full">
+                    <Link href="/admin/roadmaps">
+                      View all {roadmaps.length} roadmaps
+                    </Link>
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <Map className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="font-medium mb-2">No roadmaps yet</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Create your first roadmap to start organizing your product
+                  development.
+                </p>
+                <Button asChild>
+                  <Link href="/admin/roadmaps/new">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create Roadmap
+                  </Link>
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <GitBranch className="h-5 w-5" />
+                  GitHub Integration
+                </CardTitle>
+                <CardDescription>
+                  Connected repositories and installations
+                </CardDescription>
+              </div>
+              {!githubInstallation && (
+                <Button asChild size="sm">
+                  <Link href="/admin/organization/github">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Connect GitHub
+                  </Link>
+                </Button>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent>
+            {isLoadingGithub ? (
+              <div className="flex items-center justify-center h-32">
+                <Loader2 className="h-6 w-6 animate-spin" />
+              </div>
+            ) : githubInstallation ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium">GitHub App</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Installation ID: {githubInstallation.installationId}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Connected{" "}
+                      {new Date(
+                        githubInstallation.createdAt
+                      ).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <Badge variant="secondary">Connected</Badge>
+                </div>
+
+                {isLoadingRepos ? (
+                  <div className="flex items-center justify-center h-16">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  </div>
+                ) : githubRepos && githubRepos.data.repositories.length > 0 ? (
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-sm">Recent Repositories</h4>
+                    {githubRepos.data.repositories
+                      .slice(0, 3)
+                      .map((repo: any) => (
+                        <div
+                          key={repo.id}
+                          className="flex items-center justify-between p-2 border rounded text-sm"
+                        >
+                          <div>
+                            <span className="font-medium">
+                              {repo.full_name}
+                            </span>
+                            <p className="text-xs text-muted-foreground">
+                              {repo.private ? "Private" : "Public"}
+                            </p>
+                          </div>
+                          <Button asChild variant="ghost" size="sm">
+                            <a
+                              href={repo.html_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                            </a>
+                          </Button>
+                        </div>
+                      ))}
+                    {githubRepos.data.repositories.length > 3 && (
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                      >
+                        <Link href="/admin/organization/github">
+                          View all {githubRepos.data.repositories.length}{" "}
+                          repositories
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-center py-4">
+                    <p className="text-sm text-muted-foreground">
+                      No repositories found in this installation.
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <GitBranch className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="font-medium mb-2">GitHub not connected</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Connect your GitHub account to sync repositories and issues.
+                </p>
+                <Button asChild>
+                  <Link href="/admin/organization/github">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Connect GitHub
+                  </Link>
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Quick Actions</CardTitle>
+          <CardDescription>Common tasks and shortcuts</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Button asChild variant="outline" className="h-auto p-4 flex-col">
+              <Link href="/admin/roadmaps/new">
+                <Map className="h-6 w-6 mb-2" />
+                <span>Create Roadmap</span>
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="h-auto p-4 flex-col">
+              <Link href="/admin/organization/github">
+                <GitBranch className="h-6 w-6 mb-2" />
+                <span>Manage GitHub</span>
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="h-auto p-4 flex-col">
+              <Link href="/admin/members">
+                <Users className="h-6 w-6 mb-2" />
+                <span>Manage Members</span>
+              </Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -162,103 +478,6 @@ export default function AdminPage() {
               <p className="text-sm">
                 {activeOrganization.createdAt
                   ? new Date(activeOrganization.createdAt).toLocaleDateString()
-                  : "Unknown"}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Organization Members
-            </CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {activeOrganization.members?.length || 0}
-            </div>
-            <p className="text-xs text-muted-foreground">Active members</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Pending Invitations
-            </CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {activeOrganization.invitations?.filter(
-                (inv) => inv.status === "pending"
-              ).length || 0}
-            </div>
-            <p className="text-xs text-muted-foreground">Awaiting response</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">System Status</CardTitle>
-            <Settings className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">Healthy</div>
-            <p className="text-xs text-muted-foreground">
-              All systems operational
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Uptime</CardTitle>
-            <Shield className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">99.9%</div>
-            <p className="text-xs text-muted-foreground">Last 30 days</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* User Session Info */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Current Session</CardTitle>
-          <CardDescription>
-            Your authentication details and session information
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium text-gray-500">
-                User ID
-              </label>
-              <p className="text-sm font-mono">{session.user.id}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">Email</label>
-              <p className="text-sm">{session.user.email}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">Name</label>
-              <p className="text-sm">{session.user.name || "Not provided"}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">
-                Session Expires
-              </label>
-              <p className="text-sm">
-                {session.session.expiresAt
-                  ? new Date(session.session.expiresAt).toLocaleString()
                   : "Unknown"}
               </p>
             </div>
