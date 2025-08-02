@@ -4,16 +4,6 @@ import { githubInstallations } from "@/db/schema";
 import { Octokit } from "@octokit/rest";
 import { createAppAuth } from "@octokit/auth-app";
 
-const octokit = new Octokit({
-  authStrategy: createAppAuth,
-  auth: {
-    appId: process.env.GITHUB_APP_ID,
-    clientId: process.env.GITHUB_CLIENT_ID,
-    privateKey: process.env.GITHUB_PRIVATE_KEY,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  },
-});
-
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const installationId = searchParams.get("installation_id");
@@ -40,6 +30,16 @@ export async function GET(request: NextRequest) {
       // Handle case where state is not provided
       return NextResponse.redirect("/organizations?github_setup=error");
     }
+
+    const octokit = new Octokit({
+      authStrategy: createAppAuth,
+      auth: {
+        appId: process.env.GITHUB_APP_ID,
+        clientId: process.env.GITHUB_CLIENT_ID,
+        privateKey: process.env.GITHUB_PRIVATE_KEY,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      },
+    });
 
     // TODO: Better verification of the installation - also verify the user
 
