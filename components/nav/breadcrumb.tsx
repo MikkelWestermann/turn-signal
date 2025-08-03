@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import { usePathname } from "next/navigation";
+import { usePathname } from 'next/navigation';
 import {
   Breadcrumb,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { BaseBreadcrumb, DashboardBreadcrumb } from "./breadcrumbs";
+} from '@/components/ui/breadcrumb';
+import { BaseBreadcrumb, DashboardBreadcrumb } from './breadcrumbs';
 
 export function BreadcrumbNav() {
   const pathname = usePathname();
 
   // Build breadcrumbs based on current path
   const getBreadcrumbs = () => {
-    if (pathname === "/admin") {
+    if (pathname === '/admin') {
       return [<DashboardBreadcrumb key="dashboard" />];
     }
-    if (pathname.startsWith("/admin/")) {
-      const segments = pathname.split("/").filter(Boolean);
+    if (pathname.startsWith('/admin/')) {
+      const segments = pathname.split('/').filter(Boolean);
       const breadcrumbs = [
         <BaseBreadcrumb key="dashboard" title="Dashboard" href="/admin" />,
       ];
@@ -26,7 +26,7 @@ export function BreadcrumbNav() {
         const pageName = segments[1];
         const title = pageName.charAt(0).toUpperCase() + pageName.slice(1);
         breadcrumbs.push(
-          <BaseBreadcrumb key={pageName} title={title} isActive={true} />
+          <BaseBreadcrumb key={pageName} title={title} isActive={true} />,
         );
       }
 

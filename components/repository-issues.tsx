@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useTRPC } from "@/lib/client";
-import { useQuery } from "@tanstack/react-query";
-import { Button } from "./ui/button";
+import { useState } from 'react';
+import { useTRPC } from '@/lib/client';
+import { useQuery } from '@tanstack/react-query';
+import { Button } from './ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "./ui/card";
-import { Badge } from "./ui/badge";
+} from './ui/card';
+import { Badge } from './ui/badge';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { ExternalLink, User, Calendar, RefreshCw } from "lucide-react";
+} from './ui/select';
+import { ExternalLink, User, Calendar, RefreshCw } from 'lucide-react';
 
 interface RepositoryIssuesProps {
   organizationId: string;
@@ -32,7 +32,7 @@ export function RepositoryIssues({
   owner,
   repo,
 }: RepositoryIssuesProps) {
-  const [state, setState] = useState<"open" | "closed" | "all">("open");
+  const [state, setState] = useState<'open' | 'closed' | 'all'>('open');
   const [page, setPage] = useState(1);
   const trpc = useTRPC();
 
@@ -48,10 +48,10 @@ export function RepositoryIssues({
       state,
       page,
       perPage: 20,
-    })
+    }),
   );
 
-  const handleStateChange = (newState: "open" | "closed" | "all") => {
+  const handleStateChange = (newState: 'open' | 'closed' | 'all') => {
     setState(newState);
     setPage(1);
   };
@@ -82,7 +82,7 @@ export function RepositoryIssues({
             disabled={isLoading}
           >
             <RefreshCw
-              className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+              className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
             />
             Refresh
           </Button>
@@ -101,20 +101,20 @@ export function RepositoryIssues({
             <Card key={issue.id}>
               <CardHeader>
                 <div className="flex items-start justify-between">
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center space-x-2">
-                      <CardTitle className="text-lg truncate">
+                      <CardTitle className="truncate text-lg">
                         #{issue.number} {issue.title}
                       </CardTitle>
                       <Badge
                         variant={
-                          issue.state === "open" ? "default" : "secondary"
+                          issue.state === 'open' ? 'default' : 'secondary'
                         }
                       >
                         {issue.state}
                       </Badge>
                     </div>
-                    <CardDescription className="flex items-center space-x-4 mt-2">
+                    <CardDescription className="mt-2 flex items-center space-x-4">
                       <div className="flex items-center space-x-1">
                         <User className="h-4 w-4" />
                         <span>{issue.assignees?.[0]?.login}</span>
@@ -148,7 +148,7 @@ export function RepositoryIssues({
               </CardHeader>
               {issue.body && (
                 <CardContent>
-                  <p className="text-sm text-muted-foreground line-clamp-3">
+                  <p className="line-clamp-3 text-sm text-muted-foreground">
                     {issue.body}
                   </p>
                 </CardContent>
@@ -157,7 +157,7 @@ export function RepositoryIssues({
                 <CardContent className="pt-0">
                   <div className="flex flex-wrap gap-1">
                     {issue.labels.map((label) => {
-                      if (typeof label === "string") {
+                      if (typeof label === 'string') {
                         return null;
                       }
                       return (

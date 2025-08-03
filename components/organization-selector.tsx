@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { authClient } from "@/auth/client";
-import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+import { authClient } from '@/auth/client';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   Dialog,
   DialogContent,
@@ -18,11 +18,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Loader2, Plus, Building2, Check } from "lucide-react";
-import { toast } from "sonner";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Loader2, Plus, Building2, Check } from 'lucide-react';
+import { toast } from 'sonner';
 
 export function OrganizationSelector() {
   const { data: organizations, isPending: isLoading } =
@@ -30,12 +30,12 @@ export function OrganizationSelector() {
   const { data: activeOrganization, refetch: refetchActive } =
     authClient.useActiveOrganization();
   const [isCreating, setIsCreating] = useState(false);
-  const [newOrgName, setNewOrgName] = useState("");
-  const [newOrgSlug, setNewOrgSlug] = useState("");
+  const [newOrgName, setNewOrgName] = useState('');
+  const [newOrgSlug, setNewOrgSlug] = useState('');
 
   const handleCreateOrganization = async () => {
     if (!newOrgName.trim() || !newOrgSlug.trim()) {
-      toast.error("Please fill in all fields");
+      toast.error('Please fill in all fields');
       return;
     }
 
@@ -46,14 +46,14 @@ export function OrganizationSelector() {
         slug: newOrgSlug,
       });
 
-      toast.success("Organization created successfully!");
-      setNewOrgName("");
-      setNewOrgSlug("");
+      toast.success('Organization created successfully!');
+      setNewOrgName('');
+      setNewOrgSlug('');
       // Refresh the organizations list
       window.location.reload();
     } catch (error) {
-      console.error("Error creating organization:", error);
-      toast.error("Failed to create organization");
+      console.error('Error creating organization:', error);
+      toast.error('Failed to create organization');
     } finally {
       setIsCreating(false);
     }
@@ -65,10 +65,10 @@ export function OrganizationSelector() {
         organizationId,
       });
       await refetchActive();
-      toast.success("Active organization updated");
+      toast.success('Active organization updated');
     } catch (error) {
-      console.error("Error setting active organization:", error);
-      toast.error("Failed to update active organization");
+      console.error('Error setting active organization:', error);
+      toast.error('Failed to update active organization');
     }
   };
 
@@ -88,7 +88,7 @@ export function OrganizationSelector() {
           <div className="flex items-center">
             <Building2 className="mr-2 h-4 w-4" />
             <span className="truncate">
-              {activeOrganization?.name || "Select Organization"}
+              {activeOrganization?.name || 'Select Organization'}
             </span>
           </div>
         </Button>
@@ -141,7 +141,7 @@ export function OrganizationSelector() {
                   value={newOrgSlug}
                   onChange={(e) =>
                     setNewOrgSlug(
-                      e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-")
+                      e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
                     )
                   }
                   placeholder="enter-organization-slug"

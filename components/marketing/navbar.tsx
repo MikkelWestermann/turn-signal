@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import * as React from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -11,17 +11,17 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { ArrowRight, Github, Menu, X } from "lucide-react";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { ModeToggle } from "@/components/mode-toggle";
-import Logo from "@/components/logo";
-import { authClient } from "@/auth/client";
+} from '@/components/ui/navigation-menu';
+import { ArrowRight, Github, Menu, X } from 'lucide-react';
+import { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { ModeToggle } from '@/components/mode-toggle';
+import Logo from '@/components/logo';
+import { authClient } from '@/auth/client';
 
 const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
+  React.ElementRef<'a'>,
+  React.ComponentPropsWithoutRef<'a'>
 >(({ className, title, children, ...props }, ref) => {
   return (
     <li>
@@ -29,12 +29,12 @@ const ListItem = React.forwardRef<
         <a
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
+            'block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+            className,
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
+          <div className="text-sm leading-none font-medium">{title}</div>
           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
           </p>
@@ -43,16 +43,16 @@ const ListItem = React.forwardRef<
     </li>
   );
 });
-ListItem.displayName = "ListItem";
+ListItem.displayName = 'ListItem';
 
 export function MarketingNavbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: session } = authClient.useSession();
 
   return (
-    <header className="bg-background/80 backdrop-blur-sm border-b border-border sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-3">
             <Link href="/" className="flex items-center space-x-2">
               <Logo className="h-8 w-8" />
@@ -72,11 +72,11 @@ export function MarketingNavbar() {
                       <li className="row-span-3">
                         <NavigationMenuLink asChild>
                           <a
-                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                            className="flex h-full w-full flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none select-none focus:shadow-md"
                             href="/"
                           >
                             <Logo className="h-6 w-6" />
-                            <div className="mb-2 mt-4 text-lg font-medium">
+                            <div className="mt-4 mb-2 text-lg font-medium">
                               Turn Signal
                             </div>
                             <p className="text-sm leading-tight text-muted-foreground">
@@ -85,10 +85,16 @@ export function MarketingNavbar() {
                           </a>
                         </NavigationMenuLink>
                       </li>
-                      <ListItem href="/features" title="Features">
-                        Get an overview of the features
+                      <ListItem
+                        href="https://github.com/MikkelWestermann/turn-signal"
+                        title="Repository"
+                      >
+                        GitHub repository
                       </ListItem>
-                      <ListItem href="/pricing" title="Pricing">
+                      <ListItem
+                        href="https://github.com/MikkelWestermann/turn-signal#pricing"
+                        title="Pricing"
+                      >
                         TLDR: It's free
                       </ListItem>
                       <ListItem href="/roadmap" title="Roadmap">
@@ -117,7 +123,7 @@ export function MarketingNavbar() {
             </NavigationMenu>
           </div>
 
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden items-center space-x-4 md:flex">
             {session ? (
               <Link href="/admin">
                 <Button>
@@ -153,17 +159,11 @@ export function MarketingNavbar() {
         </div>
 
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-border py-4">
+          <div className="border-t border-border py-4 md:hidden">
             <div className="space-y-4">
               <div className="space-y-2">
                 <h3 className="text-sm font-medium text-foreground">Product</h3>
                 <div className="space-y-1">
-                  <Link
-                    href="/features"
-                    className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    Features
-                  </Link>
                   <Link
                     href="/pricing"
                     className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
@@ -192,7 +192,7 @@ export function MarketingNavbar() {
                   Contact
                 </Link>
               </div>
-              <div className="pt-4 space-y-2">
+              <div className="space-y-2 pt-4">
                 <div className="flex justify-center">
                   <ModeToggle />
                 </div>

@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
-import { useTRPC } from "@/lib/client";
-import { useQuery } from "@tanstack/react-query";
-import { authClient } from "@/auth/client";
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useTRPC } from '@/lib/client';
+import { useQuery } from '@tanstack/react-query';
+import { authClient } from '@/auth/client';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import {
   ArrowLeft,
   ExternalLink,
@@ -22,10 +22,10 @@ import {
   Edit,
   Eye,
   Settings,
-} from "lucide-react";
-import Link from "next/link";
-import { KanbanBoard } from "@/components/kanban-board";
-import { toast } from "sonner";
+} from 'lucide-react';
+import Link from 'next/link';
+import { KanbanBoard } from '@/components/kanban-board';
+import { toast } from 'sonner';
 
 export default function RoadmapAdminPage() {
   const params = useParams();
@@ -44,8 +44,8 @@ export default function RoadmapAdminPage() {
   } = useQuery(
     trpc.roadmap.getById.queryOptions({
       id,
-      organizationId: organization?.id || "",
-    })
+      organizationId: organization?.id || '',
+    }),
   );
 
   const {
@@ -54,15 +54,15 @@ export default function RoadmapAdminPage() {
     refetch: refetchIssues,
   } = useQuery(
     trpc.roadmap.getRoadmap.queryOptions({
-      slug: roadmap?.slug || "",
-    })
+      slug: roadmap?.slug || '',
+    }),
   );
 
   if (isLoading) {
     return (
       <div className="container mx-auto py-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
           <p className="mt-4 text-muted-foreground">Loading roadmap...</p>
         </div>
       </div>
@@ -73,14 +73,14 @@ export default function RoadmapAdminPage() {
     return (
       <div className="container mx-auto py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Roadmap Not Found</h1>
-          <p className="text-muted-foreground mb-6">
+          <h1 className="mb-4 text-2xl font-bold">Roadmap Not Found</h1>
+          <p className="mb-6 text-muted-foreground">
             The roadmap you're looking for doesn't exist or you don't have
             access to it.
           </p>
           <Button asChild>
             <Link href="/admin/roadmaps">
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Roadmaps
             </Link>
           </Button>
@@ -93,43 +93,43 @@ export default function RoadmapAdminPage() {
   const plannedIssues =
     roadmapWithIssues?.issues?.filter((issue) =>
       issue.labels.some((label) =>
-        typeof label === "string"
+        typeof label === 'string'
           ? label === roadmap.plannedTag
-          : label.name === roadmap.plannedTag
-      )
+          : label.name === roadmap.plannedTag,
+      ),
     ).length || 0;
   const inProgressIssues =
     roadmapWithIssues?.issues?.filter((issue) =>
       issue.labels.some((label) =>
-        typeof label === "string"
+        typeof label === 'string'
           ? label === roadmap.inProgressTag
-          : label.name === roadmap.inProgressTag
-      )
+          : label.name === roadmap.inProgressTag,
+      ),
     ).length || 0;
   const doneIssues =
     roadmapWithIssues?.issues?.filter((issue) =>
       issue.labels.some((label) =>
-        typeof label === "string"
+        typeof label === 'string'
           ? label === roadmap.doneTag
-          : label.name === roadmap.doneTag
-      )
+          : label.name === roadmap.doneTag,
+      ),
     ).length || 0;
 
   const totalVotes =
     roadmapWithIssues?.issues?.reduce(
       (sum, issue) => sum + (issue.voteCount || 0),
-      0
+      0,
     ) || 0;
   const averageVotes =
     totalIssues > 0 ? Math.round((totalVotes / totalIssues) * 10) / 10 : 0;
   const mostVotedIssue = roadmapWithIssues?.issues?.reduce((max, issue) =>
-    (issue.voteCount || 0) > (max?.voteCount || 0) ? issue : max
+    (issue.voteCount || 0) > (max?.voteCount || 0) ? issue : max,
   );
 
   const handleRefresh = () => {
     refetch();
     refetchIssues();
-    toast.success("Roadmap data refreshed");
+    toast.success('Roadmap data refreshed');
   };
 
   const handleEdit = () => {
@@ -142,12 +142,12 @@ export default function RoadmapAdminPage() {
 
   return (
     <div className="container mx-auto py-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-6">
           <Button variant="ghost" asChild className="mb-4">
             <Link href="/admin/roadmaps">
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Roadmaps
             </Link>
           </Button>
@@ -156,7 +156,7 @@ export default function RoadmapAdminPage() {
             <div>
               <h1 className="text-3xl font-bold">{roadmap.name}</h1>
               {roadmap.description && (
-                <p className="text-muted-foreground mt-1">
+                <p className="mt-1 text-muted-foreground">
                   {roadmap.description}
                 </p>
               )}
@@ -169,18 +169,18 @@ export default function RoadmapAdminPage() {
                 disabled={isLoading || isLoadingIssues}
               >
                 <RefreshCw
-                  className={`h-4 w-4 mr-2 ${
-                    isLoading || isLoadingIssues ? "animate-spin" : ""
+                  className={`mr-2 h-4 w-4 ${
+                    isLoading || isLoadingIssues ? 'animate-spin' : ''
                   }`}
                 />
                 Refresh
               </Button>
               <Button variant="outline" onClick={handleViewPublic}>
-                <Eye className="w-4 h-4 mr-2" />
+                <Eye className="mr-2 h-4 w-4" />
                 View Public
               </Button>
               <Button onClick={handleEdit}>
-                <Edit className="w-4 h-4 mr-2" />
+                <Edit className="mr-2 h-4 w-4" />
                 Edit
               </Button>
             </div>
@@ -210,7 +210,7 @@ export default function RoadmapAdminPage() {
           roadmapWithIssues.issues &&
           roadmapWithIssues.issues.length > 0 && (
             <div className="mb-8">
-              <div className="flex items-center justify-between mb-4">
+              <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Most Voted Issues</h2>
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <span>Total votes: {totalVotes}</span>
@@ -232,11 +232,11 @@ export default function RoadmapAdminPage() {
                       .map((issue, index) => (
                         <div
                           key={issue.id}
-                          className="p-4 hover:bg-muted/50 transition-colors"
+                          className="p-4 transition-colors hover:bg-muted/50"
                         >
                           <div className="flex items-start justify-between">
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-3 mb-2">
+                            <div className="min-w-0 flex-1">
+                              <div className="mb-2 flex items-center gap-3">
                                 <Badge
                                   variant="secondary"
                                   className="flex-shrink-0"
@@ -253,7 +253,7 @@ export default function RoadmapAdminPage() {
                                   #{issue.number} • {issue.state}
                                 </span>
                               </div>
-                              <h3 className="font-medium text-sm mb-2 line-clamp-2">
+                              <h3 className="mb-2 line-clamp-2 text-sm font-medium">
                                 {issue.title}
                               </h3>
                               <Button
@@ -263,7 +263,7 @@ export default function RoadmapAdminPage() {
                                 className="w-fit"
                               >
                                 <Link href={issue.html_url} target="_blank">
-                                  <ExternalLink className="w-3 h-3 mr-1" />
+                                  <ExternalLink className="mr-1 h-3 w-3" />
                                   View on GitHub
                                 </Link>
                               </Button>
@@ -274,14 +274,14 @@ export default function RoadmapAdminPage() {
                   </div>
 
                   {roadmapWithIssues.issues.length > 3 && (
-                    <div className="p-4 border-t">
+                    <div className="border-t p-4">
                       <Button
                         variant="outline"
                         onClick={() => setShowAllIssues(!showAllIssues)}
                         className="w-full"
                       >
                         {showAllIssues
-                          ? "Show Less"
+                          ? 'Show Less'
                           : `Show ${
                               roadmapWithIssues.issues.length - 3
                             } More Issues`}
@@ -297,7 +297,7 @@ export default function RoadmapAdminPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Settings className="w-5 h-5" />
+                <Settings className="h-5 w-5" />
                 Roadmap Configuration
               </CardTitle>
               <CardDescription>
@@ -305,7 +305,7 @@ export default function RoadmapAdminPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">
                     Primary Label
@@ -322,21 +322,21 @@ export default function RoadmapAdminPage() {
                   <label className="text-sm font-medium text-muted-foreground">
                     Planned Label
                   </label>
-                  <p className="text-sm">{roadmap.plannedTag || "Not set"}</p>
+                  <p className="text-sm">{roadmap.plannedTag || 'Not set'}</p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">
                     In Progress Label
                   </label>
                   <p className="text-sm">
-                    {roadmap.inProgressTag || "Not set"}
+                    {roadmap.inProgressTag || 'Not set'}
                   </p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">
                     Done Label
                   </label>
-                  <p className="text-sm">{roadmap.doneTag || "Not set"}</p>
+                  <p className="text-sm">{roadmap.doneTag || 'Not set'}</p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">
@@ -354,7 +354,7 @@ export default function RoadmapAdminPage() {
         <Separator className="my-8" />
 
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
+          <div className="mb-4 flex items-center justify-between">
             <h2 className="text-2xl font-bold">Kanban Board Preview</h2>
             <p className="text-sm text-muted-foreground">
               Live preview of how your roadmap appears to users
@@ -364,7 +364,7 @@ export default function RoadmapAdminPage() {
           {roadmapWithIssues &&
           roadmapWithIssues.issues &&
           roadmapWithIssues.issues.length > 0 ? (
-            <div className="border rounded-lg p-4 bg-muted/20">
+            <div className="rounded-lg border bg-muted/20 p-4">
               <KanbanBoard roadmap={roadmapWithIssues} />
             </div>
           ) : (
@@ -376,18 +376,18 @@ export default function RoadmapAdminPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-12">
+                <div className="py-12 text-center">
                   <div className="space-y-4">
                     <div className="text-6xl">🚀</div>
                     <h3 className="text-lg font-semibold">Coming Soon</h3>
-                    <p className="text-muted-foreground max-w-md mx-auto">
+                    <p className="mx-auto max-w-md text-muted-foreground">
                       This roadmap will display GitHub issues automatically. Add
                       the "{roadmap.tag}" label to your GitHub issues to see
                       them here.
                     </p>
                     <Button variant="outline" asChild>
                       <Link href="https://github.com" target="_blank">
-                        <ExternalLink className="w-4 h-4 mr-2" />
+                        <ExternalLink className="mr-2 h-4 w-4" />
                         View on GitHub
                       </Link>
                     </Button>

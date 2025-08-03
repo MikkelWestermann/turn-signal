@@ -1,48 +1,48 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
   ArrowRight,
   Github,
   MessageSquare,
   Bug,
   Lightbulb,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { BackgroundGrid } from "@/components/marketing/background-grid";
-import { Metadata } from "next";
+import { BackgroundGrid } from '@/components/marketing/background-grid';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Contact - Turn Signal Support",
+  title: 'Contact - Turn Signal Support',
   description:
-    "Get support for Turn Signal through GitHub issues. Report bugs, ask for help, or suggest new features. All communication is transparent and community-driven.",
+    'Get support for Turn Signal through GitHub issues. Report bugs, ask for help, or suggest new features. All communication is transparent and community-driven.',
   keywords: [
-    "support",
-    "contact",
-    "bug report",
-    "feature request",
-    "GitHub issues",
-    "open source support",
+    'support',
+    'contact',
+    'bug report',
+    'feature request',
+    'GitHub issues',
+    'open source support',
   ],
   openGraph: {
-    title: "Contact - Turn Signal Support",
+    title: 'Contact - Turn Signal Support',
     description:
-      "Get support for Turn Signal through GitHub issues. Report bugs, ask for help, or suggest new features.",
-    type: "website",
-    url: "https://turn-signal.co/contact",
-    siteName: "Turn Signal",
+      'Get support for Turn Signal through GitHub issues. Report bugs, ask for help, or suggest new features.',
+    type: 'website',
+    url: 'https://turn-signal.co/contact',
+    siteName: 'Turn Signal',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Contact - Turn Signal Support",
+    card: 'summary_large_image',
+    title: 'Contact - Turn Signal Support',
     description:
-      "Get support for Turn Signal through GitHub issues. Report bugs, ask for help, or suggest new features.",
+      'Get support for Turn Signal through GitHub issues. Report bugs, ask for help, or suggest new features.',
   },
 };
 
@@ -52,21 +52,21 @@ const ContactCard = ({
   description,
   buttonText,
   href,
-  variant = "default",
+  variant = 'default',
 }: {
   icon: any;
   title: string;
   description: string;
   buttonText: string;
   href: string;
-  variant?: "default" | "outline";
+  variant?: 'default' | 'outline';
 }) => (
-  <Card className="bg-card border-4 border-black dark:border-white shadow-4xl">
-    <CardHeader className="text-center pb-6">
-      <div className="w-16 h-16 bg-primary/20 dark:bg-primary/30 border-3 border-black dark:border-white shadow-3xl flex items-center justify-center mx-auto mb-6">
-        <Icon className="w-8 h-8 text-foreground" />
+  <Card className="border-4 border-black bg-card shadow-4xl dark:border-white">
+    <CardHeader className="pb-6 text-center">
+      <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center border-3 border-black bg-primary/20 shadow-3xl dark:border-white dark:bg-primary/30">
+        <Icon className="h-8 w-8 text-foreground" />
       </div>
-      <CardTitle className="text-2xl lg:text-3xl font-black text-foreground mb-4">
+      <CardTitle className="mb-4 text-2xl font-black text-foreground lg:text-3xl">
         {title}
       </CardTitle>
       <CardDescription className="text-lg text-gray-600 dark:text-gray-400">
@@ -78,10 +78,10 @@ const ContactCard = ({
         <Button
           size="lg"
           variant={variant}
-          className={`h-14 px-8 text-lg font-bold border-2 border-black dark:border-white shadow-3xl hover:shadow-lg hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200 ${
-            variant === "outline"
-              ? "bg-background hover:bg-muted"
-              : "bg-primary hover:bg-primary/90 text-primary-foreground"
+          className={`h-14 border-2 border-black px-8 text-lg font-bold shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-lg dark:border-white ${
+            variant === 'outline'
+              ? 'bg-background hover:bg-muted'
+              : 'bg-primary text-primary-foreground hover:bg-primary/90'
           }`}
         >
           <Github className="mr-2 h-5 w-5" />
@@ -96,14 +96,14 @@ const ContactCard = ({
 export default function ContactPage() {
   return (
     <div className="min-h-screen">
-      <section className="relative bg-background overflow-hidden">
+      <section className="relative overflow-hidden bg-background">
         <BackgroundGrid />
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
-          <div className="text-center mb-16 lg:mb-24">
-            <h1 className="text-4xl lg:text-6xl font-black text-foreground mb-6 lg:mb-8">
+        <div className="relative z-10 mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-24">
+          <div className="mb-16 text-center lg:mb-24">
+            <h1 className="mb-6 text-4xl font-black text-foreground lg:mb-8 lg:text-6xl">
               Contact
             </h1>
-            <p className="text-xl lg:text-2xl text-gray-600 dark:text-gray-400 mb-8 lg:mb-12 max-w-3xl mx-auto">
+            <p className="mx-auto mb-8 max-w-3xl text-xl text-gray-600 lg:mb-12 lg:text-2xl dark:text-gray-400">
               Turn Signal is open source. All support and contact is handled
               through GitHub issues.
             </p>
@@ -112,8 +112,8 @@ export default function ContactPage() {
       </section>
 
       <section className="bg-muted/50 py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-12">
             <ContactCard
               icon={Bug}
               title="Report a Bug"
@@ -142,30 +142,30 @@ export default function ContactPage() {
       </section>
 
       <section className="bg-background py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-3xl lg:text-5xl font-black text-foreground mb-6 lg:mb-8">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mb-12 text-center lg:mb-16">
+            <h2 className="mb-6 text-3xl font-black text-foreground lg:mb-8 lg:text-5xl">
               Why GitHub Issues?
             </h2>
-            <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <p className="mx-auto max-w-3xl text-lg text-gray-600 lg:text-xl dark:text-gray-400">
               As an open source project, we believe in transparency and
               community-driven development.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
             <div className="space-y-6">
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-primary/20 dark:bg-primary/30 border-3 border-black dark:border-white shadow-lg flex items-center justify-center">
-                  <Github className="w-6 h-6 text-foreground" />
+                <div className="flex h-12 w-12 items-center justify-center border-3 border-black bg-primary/20 shadow-lg dark:border-white dark:bg-primary/30">
+                  <Github className="h-6 w-6 text-foreground" />
                 </div>
                 <div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">
+                  <h3 className="text-xl font-bold text-foreground lg:text-2xl">
                     Transparent Communication
                   </h3>
                 </div>
               </div>
-              <p className="text-gray-600 dark:text-gray-400 ml-16">
+              <p className="ml-16 text-gray-600 dark:text-gray-400">
                 All issues, discussions, and solutions are public. This means
                 you can see what others are experiencing and benefit from
                 community solutions.
@@ -174,16 +174,16 @@ export default function ContactPage() {
 
             <div className="space-y-6">
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-primary/20 dark:bg-primary/30 border-3 border-black dark:border-white shadow-lg flex items-center justify-center">
-                  <MessageSquare className="w-6 h-6 text-foreground" />
+                <div className="flex h-12 w-12 items-center justify-center border-3 border-black bg-primary/20 shadow-lg dark:border-white dark:bg-primary/30">
+                  <MessageSquare className="h-6 w-6 text-foreground" />
                 </div>
                 <div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">
+                  <h3 className="text-xl font-bold text-foreground lg:text-2xl">
                     Community Support
                   </h3>
                 </div>
               </div>
-              <p className="text-gray-600 dark:text-gray-400 ml-16">
+              <p className="ml-16 text-gray-600 dark:text-gray-400">
                 The open source community can help each other. You might get
                 answers from other users who have faced similar issues.
               </p>
@@ -193,13 +193,13 @@ export default function ContactPage() {
       </section>
 
       <section className="bg-muted/50 py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <Card className="max-w-4xl mx-auto bg-card border-4 border-black dark:border-white shadow-4xl">
-            <CardHeader className="text-center pb-6">
-              <CardTitle className="text-3xl lg:text-4xl font-black text-foreground mb-4">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <Card className="mx-auto max-w-4xl border-4 border-black bg-card shadow-4xl dark:border-white">
+            <CardHeader className="pb-6 text-center">
+              <CardTitle className="mb-4 text-3xl font-black text-foreground lg:text-4xl">
                 Ready to get in touch?
               </CardTitle>
-              <CardDescription className="text-lg lg:text-xl text-gray-600 dark:text-gray-400">
+              <CardDescription className="text-lg text-gray-600 lg:text-xl dark:text-gray-400">
                 Head over to GitHub and create an issue. We'll get back to you
                 as soon as possible.
               </CardDescription>
@@ -212,7 +212,7 @@ export default function ContactPage() {
               >
                 <Button
                   size="lg"
-                  className="h-14 px-8 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-3xl hover:shadow-lg hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                  className="h-14 border-2 border-black bg-primary px-8 text-lg font-bold text-primary-foreground shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-primary/90 hover:shadow-lg dark:border-white"
                 >
                   <Github className="mr-2 h-5 w-5" />
                   View All Issues

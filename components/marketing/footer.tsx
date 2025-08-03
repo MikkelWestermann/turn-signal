@@ -1,20 +1,20 @@
-import Link from "next/link";
-import { Github, Mail } from "lucide-react";
-import Logo from "@/components/logo";
+import Link from 'next/link';
+import { Github, Mail } from 'lucide-react';
+import Logo from '@/components/logo';
 
 export function MarketingFooter() {
   return (
-    <footer className="bg-background/80 backdrop-blur-sm border-t border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="border-t border-border bg-background/80 backdrop-blur-sm">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-3 mb-4">
+            <div className="mb-4 flex items-center space-x-3">
               <Logo className="h-8 w-8" />
               <span className="text-xl font-semibold text-foreground">
                 Turn Signal
               </span>
             </div>
-            <p className="text-muted-foreground mb-4 max-w-md">
+            <p className="mb-4 max-w-md text-muted-foreground">
               Transform your GitHub issues into beautiful, public roadmaps that
               keep your users informed about what's coming next. Open source and
               free forever.
@@ -40,7 +40,7 @@ export function MarketingFooter() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-4">
+            <h3 className="mb-4 text-sm font-semibold text-foreground">
               Product
             </h3>
             <ul className="space-y-3">
@@ -80,7 +80,7 @@ export function MarketingFooter() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-4">
+            <h3 className="mb-4 text-sm font-semibold text-foreground">
               Resources
             </h3>
             <ul className="space-y-3">
@@ -128,8 +128,8 @@ export function MarketingFooter() {
           </div>
         </div>
 
-        <div className="border-t border-border mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+        <div className="mt-8 border-t border-border pt-8">
+          <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
             <div className="text-sm text-muted-foreground">
               <p>
                 &copy; {new Date().getFullYear()} Turn Signal. Open source and

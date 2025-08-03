@@ -11,9 +11,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/about`,
     },
     {
-      url: `${baseUrl}/features`,
-    },
-    {
       url: `${baseUrl}/pricing`,
     },
     {

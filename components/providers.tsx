@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { getQueryClient } from "@/components/get-query-client";
-import { ConfirmDialogProvider } from "@/components/confirm-dialog";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { Toaster } from "@/components/ui/sonner";
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { getQueryClient } from '@/components/get-query-client';
+import { ConfirmDialogProvider } from '@/components/confirm-dialog';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import { Toaster } from '@/components/ui/sonner';
 
-import { createTRPCClient, httpLink } from "@trpc/client";
-import { useState } from "react";
-import { TRPCProvider } from "@/lib/client";
-import type { AppRouter } from "@/server";
-import superjson from "superjson";
+import { createTRPCClient, httpLink } from '@trpc/client';
+import { useState } from 'react';
+import { TRPCProvider } from '@/lib/client';
+import type { AppRouter } from '@/server';
+import superjson from 'superjson';
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   const [queryClient] = useState(() => getQueryClient());
@@ -19,11 +19,11 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     createTRPCClient<AppRouter>({
       links: [
         httpLink({
-          url: "/api/trpc",
+          url: '/api/trpc',
           transformer: superjson,
         }),
       ],
-    })
+    }),
   );
 
   return (

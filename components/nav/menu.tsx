@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import * as React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   Home,
   Settings,
@@ -13,7 +13,7 @@ import {
   Building2,
   Github,
   Map,
-} from "lucide-react";
+} from 'lucide-react';
 
 import {
   Sidebar,
@@ -27,44 +27,44 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupContent,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { authClient } from "@/auth/client";
-import Logo from "@/components/logo";
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { authClient } from '@/auth/client';
+import Logo from '@/components/logo';
 
 // Menu items organized by groups
 const menuData = {
   navigation: [
     {
-      title: "Dashboard",
-      url: "/admin",
+      title: 'Dashboard',
+      url: '/admin',
       icon: Home,
     },
     {
-      title: "Roadmaps",
-      url: "/admin/roadmaps",
+      title: 'Roadmaps',
+      url: '/admin/roadmaps',
       icon: Map,
     },
     {
-      title: "Members",
-      url: "/admin/members",
+      title: 'Members',
+      url: '/admin/members',
       icon: Users,
     },
     {
-      title: "Organization",
-      url: "/admin/organization",
+      title: 'Organization',
+      url: '/admin/organization',
       icon: Building2,
     },
     {
-      title: "GitHub",
-      url: "/admin/organization/github",
+      title: 'GitHub',
+      url: '/admin/organization/github',
       icon: Github,
     },
   ],
@@ -128,10 +128,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage
                       src={user?.image || undefined}
-                      alt={user?.name || "User"}
+                      alt={user?.name || 'User'}
                     />
                     <AvatarFallback className="rounded-lg">
-                      {user?.name?.[0]?.toUpperCase() || "U"}
+                      {user?.name?.[0]?.toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">

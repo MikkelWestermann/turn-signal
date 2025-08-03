@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { authClient } from "@/auth/client";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { authClient } from '@/auth/client';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, ArrowLeft, Zap, Car } from "lucide-react";
-import Link from "next/link";
-import { ModeToggle } from "@/components/mode-toggle";
-import Logo from "@/components/logo";
-import { TurnSignal } from "@/components/turn-signal";
+} from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Loader2, ArrowLeft, Zap, Car } from 'lucide-react';
+import Link from 'next/link';
+import { ModeToggle } from '@/components/mode-toggle';
+import Logo from '@/components/logo';
+import { TurnSignal } from '@/components/turn-signal';
 
 const BackgroundGrid = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+  <div className="pointer-events-none absolute inset-0 overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-br from-muted/20 via-muted/10 to-muted/20 opacity-30" />
     <div
       className="absolute inset-0"
@@ -27,17 +27,17 @@ const BackgroundGrid = () => (
           linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
           linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)
         `,
-        backgroundSize: "50px 50px",
+        backgroundSize: '50px 50px',
       }}
     />
     <div
-      className="absolute inset-0 dark:block hidden"
+      className="absolute inset-0 hidden dark:block"
       style={{
         backgroundImage: `
           linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
           linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
         `,
-        backgroundSize: "50px 50px",
+        backgroundSize: '50px 50px',
       }}
     />
   </div>
@@ -53,7 +53,7 @@ const FloatingElement = ({
   duration: number;
 }) => (
   <div
-    className="absolute animate-bounce hidden sm:block"
+    className="absolute hidden animate-bounce sm:block"
     style={{
       animationDelay: `${delay}s`,
       animationDuration: `${duration}s`,
@@ -66,7 +66,7 @@ const FloatingElement = ({
 const LoginContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirect");
+  const redirectTo = searchParams.get('redirect');
   const { data: session, isPending } = authClient.useSession();
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -74,7 +74,7 @@ const LoginContent = () => {
   // TODO: do this server side
   useEffect(() => {
     if (session?.user && !isPending) {
-      router.push(redirectTo || "/admin");
+      router.push(redirectTo || '/admin');
     }
   }, [session, isPending, router, redirectTo]);
 
@@ -84,14 +84,14 @@ const LoginContent = () => {
 
     try {
       await authClient.signIn.social({
-        provider: "google",
-        callbackURL: redirectTo || "/admin",
-        errorCallbackURL: "/login",
-        newUserCallbackURL: redirectTo || "/admin",
+        provider: 'google',
+        callbackURL: redirectTo || '/admin',
+        errorCallbackURL: '/login',
+        newUserCallbackURL: redirectTo || '/admin',
       });
     } catch (error) {
-      console.error("Google sign-in error:", error);
-      setAuthError("Failed to sign in with Google. Please try again.");
+      console.error('Google sign-in error:', error);
+      setAuthError('Failed to sign in with Google. Please try again.');
       setIsSigningIn(false);
     }
   };
@@ -102,25 +102,25 @@ const LoginContent = () => {
 
     try {
       await authClient.signIn.social({
-        provider: "github",
-        callbackURL: redirectTo || "/admin",
-        errorCallbackURL: "/login",
-        newUserCallbackURL: redirectTo || "/admin",
+        provider: 'github',
+        callbackURL: redirectTo || '/admin',
+        errorCallbackURL: '/login',
+        newUserCallbackURL: redirectTo || '/admin',
       });
     } catch (error) {
-      console.error("GitHub sign-in error:", error);
-      setAuthError("Failed to sign in with GitHub. Please try again.");
+      console.error('GitHub sign-in error:', error);
+      setAuthError('Failed to sign in with GitHub. Please try again.');
       setIsSigningIn(false);
     }
   };
 
   if (isPending) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden px-4">
+      <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4">
         <BackgroundGrid />
-        <div className="relative z-10 flex items-center space-x-4 bg-card border-2 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] px-6 py-4 sm:px-8 sm:py-6">
-          <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-primary" />
-          <span className="text-lg sm:text-xl font-bold tracking-wider text-black dark:text-white">
+        <div className="relative z-10 flex items-center space-x-4 border-2 border-black bg-card px-6 py-4 shadow-lg sm:px-8 sm:py-6 dark:border-white">
+          <Loader2 className="h-6 w-6 animate-spin text-primary sm:h-8 sm:w-8" />
+          <span className="text-lg font-bold tracking-wider text-black sm:text-xl dark:text-white">
             LOADING...
           </span>
         </div>
@@ -129,39 +129,39 @@ const LoginContent = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden px-4">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4">
       <BackgroundGrid />
 
-      <div className="absolute top-4 left-4 sm:top-8 sm:left-8 z-20">
-        <Logo className="w-10 h-10 sm:w-12 sm:h-12" />
+      <div className="absolute top-4 left-4 z-20 sm:top-8 sm:left-8">
+        <Logo className="h-10 w-10 sm:h-12 sm:w-12" />
       </div>
 
-      <div className="absolute top-4 right-4 sm:top-8 sm:right-8 z-20">
+      <div className="absolute top-4 right-4 z-20 sm:top-8 sm:right-8">
         <ModeToggle />
       </div>
 
       <FloatingElement delay={0} duration={3}>
-        <div className="top-20 left-20 w-16 h-16 bg-primary/20 dark:bg-primary/30 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-          <Zap className="w-8 h-8 text-black dark:text-white" />
+        <div className="top-20 left-20 flex h-16 w-16 items-center justify-center border-2 border-black bg-primary/20 shadow-lg dark:border-white dark:bg-primary/30">
+          <Zap className="h-8 w-8 text-black dark:text-white" />
         </div>
       </FloatingElement>
 
       <FloatingElement delay={1} duration={4}>
-        <div className="top-32 right-32 w-12 h-12 bg-secondary/20 dark:bg-secondary/30 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-          <Car className="w-6 h-6 text-black dark:text-white" />
+        <div className="top-32 right-32 flex h-12 w-12 items-center justify-center border-2 border-black bg-secondary/20 shadow-lg dark:border-white dark:bg-secondary/30">
+          <Car className="h-6 w-6 text-black dark:text-white" />
         </div>
       </FloatingElement>
 
       <div className="relative z-10 w-full max-w-sm sm:max-w-lg">
-        <Card className="bg-card border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
-          <CardHeader className="text-center pb-6 sm:pb-8">
-            <div className="flex items-center justify-center space-x-4 sm:space-x-8 mb-4 sm:mb-6">
+        <Card className="border-4 border-black bg-card shadow-lg dark:border-white">
+          <CardHeader className="pb-6 text-center sm:pb-8">
+            <div className="mb-4 flex items-center justify-center space-x-4 sm:mb-6 sm:space-x-8">
               <TurnSignal direction="left" autoBlink={true} blinkDelay={0} />
               <div className="text-center">
-                <h1 className="text-4xl sm:text-6xl font-black tracking-wider text-black dark:text-white mb-1 sm:mb-2">
+                <h1 className="mb-1 text-4xl font-black tracking-wider text-black sm:mb-2 sm:text-6xl dark:text-white">
                   TURN
                 </h1>
-                <h2 className="text-4xl sm:text-6xl font-black tracking-wider text-primary -mt-1 sm:-mt-2">
+                <h2 className="-mt-1 text-4xl font-black tracking-wider text-primary sm:-mt-2 sm:text-6xl">
                   SIGNAL
                 </h2>
               </div>
@@ -172,18 +172,18 @@ const LoginContent = () => {
               />
             </div>
 
-            <CardDescription className="text-lg sm:text-xl font-semibold text-gray-700 dark:text-gray-300 px-4 sm:px-8">
+            <CardDescription className="px-4 text-lg font-semibold text-gray-700 sm:px-8 sm:text-xl dark:text-gray-300">
               Ready to let your users know where you're going?
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
+          <CardContent className="space-y-4 px-4 sm:space-y-6 sm:px-6">
             {authError && (
               <Alert
-                className="border-2 border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-950 shadow-[4px_4px_0px_0px_rgba(220,38,38,0.3)] dark:shadow-[4px_4px_0px_0px_rgba(248,113,113,0.3)]"
+                className="border-2 border-red-500 bg-red-50 shadow-lg dark:border-red-400 dark:bg-red-950"
                 variant="destructive"
               >
-                <AlertDescription className="font-semibold text-red-900 dark:text-red-100 text-sm sm:text-base">
+                <AlertDescription className="text-sm font-semibold text-red-900 sm:text-base dark:text-red-100">
                   {authError}
                 </AlertDescription>
               </Alert>
@@ -192,15 +192,15 @@ const LoginContent = () => {
             <div className="space-y-3 sm:space-y-4">
               <Button
                 variant="outline"
-                className="w-full h-12 sm:h-14 text-base sm:text-lg font-bold border-3 border-black dark:border-white bg-background hover:bg-muted shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200 text-black dark:text-white"
+                className="h-12 w-full border-3 border-black bg-background text-base font-bold text-black shadow-lg transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-muted sm:h-14 sm:text-lg dark:border-white dark:text-white"
                 onClick={handleGoogleSignIn}
                 disabled={isSigningIn}
               >
                 {isSigningIn && (
-                  <Loader2 className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin sm:mr-3 sm:h-5 sm:w-5" />
                 )}
                 <svg
-                  className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5"
+                  className="mr-2 h-4 w-4 sm:mr-3 sm:h-5 sm:w-5"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -226,15 +226,15 @@ const LoginContent = () => {
 
               <Button
                 variant="outline"
-                className="w-full h-12 sm:h-14 text-base sm:text-lg font-bold border-3 border-black dark:border-white bg-background hover:bg-muted shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200 text-black dark:text-white"
+                className="h-12 w-full border-3 border-black bg-background text-base font-bold text-black shadow-lg transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-muted sm:h-14 sm:text-lg dark:border-white dark:text-white"
                 onClick={handleGitHubSignIn}
                 disabled={isSigningIn}
               >
                 {isSigningIn && (
-                  <Loader2 className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin sm:mr-3 sm:h-5 sm:w-5" />
                 )}
                 <svg
-                  className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5"
+                  className="mr-2 h-4 w-4 sm:mr-3 sm:h-5 sm:w-5"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -247,30 +247,18 @@ const LoginContent = () => {
               </Button>
             </div>
 
-            <div className="mt-6 sm:mt-8 text-center">
+            <div className="mt-6 text-center sm:mt-8">
               <Link
                 href="/"
-                className="inline-flex items-center text-base sm:text-lg font-bold text-primary hover:text-primary/80 bg-background border-2 border-primary px-4 sm:px-6 py-2 sm:py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] dark:hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                className="inline-flex items-center border-2 border-primary bg-background px-4 py-2 text-base font-bold text-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:text-primary/80 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] sm:px-6 sm:py-3 sm:text-lg dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] dark:hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)]"
               >
-                <ArrowLeft className="mr-1 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                <ArrowLeft className="mr-1 h-4 w-4 sm:mr-2 sm:h-5 sm:w-5" />
                 <span className="hidden sm:inline">BACK TO HOME</span>
                 <span className="sm:hidden">HOME</span>
               </Link>
             </div>
           </CardContent>
         </Card>
-      </div>
-
-      <div className="absolute bottom-8 left-8 hidden sm:flex space-x-4">
-        <div className="w-8 h-8 bg-primary/30 dark:bg-primary/40 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
-        <div className="w-8 h-8 bg-secondary/30 dark:bg-secondary/40 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
-        <div className="w-8 h-8 bg-accent/30 dark:bg-accent/40 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
-      </div>
-
-      <div className="absolute bottom-8 right-8 hidden sm:flex space-x-4">
-        <div className="w-8 h-8 bg-accent/30 dark:bg-accent/40 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
-        <div className="w-8 h-8 bg-secondary/30 dark:bg-secondary/40 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
-        <div className="w-8 h-8 bg-primary/30 dark:bg-primary/40 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
       </div>
     </div>
   );

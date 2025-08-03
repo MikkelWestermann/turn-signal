@@ -1,49 +1,49 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { ArrowRight, Github, Cloud, Server, Check } from "lucide-react";
+} from '@/components/ui/card';
+import { ArrowRight, Github, Cloud, Server, Check } from 'lucide-react';
 
-import { BackgroundGrid } from "@/components/marketing/background-grid";
-import { Metadata } from "next";
+import { BackgroundGrid } from '@/components/marketing/background-grid';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Pricing - Turn Signal Roadmap Tool",
+  title: 'Pricing - Turn Signal Roadmap Tool',
   description:
-    "Turn Signal is completely free! Choose between self-hosting for complete control or using our cloud platform for simplicity. Both options are free and open source.",
+    'Turn Signal is completely free! Choose between self-hosting for complete control or using our cloud platform for simplicity. Both options are free and open source.',
   keywords: [
-    "roadmap pricing",
-    "free roadmap tool",
-    "self-host",
-    "cloud platform",
-    "open source",
-    "GitHub integration",
+    'roadmap pricing',
+    'free roadmap tool',
+    'self-host',
+    'cloud platform',
+    'open source',
+    'GitHub integration',
   ],
   openGraph: {
-    title: "Pricing - Turn Signal Roadmap Tool",
+    title: 'Pricing - Turn Signal Roadmap Tool',
     description:
-      "Turn Signal is completely free! Choose between self-hosting for complete control or using our cloud platform for simplicity.",
-    type: "website",
-    url: "https://turn-signal.co/pricing",
-    siteName: "Turn Signal",
+      'Turn Signal is completely free! Choose between self-hosting for complete control or using our cloud platform for simplicity.',
+    type: 'website',
+    url: 'https://turn-signal.co/pricing',
+    siteName: 'Turn Signal',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Pricing - Turn Signal Roadmap Tool",
+    card: 'summary_large_image',
+    title: 'Pricing - Turn Signal Roadmap Tool',
     description:
-      "Turn Signal is completely free! Choose between self-hosting for complete control or using our cloud platform for simplicity.",
+      'Turn Signal is completely free! Choose between self-hosting for complete control or using our cloud platform for simplicity.',
   },
 };
 
 const FeatureItem = ({ children }: { children: React.ReactNode }) => (
   <div className="flex items-center space-x-3">
-    <div className="w-5 h-5 bg-green-500 dark:bg-green-600 border-2 shadow-sm flex items-center justify-center flex-shrink-0">
-      <Check className="w-3 h-3 text-white" />
+    <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center border-2 bg-green-500 shadow-sm dark:bg-green-600">
+      <Check className="h-3 w-3 text-white" />
     </div>
     <span className="text-gray-700 dark:text-gray-300">{children}</span>
   </div>
@@ -52,14 +52,14 @@ const FeatureItem = ({ children }: { children: React.ReactNode }) => (
 export default function PricingPage() {
   return (
     <div className="min-h-screen">
-      <section className="relative bg-background overflow-hidden">
+      <section className="relative overflow-hidden bg-background">
         <BackgroundGrid />
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
-          <div className="text-center mb-16 lg:mb-24">
-            <h1 className="text-4xl lg:text-6xl font-black text-foreground mb-6 lg:mb-8">
+        <div className="relative z-10 mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-24">
+          <div className="mb-16 text-center lg:mb-24">
+            <h1 className="mb-6 text-4xl font-black text-foreground lg:mb-8 lg:text-6xl">
               Pricing
             </h1>
-            <p className="text-xl lg:text-2xl text-gray-600 dark:text-gray-400 mb-8 lg:mb-12 max-w-3xl mx-auto">
+            <p className="mx-auto mb-8 max-w-3xl text-xl text-gray-600 lg:mb-12 lg:text-2xl dark:text-gray-400">
               Choose how you want to use Turn Signal. Self-host for complete
               control, or use our cloud platform for simplicity.
             </p>
@@ -68,24 +68,24 @@ export default function PricingPage() {
       </section>
 
       <section className="bg-muted/50 py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-            <Card className="bg-card border-4 border-black dark:border-white shadow-4xl">
-              <CardHeader className="text-center pb-6">
-                <div className="w-16 h-16 bg-primary/20 dark:bg-primary/30 border-3 border-black dark:border-white shadow-3xl flex items-center justify-center mx-auto mb-6">
-                  <Server className="w-8 h-8 text-foreground" />
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+            <Card className="border-4 border-black bg-card shadow-4xl dark:border-white">
+              <CardHeader className="pb-6 text-center">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center border-3 border-black bg-primary/20 shadow-3xl dark:border-white dark:bg-primary/30">
+                  <Server className="h-8 w-8 text-foreground" />
                 </div>
-                <CardTitle className="text-3xl lg:text-4xl font-black text-foreground mb-4">
+                <CardTitle className="mb-4 text-3xl font-black text-foreground lg:text-4xl">
                   Self Host
                 </CardTitle>
-                <CardDescription className="text-lg lg:text-xl text-gray-600 dark:text-gray-400">
+                <CardDescription className="text-lg text-gray-600 lg:text-xl dark:text-gray-400">
                   Deploy Turn Signal on your own infrastructure for complete
                   control and privacy.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-8">
                 <div className="text-center">
-                  <div className="text-4xl lg:text-5xl font-black text-foreground mb-2">
+                  <div className="mb-2 text-4xl font-black text-foreground lg:text-5xl">
                     FREE
                   </div>
                   <p className="text-gray-600 dark:text-gray-400">
@@ -110,7 +110,7 @@ export default function PricingPage() {
                     <Button
                       size="lg"
                       variant="outline"
-                      className="w-full h-14 text-lg font-bold border-3 border-black dark:border-white bg-background hover:bg-muted shadow-3xl hover:shadow-lg hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                      className="h-14 w-full border-3 border-black bg-background text-lg font-bold shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-muted hover:shadow-lg dark:border-white"
                     >
                       <Github className="mr-2 h-5 w-5" />
                       View on GitHub
@@ -120,22 +120,22 @@ export default function PricingPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-card border-4 border-black dark:border-white shadow-4xl">
-              <CardHeader className="text-center pb-6">
-                <div className="w-16 h-16 bg-primary/20 dark:bg-primary/30 border-3 border-black dark:border-white shadow-3xl flex items-center justify-center mx-auto mb-6">
-                  <Cloud className="w-8 h-8 text-foreground" />
+            <Card className="border-4 border-black bg-card shadow-4xl dark:border-white">
+              <CardHeader className="pb-6 text-center">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center border-3 border-black bg-primary/20 shadow-3xl dark:border-white dark:bg-primary/30">
+                  <Cloud className="h-8 w-8 text-foreground" />
                 </div>
-                <CardTitle className="text-3xl lg:text-4xl font-black text-foreground mb-4">
+                <CardTitle className="mb-4 text-3xl font-black text-foreground lg:text-4xl">
                   Cloud
                 </CardTitle>
-                <CardDescription className="text-lg lg:text-xl text-gray-600 dark:text-gray-400">
+                <CardDescription className="text-lg text-gray-600 lg:text-xl dark:text-gray-400">
                   Use Turn Signal as a hosted service. Simple setup, automatic
                   updates, and managed infrastructure.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-8">
                 <div className="text-center">
-                  <div className="text-4xl lg:text-5xl font-black text-foreground mb-2">
+                  <div className="mb-2 text-4xl font-black text-foreground lg:text-5xl">
                     FREE
                   </div>
                   <p className="text-gray-600 dark:text-gray-400">
@@ -155,7 +155,7 @@ export default function PricingPage() {
                   <Link href="/login">
                     <Button
                       size="lg"
-                      className="w-full h-14 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-3xl hover:shadow-lg hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                      className="h-14 w-full border-2 border-black bg-primary text-lg font-bold text-primary-foreground shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-primary/90 hover:shadow-lg dark:border-white"
                     >
                       Get Started Free
                       <ArrowRight className="ml-2 h-5 w-5" />
@@ -170,30 +170,30 @@ export default function PricingPage() {
 
       {/* Comparison Section */}
       <section className="bg-background py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-3xl lg:text-5xl font-black text-foreground mb-6 lg:mb-8">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mb-12 text-center lg:mb-16">
+            <h2 className="mb-6 text-3xl font-black text-foreground lg:mb-8 lg:text-5xl">
               Which option is right for you?
             </h2>
-            <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <p className="mx-auto max-w-3xl text-lg text-gray-600 lg:text-xl dark:text-gray-400">
               Both options give you the same powerful features. The choice
               depends on your preferences for control vs. convenience.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
             <div className="space-y-6">
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-primary/20 dark:bg-primary/30 border-3 border-black dark:border-white shadow-lg flex items-center justify-center">
-                  <Server className="w-6 h-6 text-foreground" />
+                <div className="flex h-12 w-12 items-center justify-center border-3 border-black bg-primary/20 shadow-lg dark:border-white dark:bg-primary/30">
+                  <Server className="h-6 w-6 text-foreground" />
                 </div>
                 <div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">
+                  <h3 className="text-xl font-bold text-foreground lg:text-2xl">
                     Choose Self Host if you:
                   </h3>
                 </div>
               </div>
-              <div className="space-y-3 ml-16">
+              <div className="ml-16 space-y-3">
                 <p className="text-gray-600 dark:text-gray-400">
                   • Want complete control over your data
                 </p>
@@ -214,16 +214,16 @@ export default function PricingPage() {
 
             <div className="space-y-6">
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-primary/20 dark:bg-primary/30 border-3 border-black dark:border-white shadow-lg flex items-center justify-center">
-                  <Cloud className="w-6 h-6 text-foreground" />
+                <div className="flex h-12 w-12 items-center justify-center border-3 border-black bg-primary/20 shadow-lg dark:border-white dark:bg-primary/30">
+                  <Cloud className="h-6 w-6 text-foreground" />
                 </div>
                 <div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">
+                  <h3 className="text-xl font-bold text-foreground lg:text-2xl">
                     Choose Cloud if you:
                   </h3>
                 </div>
               </div>
-              <div className="space-y-3 ml-16">
+              <div className="ml-16 space-y-3">
                 <p className="text-gray-600 dark:text-gray-400">
                   • Want to get started quickly
                 </p>
@@ -247,23 +247,23 @@ export default function PricingPage() {
 
       {/* CTA Section */}
       <section className="bg-muted/50 py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <Card className="max-w-4xl mx-auto bg-card border-4 border-black dark:border-white shadow-4xl">
-            <CardHeader className="text-center pb-6">
-              <CardTitle className="text-3xl lg:text-4xl font-black text-foreground mb-4">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <Card className="mx-auto max-w-4xl border-4 border-black bg-card shadow-4xl dark:border-white">
+            <CardHeader className="pb-6 text-center">
+              <CardTitle className="mb-4 text-3xl font-black text-foreground lg:text-4xl">
                 Ready to get started?
               </CardTitle>
-              <CardDescription className="text-lg lg:text-xl text-gray-600 dark:text-gray-400">
+              <CardDescription className="text-lg text-gray-600 lg:text-xl dark:text-gray-400">
                 Both options are completely free. Start building your roadmap
                 today.
               </CardDescription>
             </CardHeader>
             <CardContent className="text-center">
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col justify-center gap-4 sm:flex-row">
                 <Link href="/login">
                   <Button
                     size="lg"
-                    className="h-14 px-8 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-3xl hover:shadow-lg hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                    className="h-14 border-2 border-black bg-primary px-8 text-lg font-bold text-primary-foreground shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-primary/90 hover:shadow-lg dark:border-white"
                   >
                     Try Cloud Free
                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -277,7 +277,7 @@ export default function PricingPage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="h-14 px-8 text-lg font-bold border-3 border-black dark:border-white bg-background hover:bg-muted shadow-3xl hover:shadow-lg hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                    className="h-14 border-3 border-black bg-background px-8 text-lg font-bold shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-muted hover:shadow-lg dark:border-white"
                   >
                     <Github className="mr-2 h-5 w-5" />
                     Self Host

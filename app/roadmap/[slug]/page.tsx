@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { useParams } from "next/navigation";
-import { useTRPC } from "@/lib/client";
-import { useQuery } from "@tanstack/react-query";
+import { useParams } from 'next/navigation';
+import { useTRPC } from '@/lib/client';
+import { useQuery } from '@tanstack/react-query';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, ExternalLink, RefreshCw } from "lucide-react";
-import Link from "next/link";
-import { KanbanBoard } from "@/components/kanban-board";
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, ExternalLink, RefreshCw } from 'lucide-react';
+import Link from 'next/link';
+import { KanbanBoard } from '@/components/kanban-board';
 
 export default function RoadmapPage() {
   const params = useParams();
@@ -33,7 +33,7 @@ export default function RoadmapPage() {
     return (
       <div className="container mx-auto py-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
           <p className="mt-4 text-muted-foreground">Loading roadmap...</p>
         </div>
       </div>
@@ -44,13 +44,13 @@ export default function RoadmapPage() {
     return (
       <div className="container mx-auto py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Roadmap Not Found</h1>
-          <p className="text-muted-foreground mb-6">
+          <h1 className="mb-4 text-2xl font-bold">Roadmap Not Found</h1>
+          <p className="mb-6 text-muted-foreground">
             The roadmap you're looking for doesn't exist or has been removed.
           </p>
           <Button asChild>
             <Link href="/">
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <ArrowLeft className="mr-2 h-4 w-4" />
               Go Home
             </Link>
           </Button>
@@ -63,11 +63,11 @@ export default function RoadmapPage() {
 
   return (
     <div className="container mx-auto py-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto max-w-7xl">
         <div className="mb-8">
           <Button variant="ghost" asChild className="mb-4">
             <Link href="/">
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Home
             </Link>
           </Button>
@@ -77,7 +77,7 @@ export default function RoadmapPage() {
               <div>
                 <h1 className="text-4xl font-bold">{roadmap.name}</h1>
                 {roadmap.description && (
-                  <p className="text-xl text-muted-foreground mt-2">
+                  <p className="mt-2 text-xl text-muted-foreground">
                     {roadmap.description}
                   </p>
                 )}
@@ -88,7 +88,7 @@ export default function RoadmapPage() {
                 disabled={isLoading}
               >
                 <RefreshCw
-                  className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+                  className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
                 />
                 Refresh
               </Button>
@@ -119,18 +119,18 @@ export default function RoadmapPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-12">
+              <div className="py-12 text-center">
                 <div className="space-y-4">
                   <div className="text-6xl">🚀</div>
                   <h3 className="text-lg font-semibold">Coming Soon</h3>
-                  <p className="text-muted-foreground max-w-md mx-auto">
+                  <p className="mx-auto max-w-md text-muted-foreground">
                     This roadmap will display GitHub issues automatically. Add
                     the "{roadmap.tag}" label to your GitHub issues to see them
                     here.
                   </p>
                   <Button variant="outline" asChild>
                     <Link href="https://github.com" target="_blank">
-                      <ExternalLink className="w-4 h-4 mr-2" />
+                      <ExternalLink className="mr-2 h-4 w-4" />
                       View on GitHub
                     </Link>
                   </Button>

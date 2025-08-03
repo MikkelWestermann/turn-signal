@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useTRPC } from "@/lib/client";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from 'react';
+import { useTRPC } from '@/lib/client';
+import { useQuery } from '@tanstack/react-query';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ExternalLink, Github, RefreshCw } from "lucide-react";
-import Link from "next/link";
-import { authClient } from "@/auth/client";
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ExternalLink, Github, RefreshCw } from 'lucide-react';
+import Link from 'next/link';
+import { authClient } from '@/auth/client';
 
 export default function GitHubOverviewPage() {
   const [isConnecting, setIsConnecting] = useState(false);
@@ -28,13 +28,13 @@ export default function GitHubOverviewPage() {
   } = useQuery(
     trpc.github.getRepositories.queryOptions({
       organizationId: activeOrganization!.id,
-    })
+    }),
   );
 
   const { data: installation } = useQuery(
     trpc.github.getInstallation.queryOptions({
       organizationId: activeOrganization!.id,
-    })
+    }),
   );
 
   const { data: installationUrl } = useQuery(
@@ -44,8 +44,8 @@ export default function GitHubOverviewPage() {
       },
       {
         enabled: !installation,
-      }
-    )
+      },
+    ),
   );
 
   return (
@@ -70,8 +70,8 @@ export default function GitHubOverviewPage() {
             <CardContent>
               <div className="flex flex-col space-y-4">
                 <div className="text-sm text-muted-foreground">
-                  <h4 className="font-medium mb-2">What you'll get:</h4>
-                  <ul className="list-disc list-inside space-y-1">
+                  <h4 className="mb-2 font-medium">What you'll get:</h4>
+                  <ul className="list-inside list-disc space-y-1">
                     <li>Real-time access to repository issues</li>
                     <li>Always up-to-date repository lists</li>
                     <li>Fine-grained repository permissions</li>
@@ -87,7 +87,7 @@ export default function GitHubOverviewPage() {
                   disabled={isConnecting || !installationUrl}
                   className="w-fit"
                 >
-                  {isConnecting ? "Connecting..." : "Connect GitHub App"}
+                  {isConnecting ? 'Connecting...' : 'Connect GitHub App'}
                 </Button>
               </div>
             </CardContent>
@@ -106,7 +106,7 @@ export default function GitHubOverviewPage() {
                   </Badge>
                 </div>
                 <CardDescription>
-                  Connected on{" "}
+                  Connected on{' '}
                   {new Date(installation.createdAt).toLocaleDateString()}
                 </CardDescription>
               </CardHeader>
@@ -128,8 +128,8 @@ export default function GitHubOverviewPage() {
                     disabled={repositoriesLoading}
                   >
                     <RefreshCw
-                      className={`h-4 w-4 mr-2 ${
-                        repositoriesLoading ? "animate-spin" : ""
+                      className={`mr-2 h-4 w-4 ${
+                        repositoriesLoading ? 'animate-spin' : ''
                       }`}
                     />
                     Refresh
@@ -149,7 +149,7 @@ export default function GitHubOverviewPage() {
                     {repositories.data.repositories.map((repo) => (
                       <div
                         key={repo.id}
-                        className="flex items-center justify-between p-3 border rounded-lg"
+                        className="flex items-center justify-between rounded-lg border p-3"
                       >
                         <div className="flex items-center space-x-3">
                           <div>
@@ -179,7 +179,7 @@ export default function GitHubOverviewPage() {
                           </Button>
                           <Button variant="outline" size="sm" asChild>
                             <Link
-                              href={`/admin/organization/github/${repo.full_name.split("/")[0]}/${
+                              href={`/admin/organization/github/${repo.full_name.split('/')[0]}/${
                                 repo.name
                               }`}
                             >
@@ -191,7 +191,7 @@ export default function GitHubOverviewPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-muted-foreground text-center py-8">
+                  <p className="py-8 text-center text-muted-foreground">
                     No repositories available. Make sure to grant repository
                     access during installation.
                   </p>

@@ -1,48 +1,48 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Github } from "lucide-react";
-import { BackgroundGrid } from "@/components/marketing/background-grid";
-import { Metadata } from "next";
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Github } from 'lucide-react';
+import { BackgroundGrid } from '@/components/marketing/background-grid';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "The Story Behind Turn Signal",
+  title: 'The Story Behind Turn Signal',
   description:
-    "Learn about the story behind Turn Signal, an open source roadmap tool that transforms GitHub issues into beautiful public roadmaps. Built for transparency and community-driven development.",
+    'Learn about the story behind Turn Signal, an open source roadmap tool that transforms GitHub issues into beautiful public roadmaps. Built for transparency and community-driven development.',
   keywords: [
-    "roadmap tool",
-    "GitHub integration",
-    "open source",
-    "product development",
-    "feature requests",
-    "user feedback",
+    'roadmap tool',
+    'GitHub integration',
+    'open source',
+    'product development',
+    'feature requests',
+    'user feedback',
   ],
   openGraph: {
-    title: "The Story Behind Turn Signal",
+    title: 'The Story Behind Turn Signal',
     description:
-      "Learn about the story behind Turn Signal, an open source roadmap tool that transforms GitHub issues into beautiful public roadmaps.",
-    type: "website",
-    url: "https://turn-signal.co/about",
-    siteName: "Turn Signal",
+      'Learn about the story behind Turn Signal, an open source roadmap tool that transforms GitHub issues into beautiful public roadmaps.',
+    type: 'website',
+    url: 'https://turn-signal.co/about',
+    siteName: 'Turn Signal',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "The Story Behind Turn Signal",
+    card: 'summary_large_image',
+    title: 'The Story Behind Turn Signal',
     description:
-      "Learn about the story behind Turn Signal, an open source roadmap tool that transforms GitHub issues into beautiful public roadmaps.",
+      'Learn about the story behind Turn Signal, an open source roadmap tool that transforms GitHub issues into beautiful public roadmaps.',
   },
 };
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen">
-      <section className="relative bg-background overflow-hidden">
+      <section className="relative overflow-hidden bg-background">
         <BackgroundGrid />
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
-          <div className="text-center mb-16 lg:mb-24">
-            <h1 className="text-4xl lg:text-6xl font-black text-foreground mb-6 lg:mb-8">
+        <div className="relative z-10 mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-24">
+          <div className="mb-16 text-center lg:mb-24">
+            <h1 className="mb-6 text-4xl font-black text-foreground lg:mb-8 lg:text-6xl">
               About Turn Signal
             </h1>
-            <p className="text-xl lg:text-2xl text-gray-600 dark:text-gray-400 mb-8 lg:mb-12 max-w-3xl mx-auto">
+            <p className="mx-auto mb-8 max-w-3xl text-xl text-gray-600 lg:mb-12 lg:text-2xl dark:text-gray-400">
               The story behind building a simple, open source roadmap tool
             </p>
           </div>
@@ -50,7 +50,7 @@ export default function AboutPage() {
       </section>
 
       <section className="bg-muted/50 py-16 lg:py-24">
-        <div className="max-w-4xl mx-auto px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <div className="space-y-6 text-lg leading-relaxed text-gray-600 dark:text-gray-400">
             <p>
               I was working on several projects and kept running into the same
@@ -100,20 +100,20 @@ export default function AboutPage() {
       </section>
 
       <section className="bg-background py-16 lg:py-24">
-        <div className="max-w-4xl mx-auto px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl lg:text-4xl font-black text-foreground mb-6">
+            <h2 className="mb-6 text-3xl font-black text-foreground lg:text-4xl">
               Ready to get started?
             </h2>
-            <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400 mb-8">
+            <p className="mb-8 text-lg text-gray-600 lg:text-xl dark:text-gray-400">
               Join the community and start building better products with Turn
               Signal.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Link href="/login">
                 <Button
                   size="lg"
-                  className="h-14 px-8 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-3xl hover:shadow-lg hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                  className="h-14 border-2 border-black bg-primary px-8 text-lg font-bold text-primary-foreground shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-primary/90 hover:shadow-lg dark:border-white"
                 >
                   Try Turn Signal Free
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -127,7 +127,7 @@ export default function AboutPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="h-14 px-8 text-lg font-bold border-3 border-black dark:border-white bg-background hover:bg-muted shadow-3xl hover:shadow-lg hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                  className="h-14 border-3 border-black bg-background px-8 text-lg font-bold shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-muted hover:shadow-lg dark:border-white"
                 >
                   <Github className="mr-2 h-5 w-5" />
                   View on GitHub

@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { authClient } from "@/auth/client";
+import { useState } from 'react';
+import { authClient } from '@/auth/client';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 import {
   Dialog,
   DialogContent,
@@ -23,7 +23,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   User,
   Shield,
@@ -32,33 +32,33 @@ import {
   Loader2,
   Building2,
   Crown,
-} from "lucide-react";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function ProfilePage() {
   const { data: session } = authClient.useSession();
   const { data: activeOrganization } = authClient.useActiveOrganization();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [editName, setEditName] = useState("");
-  const [editEmail, setEditEmail] = useState("");
+  const [editName, setEditName] = useState('');
+  const [editEmail, setEditEmail] = useState('');
 
   const user = session?.user;
   const activeMember = activeOrganization?.members?.find(
-    (member) => member.user?.id === user?.id
+    (member) => member.user?.id === user?.id,
   );
 
   const handleEditProfile = () => {
     if (user) {
-      setEditName(user.name || "");
-      setEditEmail(user.email || "");
+      setEditName(user.name || '');
+      setEditEmail(user.email || '');
     }
     setIsEditing(true);
   };
 
   const handleSaveProfile = async () => {
     if (!editName.trim() || !editEmail.trim()) {
-      toast.error("Please fill in all fields");
+      toast.error('Please fill in all fields');
       return;
     }
 
@@ -66,11 +66,11 @@ export default function ProfilePage() {
     try {
       // Note: This would need to be implemented in your auth system
       // For now, we'll just show a success message
-      toast.success("Profile updated successfully!");
+      toast.success('Profile updated successfully!');
       setIsEditing(false);
     } catch (error) {
-      console.error("Error updating profile:", error);
-      toast.error("Failed to update profile");
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update profile');
     } finally {
       setIsSaving(false);
     }
@@ -78,9 +78,9 @@ export default function ProfilePage() {
 
   const getRoleIcon = (role: string) => {
     switch (role) {
-      case "owner":
+      case 'owner':
         return <Crown className="h-4 w-4" />;
-      case "admin":
+      case 'admin':
         return <Shield className="h-4 w-4" />;
       default:
         return <User className="h-4 w-4" />;
@@ -89,18 +89,18 @@ export default function ProfilePage() {
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case "owner":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-      case "admin":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+      case 'owner':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      case 'admin':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
     }
   };
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex h-64 items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-center">Not Authenticated</CardTitle>
@@ -173,7 +173,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile Information */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Main Profile Card */}
         <div className="lg:col-span-2">
           <Card>
@@ -191,19 +191,19 @@ export default function ProfilePage() {
                 <Avatar className="h-20 w-20">
                   <AvatarImage src={user.image || undefined} />
                   <AvatarFallback className="text-lg">
-                    {user.name?.[0]?.toUpperCase() || "U"}
+                    {user.name?.[0]?.toUpperCase() || 'U'}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <h3 className="text-xl font-semibold">
-                    {user.name || "No name set"}
+                    {user.name || 'No name set'}
                   </h3>
                   <p className="text-muted-foreground">{user.email}</p>
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="mt-2 flex items-center gap-2">
                     <Badge
-                      variant={user.emailVerified ? "default" : "secondary"}
+                      variant={user.emailVerified ? 'default' : 'secondary'}
                     >
-                      {user.emailVerified ? "Verified" : "Unverified"}
+                      {user.emailVerified ? 'Verified' : 'Unverified'}
                     </Badge>
                   </div>
                 </div>
@@ -211,13 +211,13 @@ export default function ProfilePage() {
 
               <Separator />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                   <Label className="text-sm font-medium text-gray-500">
                     Full Name
                   </Label>
                   <p className="text-sm font-semibold">
-                    {user.name || "Not provided"}
+                    {user.name || 'Not provided'}
                   </p>
                 </div>
                 <div>
@@ -233,7 +233,7 @@ export default function ProfilePage() {
                   <p className="text-sm">
                     {user.createdAt
                       ? new Date(user.createdAt).toLocaleDateString()
-                      : "Unknown"}
+                      : 'Unknown'}
                   </p>
                 </div>
                 <div>
@@ -243,7 +243,7 @@ export default function ProfilePage() {
                   <p className="text-sm">
                     {user.updatedAt
                       ? new Date(user.updatedAt).toLocaleDateString()
-                      : "Unknown"}
+                      : 'Unknown'}
                   </p>
                 </div>
               </div>
@@ -280,12 +280,12 @@ export default function ProfilePage() {
                     </Label>
                     <div className="mt-1">
                       <Badge
-                        className={getRoleColor(activeMember?.role || "member")}
+                        className={getRoleColor(activeMember?.role || 'member')}
                       >
                         <span className="mr-1">
-                          {getRoleIcon(activeMember?.role || "member")}
+                          {getRoleIcon(activeMember?.role || 'member')}
                         </span>
-                        {activeMember?.role || "Member"}
+                        {activeMember?.role || 'Member'}
                       </Badge>
                     </div>
                   </div>
@@ -296,13 +296,13 @@ export default function ProfilePage() {
                     <p className="text-sm">
                       {activeMember?.createdAt
                         ? new Date(activeMember.createdAt).toLocaleDateString()
-                        : "Unknown"}
+                        : 'Unknown'}
                     </p>
                   </div>
                 </>
               ) : (
-                <div className="text-center py-4">
-                  <Building2 className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                <div className="py-4 text-center">
+                  <Building2 className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
                     No active organization
                   </p>

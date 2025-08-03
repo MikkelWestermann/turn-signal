@@ -1,31 +1,31 @@
-"use client";
+'use client';
 
-import { Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { authClient } from "@/auth/client";
-import { Button } from "@/components/ui/button";
+import { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { authClient } from '@/auth/client';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, XCircle, AlertCircle, Building2, LogIn } from "lucide-react";
-import { toast } from "sonner";
+} from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Loader2, XCircle, AlertCircle, Building2, LogIn } from 'lucide-react';
+import { toast } from 'sonner';
 
 type InvitationStatus =
-  | "loading"
-  | "error"
-  | "not-found"
-  | "expired"
-  | "not-authenticated";
+  | 'loading'
+  | 'error'
+  | 'not-found'
+  | 'expired'
+  | 'not-authenticated';
 
 function OrganizationsPage() {
   const searchParams = useSearchParams();
-  const inviteId = searchParams.get("invite");
+  const inviteId = searchParams.get('invite');
   const { data: session, isPending: isSessionLoading } =
     authClient.useSession();
 
@@ -34,9 +34,9 @@ function OrganizationsPage() {
     isLoading: isInvitationLoading,
     error: invitationError,
   } = useQuery({
-    queryKey: ["invitation", inviteId],
+    queryKey: ['invitation', inviteId],
     queryFn: async () => {
-      if (!inviteId) throw new Error("No invitation ID");
+      if (!inviteId) throw new Error('No invitation ID');
       return authClient.organization.getInvitation({
         query: {
           id: inviteId,
@@ -49,55 +49,55 @@ function OrganizationsPage() {
 
   const acceptInvitationMutation = useMutation({
     mutationFn: async () => {
-      if (!inviteId) throw new Error("No invitation ID");
+      if (!inviteId) throw new Error('No invitation ID');
       return authClient.organization.acceptInvitation({
         invitationId: inviteId,
       });
     },
     onSuccess: () => {
-      toast.success("Invitation accepted successfully!");
-      window.location.href = "/admin";
+      toast.success('Invitation accepted successfully!');
+      window.location.href = '/admin';
     },
     onError: (error) => {
-      console.error("Error accepting invitation:", error);
-      toast.error("Failed to accept invitation");
+      console.error('Error accepting invitation:', error);
+      toast.error('Failed to accept invitation');
     },
   });
 
   const rejectInvitationMutation = useMutation({
     mutationFn: async () => {
-      if (!inviteId) throw new Error("No invitation ID");
+      if (!inviteId) throw new Error('No invitation ID');
       return authClient.organization.rejectInvitation({
         invitationId: inviteId,
       });
     },
     onSuccess: () => {
-      toast.success("Invitation rejected");
+      toast.success('Invitation rejected');
     },
     onError: (error) => {
-      console.error("Error rejecting invitation:", error);
-      toast.error("Failed to reject invitation");
+      console.error('Error rejecting invitation:', error);
+      toast.error('Failed to reject invitation');
     },
   });
 
   let status: InvitationStatus | null = null;
 
   if (!inviteId) {
-    status = "not-found";
+    status = 'not-found';
   } else if (!session?.user) {
-    status = "not-authenticated";
+    status = 'not-authenticated';
   } else if (isInvitationLoading) {
-    status = "loading";
+    status = 'loading';
   } else if (invitationError) {
-    status = "error";
+    status = 'error';
   } else if (!invitationData || invitationData.error) {
-    status = "not-found";
+    status = 'not-found';
   } else if (invitationData.data) {
     const now = new Date();
     const expiresAt = new Date(invitationData.data.expiresAt);
 
     if (now > expiresAt) {
-      status = "expired";
+      status = 'expired';
     }
   }
 
@@ -109,9 +109,9 @@ function OrganizationsPage() {
     rejectInvitationMutation.mutate();
   };
 
-  if (status === "loading" || isSessionLoading) {
+  if (status === 'loading' || isSessionLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="flex items-center space-x-2">
           <Loader2 className="h-6 w-6 animate-spin" />
           <span>Loading invitation...</span>
@@ -120,12 +120,12 @@ function OrganizationsPage() {
     );
   }
 
-  if (status === "not-authenticated") {
+  if (status === 'not-authenticated') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <LogIn className="h-12 w-12 text-primary mx-auto mb-4" />
+            <LogIn className="mx-auto mb-4 h-12 w-12 text-primary" />
             <CardTitle>Sign In Required</CardTitle>
             <CardDescription>
               You need to sign in to accept this invitation.
@@ -153,12 +153,12 @@ function OrganizationsPage() {
     );
   }
 
-  if (status === "not-found") {
+  if (status === 'not-found') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <XCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+            <XCircle className="mx-auto mb-4 h-12 w-12 text-destructive" />
             <CardTitle>Invitation Not Found</CardTitle>
             <CardDescription>
               This invitation link is invalid or has expired.
@@ -167,7 +167,7 @@ function OrganizationsPage() {
           <CardContent>
             <Button
               className="w-full"
-              onClick={() => (window.location.href = "/admin")}
+              onClick={() => (window.location.href = '/admin')}
             >
               Go to Dashboard
             </Button>
@@ -177,12 +177,12 @@ function OrganizationsPage() {
     );
   }
 
-  if (status === "expired") {
+  if (status === 'expired') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
             <CardTitle>Invitation Expired</CardTitle>
             <CardDescription>
               This invitation has expired. Please contact the organization
@@ -192,7 +192,7 @@ function OrganizationsPage() {
           <CardContent>
             <Button
               className="w-full"
-              onClick={() => (window.location.href = "/admin")}
+              onClick={() => (window.location.href = '/admin')}
             >
               Go to Dashboard
             </Button>
@@ -202,12 +202,12 @@ function OrganizationsPage() {
     );
   }
 
-  if (status === "error") {
+  if (status === 'error') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <XCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+            <XCircle className="mx-auto mb-4 h-12 w-12 text-destructive" />
             <CardTitle>Error</CardTitle>
             <CardDescription>
               An error occurred while processing your invitation. Please try
@@ -231,10 +231,10 @@ function OrganizationsPage() {
   const invitation = invitationData.data;
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <Building2 className="h-12 w-12 text-primary mx-auto mb-4" />
+          <Building2 className="mx-auto mb-4 h-12 w-12 text-primary" />
           <CardTitle>Organization Invitation</CardTitle>
           <CardDescription>
             You've been invited to join an organization
@@ -279,11 +279,11 @@ function OrganizationsPage() {
             >
               {acceptInvitationMutation.isPending ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Accepting...
                 </>
               ) : (
-                "Accept Invitation"
+                'Accept Invitation'
               )}
             </Button>
           </div>

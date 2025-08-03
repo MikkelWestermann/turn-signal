@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { authClient } from "@/auth/client";
+import { useState } from 'react';
+import { authClient } from '@/auth/client';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Dialog,
   DialogContent,
@@ -27,7 +27,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   Table,
   TableBody,
@@ -35,16 +35,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,7 +55,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 import {
   Users,
   MoreHorizontal,
@@ -65,10 +65,10 @@ import {
   Crown,
   Shield,
   User,
-} from "lucide-react";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { toast } from 'sonner';
 
-type Role = "member" | "admin" | "owner";
+type Role = 'member' | 'admin' | 'owner';
 
 export default function MembersPage() {
   const { data: activeOrganization } = authClient.useActiveOrganization();
@@ -84,14 +84,14 @@ export default function MembersPage() {
   };
   const [isInviting, setIsInviting] = useState(false);
   const [isUpdatingRole, setIsUpdatingRole] = useState(false);
-  const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteRole, setInviteRole] = useState<Role>("member");
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState<Role>('member');
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
-  const [newRole, setNewRole] = useState<Role>("member");
+  const [newRole, setNewRole] = useState<Role>('member');
 
   const handleInviteMember = async () => {
     if (!inviteEmail.trim()) {
-      toast.error("Please enter an email address");
+      toast.error('Please enter an email address');
       return;
     }
 
@@ -102,13 +102,13 @@ export default function MembersPage() {
         role: inviteRole,
       });
 
-      toast.success("Invitation sent successfully!");
-      setInviteEmail("");
-      setInviteRole("member");
+      toast.success('Invitation sent successfully!');
+      setInviteEmail('');
+      setInviteRole('member');
       refetchInvitations();
     } catch (error) {
-      console.error("Error inviting member:", error);
-      toast.error("Failed to send invitation");
+      console.error('Error inviting member:', error);
+      toast.error('Failed to send invitation');
     } finally {
       setIsInviting(false);
     }
@@ -124,13 +124,13 @@ export default function MembersPage() {
         role: newRole,
       });
 
-      toast.success("Member role updated successfully!");
+      toast.success('Member role updated successfully!');
       setSelectedMemberId(null);
-      setNewRole("member");
+      setNewRole('member');
       refetchMembers();
     } catch (error) {
-      console.error("Error updating member role:", error);
-      toast.error("Failed to update member role");
+      console.error('Error updating member role:', error);
+      toast.error('Failed to update member role');
     } finally {
       setIsUpdatingRole(false);
     }
@@ -145,19 +145,19 @@ export default function MembersPage() {
         organizationId: activeOrganization.id,
       });
 
-      toast.success("Member removed successfully!");
+      toast.success('Member removed successfully!');
       refetchMembers();
     } catch (error) {
-      console.error("Error removing member:", error);
-      toast.error("Failed to remove member");
+      console.error('Error removing member:', error);
+      toast.error('Failed to remove member');
     }
   };
 
   const getRoleIcon = (role: string) => {
     switch (role) {
-      case "owner":
+      case 'owner':
         return <Crown className="h-4 w-4" />;
-      case "admin":
+      case 'admin':
         return <Shield className="h-4 w-4" />;
       default:
         return <User className="h-4 w-4" />;
@@ -166,40 +166,22 @@ export default function MembersPage() {
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case "owner":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-      case "admin":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+      case 'owner':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      case 'admin':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
     }
   };
 
-  if (!activeOrganization) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="text-center">
-              No Active Organization
-            </CardTitle>
-            <CardDescription className="text-center">
-              Please select an organization to manage members.
-            </CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Members</h1>
           <p className="text-muted-foreground">
-            Manage members of {activeOrganization.name}
+            Manage members of {activeOrganization!.name}
           </p>
         </div>
 
@@ -287,7 +269,7 @@ export default function MembersPage() {
                       <Avatar className="h-8 w-8">
                         <AvatarImage src={member.user?.image || undefined} />
                         <AvatarFallback>
-                          {member.user?.name?.[0]?.toUpperCase() || "U"}
+                          {member.user?.name?.[0]?.toUpperCase() || 'U'}
                         </AvatarFallback>
                       </Avatar>
                       <div>
@@ -307,7 +289,7 @@ export default function MembersPage() {
                   <TableCell>
                     {member.createdAt
                       ? new Date(member.createdAt).toLocaleDateString()
-                      : "Unknown"}
+                      : 'Unknown'}
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>
@@ -341,7 +323,7 @@ export default function MembersPage() {
                             <AlertDialogHeader>
                               <AlertDialogTitle>Remove Member</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to remove{" "}
+                                Are you sure you want to remove{' '}
                                 {member.user?.name} from the organization? This
                                 action cannot be undone.
                               </AlertDialogDescription>
@@ -375,7 +357,7 @@ export default function MembersPage() {
               Pending Invitations
             </CardTitle>
             <CardDescription>
-              {invitations.filter((inv) => inv.status === "pending").length}{" "}
+              {invitations.filter((inv) => inv.status === 'pending').length}{' '}
               pending invitations
             </CardDescription>
           </CardHeader>
@@ -392,7 +374,7 @@ export default function MembersPage() {
               </TableHeader>
               <TableBody>
                 {invitations
-                  .filter((inv) => inv.status === "pending")
+                  .filter((inv) => inv.status === 'pending')
                   .map((invitation) => (
                     <TableRow key={invitation.id}>
                       <TableCell>{invitation.email}</TableCell>
@@ -405,7 +387,7 @@ export default function MembersPage() {
                       <TableCell>
                         {invitation.expiresAt
                           ? new Date(invitation.expiresAt).toLocaleDateString()
-                          : "Unknown"}
+                          : 'Unknown'}
                       </TableCell>
                       <TableCell>
                         <AlertDialog>
@@ -433,12 +415,12 @@ export default function MembersPage() {
                                       invitationId: invitation.id,
                                     })
                                     .then(() => {
-                                      toast.success("Invitation cancelled");
+                                      toast.success('Invitation cancelled');
                                       refetchInvitations();
                                     })
                                     .catch(() => {
                                       toast.error(
-                                        "Failed to cancel invitation"
+                                        'Failed to cancel invitation',
                                       );
                                     });
                                 }}

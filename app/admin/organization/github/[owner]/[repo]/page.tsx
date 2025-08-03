@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { RepositoryIssues } from "@/components/repository-issues";
-import { authClient } from "@/auth/client";
-import { useParams } from "next/navigation";
+import { RepositoryIssues } from '@/components/repository-issues';
+import { authClient } from '@/auth/client';
+import { useParams } from 'next/navigation';
 
 export default function RepositoryIssuesPage() {
   const { data: activeOrganization } = authClient.useActiveOrganization();

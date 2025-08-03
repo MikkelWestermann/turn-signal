@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   ExternalLink,
   User,
   Calendar,
   MessageSquare,
   ThumbsUp,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useVotes, type Vote } from "@/hooks/use-votes";
-import { useTRPC } from "@/lib/client";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useVotes, type Vote } from '@/hooks/use-votes';
+import { useTRPC } from '@/lib/client';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 interface Issue {
   id: number;
@@ -47,7 +47,7 @@ interface KanbanBoardProps {
 
 function categorizeIssues(
   issues: Issue[],
-  roadmap: KanbanBoardProps["roadmap"]
+  roadmap: KanbanBoardProps['roadmap'],
 ) {
   const planned: Issue[] = [];
   const inProgress: Issue[] = [];
@@ -55,7 +55,7 @@ function categorizeIssues(
 
   issues.forEach((issue) => {
     const labelNames = issue.labels.map((label) =>
-      typeof label === "string" ? label : label.name
+      typeof label === 'string' ? label : label.name,
     );
 
     if (roadmap.doneTag && labelNames.includes(roadmap.doneTag)) {
@@ -102,26 +102,26 @@ function IssueCard({
     trpc.roadmap.createVote.mutationOptions({
       onSuccess: (data) => {
         addVote(issue.id.toString(), data.id);
-        toast.success("Vote recorded!");
+        toast.success('Vote recorded!');
       },
       onError: (error) => {
-        toast.error("Failed to record vote. Please try again.");
-        console.error("Vote error:", error);
+        toast.error('Failed to record vote. Please try again.');
+        console.error('Vote error:', error);
       },
-    })
+    }),
   );
 
   const deleteVoteMutation = useMutation(
     trpc.roadmap.deleteVote.mutationOptions({
       onSuccess: () => {
         removeVote(issue.id.toString());
-        toast.success("Vote removed!");
+        toast.success('Vote removed!');
       },
       onError: (error) => {
-        toast.error("Failed to remove vote. Please try again.");
-        console.error("Vote error:", error);
+        toast.error('Failed to remove vote. Please try again.');
+        console.error('Vote error:', error);
       },
-    })
+    }),
   );
 
   const handleVote = (e: React.MouseEvent) => {
@@ -149,18 +149,18 @@ function IssueCard({
     (issue.voteCount || 0) + (vote && vote.timestamp > timestamp ? 1 : 0);
 
   return (
-    <Card className="mb-3 hover:shadow-md transition-shadow cursor-pointer border-border">
+    <Card className="mb-3 cursor-pointer border-border transition-shadow hover:shadow-md">
       <CardContent className="p-4">
         <div className="space-y-3">
           <div className="flex items-start justify-between">
-            <div className="flex-1 min-w-0">
-              <h4 className="font-medium text-sm leading-tight line-clamp-2 text-foreground">
+            <div className="min-w-0 flex-1">
+              <h4 className="line-clamp-2 text-sm leading-tight font-medium text-foreground">
                 #{issue.number} {issue.title}
               </h4>
             </div>
             <div className="flex items-center space-x-1">
               <Button
-                variant={userHasVoted ? "default" : "ghost"}
+                variant={userHasVoted ? 'default' : 'ghost'}
                 size="sm"
                 onClick={handleVote}
                 disabled={isLoading}
@@ -190,7 +190,7 @@ function IssueCard({
           </div>
 
           {issue.body && (
-            <p className="text-xs text-muted-foreground line-clamp-2">
+            <p className="line-clamp-2 text-xs text-muted-foreground">
               {issue.body}
             </p>
           )}
@@ -222,14 +222,14 @@ function IssueCard({
           {issue.labels.length > 0 && (
             <div className="flex flex-wrap gap-1">
               {issue.labels.map((label) => {
-                if (typeof label === "string") return null;
+                if (typeof label === 'string') return null;
                 const labelColor = label.color ? `#${label.color}` : undefined;
 
                 return (
                   <Badge
                     key={label.id || label.name}
                     variant="outline"
-                    className="text-xs px-1 py-0"
+                    className="px-1 py-0 text-xs"
                     style={{
                       borderColor: labelColor,
                       color: labelColor,
@@ -253,40 +253,40 @@ function IssueCard({
 export function KanbanBoard({ roadmap }: KanbanBoardProps) {
   const { planned, inProgress, done } = categorizeIssues(
     roadmap.issues,
-    roadmap
+    roadmap,
   );
   const { getVote, addVote, removeVote } = useVotes();
 
   const columns = [
     {
-      title: "Planned",
+      title: 'Planned',
       issues: planned,
       color:
-        "border-blue-200 bg-blue-50/50 dark:border-blue-800 dark:bg-blue-950/30",
+        'border-blue-200 bg-blue-50/50 dark:border-blue-800 dark:bg-blue-950/30',
       count: planned.length,
     },
     {
-      title: "In Progress",
+      title: 'In Progress',
       issues: inProgress,
       color:
-        "border-yellow-200 bg-yellow-50/50 dark:border-yellow-800 dark:bg-yellow-950/30",
+        'border-yellow-200 bg-yellow-50/50 dark:border-yellow-800 dark:bg-yellow-950/30',
       count: inProgress.length,
     },
     {
-      title: "Done",
+      title: 'Done',
       issues: done,
       color:
-        "border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/30",
+        'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/30',
       count: done.length,
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
       {columns.map((column) => (
         <div key={column.title} className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-lg text-foreground">
+            <h3 className="text-lg font-semibold text-foreground">
               {column.title}
             </h3>
             <Badge variant="secondary" className="text-xs">
@@ -295,8 +295,8 @@ export function KanbanBoard({ roadmap }: KanbanBoardProps) {
           </div>
           <div
             className={cn(
-              "min-h-[400px] p-4 rounded-lg border-2 border-dashed",
-              column.color
+              'min-h-[400px] rounded-lg border-2 border-dashed p-4',
+              column.color,
             )}
           >
             {column.issues.length > 0 ? (
@@ -315,8 +315,8 @@ export function KanbanBoard({ roadmap }: KanbanBoardProps) {
                 ))}
               </div>
             ) : (
-              <div className="flex items-center justify-center h-full">
-                <p className="text-sm text-muted-foreground text-center">
+              <div className="flex h-full items-center justify-center">
+                <p className="text-center text-sm text-muted-foreground">
                   No issues in {column.title.toLowerCase()}
                 </p>
               </div>
