@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { authClient } from "@/auth/client";
@@ -22,7 +23,7 @@ type InvitationStatus =
   | "expired"
   | "not-authenticated";
 
-export default function OrganizationsPage() {
+function OrganizationsPage() {
   const searchParams = useSearchParams();
   const inviteId = searchParams.get("invite");
   const { data: session, isPending: isSessionLoading } =
@@ -289,5 +290,13 @@ export default function OrganizationsPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function OrganizationsPageWrapper() {
+  return (
+    <Suspense fallback={null}>
+      <OrganizationsPage />
+    </Suspense>
   );
 }

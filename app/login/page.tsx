@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/auth/client";
 import { Button } from "@/components/ui/button";
@@ -63,7 +63,7 @@ const FloatingElement = ({
   </div>
 );
 
-export default function LoginPage() {
+const LoginContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect");
@@ -273,5 +273,13 @@ export default function LoginPage() {
         <div className="w-8 h-8 bg-primary/30 dark:bg-primary/40 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
       </div>
     </div>
+  );
+};
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginContent />
+    </Suspense>
   );
 }
