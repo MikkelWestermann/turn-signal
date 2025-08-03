@@ -25,9 +25,7 @@ export default function RoadmapsPage() {
   const confirm = useConfirm();
 
   const { data: roadmaps, refetch } = useQuery(
-    trpc.roadmap.getAll.queryOptions({
-      organizationId: organization?.id || '',
-    }),
+    trpc.roadmap.getAll.queryOptions(),
   );
 
   const deleteRoadmap = useMutation(
@@ -52,7 +50,7 @@ export default function RoadmapsPage() {
       }))
     )
       return;
-    deleteRoadmap.mutate({ id, organizationId: organization.id });
+    deleteRoadmap.mutate({ id });
   };
 
   const handleCreate = () => {

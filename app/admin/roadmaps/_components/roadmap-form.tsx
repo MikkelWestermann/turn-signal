@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { authClient } from '@/auth/client';
 import { useTRPC } from '@/lib/client';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -62,7 +61,6 @@ interface Repository {
 }
 
 export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
-  const { data: organization } = authClient.useActiveOrganization();
   const trpc = useTRPC();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -80,29 +78,17 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
     doneTag: 'done',
   });
 
-  // Fetch roadmap data if editing
   const { data: roadmap } = useQuery(
     trpc.roadmap.getById.queryOptions({
       id: roadmapId!,
-      organizationId: organization?.id || '',
     }),
   );
 
-  // Fetch available repositories
   const { data: availableRepositories } = useQuery(
-    trpc.github.getRepositories.queryOptions({
-      organizationId: organization?.id || '',
-    }),
+    trpc.github.getRepositories.queryOptions(),
   );
 
-  // Fetch current roadmap repositories if editing
-  const { data: currentRepositories } = useQuery({
-    ...trpc.roadmap.getRepositories.queryOptions({
-      roadmapId: roadmapId!,
-      organizationId: organization?.id || '',
-    }),
-    enabled: mode === 'edit' && !!roadmapId,
-  });
+  const currentRepositories = roadmap?.repositories;
 
   const createRoadmap = useMutation(
     trpc.roadmap.create.mutationOptions({
@@ -171,14 +157,12 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!organization?.id) return;
 
     setIsLoading(true);
 
     try {
       if (mode === 'create') {
         const newRoadmap = await createRoadmap.mutateAsync({
-          organizationId: organization.id,
           ...formData,
         });
 
@@ -186,21 +170,18 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
         if (selectedRepositories.length > 0) {
           await updateRepositories.mutateAsync({
             roadmapId: newRoadmap.id,
-            organizationId: organization.id,
             repositories: selectedRepositories,
           });
         }
       } else {
         await updateRoadmap.mutateAsync({
           id: roadmapId!,
-          organizationId: organization.id,
           ...formData,
         });
 
         // Update repositories for the existing roadmap
         await updateRepositories.mutateAsync({
           roadmapId: roadmapId!,
-          organizationId: organization.id,
           repositories: selectedRepositories,
         });
       }
@@ -224,19 +205,6 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
       handleInputChange('slug', slug);
     }
   };
-
-  if (!organization) {
-    return (
-      <div className="container mx-auto py-8">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">No organization selected</h1>
-          <p className="text-muted-foreground">
-            Please select an organization to manage roadmaps.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto py-8">

@@ -1,122 +1,57 @@
-import { z } from "zod";
-import { router, protectedProcedure, publicProcedure } from "../trpc";
-import { TRPCError } from "@trpc/server";
-import { getDb } from "../../db";
-import {
-  roadmaps,
-  members,
-  roadmapRepositories,
-  issueVotes,
-} from "../../db/schema";
-import { eq, and, not, sql } from "drizzle-orm";
-import { nanoid } from "nanoid";
-import { installationClient } from "@/lib/github";
-
-async function verifyOrganizationAccess(
-  userId: string,
-  organizationId: string
-): Promise<boolean> {
-  const db = await getDb();
-  const member = await db
-    .select()
-    .from(members)
-    .where(
-      and(
-        eq(members.userId, userId),
-        eq(members.organizationId, organizationId)
-      )
-    )
-    .limit(1);
-
-  return member.length > 0;
-}
+import { z } from 'zod';
+import { router, publicProcedure, organizationProcedure } from '../trpc';
+import { TRPCError } from '@trpc/server';
+import { getDb } from '../../db';
+import { roadmaps, roadmapRepositories, issueVotes } from '../../db/schema';
+import { eq, and, not, sql } from 'drizzle-orm';
+import { nanoid } from 'nanoid';
+import { installationClient } from '@/lib/github';
 
 export const roadmapRouter = router({
-  getAll: protectedProcedure
-    .input(
-      z.object({
-        organizationId: z.string(),
-      })
-    )
-    .query(async ({ input, ctx }) => {
-      const hasAccess = await verifyOrganizationAccess(
-        ctx.user.id,
-        input.organizationId
-      );
-      if (!hasAccess) {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
+  getAll: organizationProcedure.query(async ({ input, ctx }) => {
+    const organizationId = ctx.activeOrganizationId;
 
-      const db = await getDb();
-      const roadmapsList = await db
-        .select()
-        .from(roadmaps)
-        .where(eq(roadmaps.organizationId, input.organizationId))
-        .orderBy(roadmaps.createdAt);
+    const db = await getDb();
+    const roadmapsList = await db
+      .select()
+      .from(roadmaps)
+      .where(eq(roadmaps.organizationId, organizationId))
+      .orderBy(roadmaps.createdAt);
 
-      return roadmapsList;
-    }),
+    return roadmapsList;
+  }),
 
-  getById: protectedProcedure
+  getById: organizationProcedure
     .input(
       z.object({
         id: z.string(),
-        organizationId: z.string(),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
-      const hasAccess = await verifyOrganizationAccess(
-        ctx.user.id,
-        input.organizationId
-      );
-      if (!hasAccess) {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
+      const organizationId = ctx.activeOrganizationId;
 
       const db = await getDb();
-      const roadmap = await db
-        .select()
-        .from(roadmaps)
-        .where(
-          and(
-            eq(roadmaps.id, input.id),
-            eq(roadmaps.organizationId, input.organizationId)
-          )
-        )
-        .limit(1);
 
-      if (roadmap.length === 0) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+      const roadmap = await db.query.roadmaps.findFirst({
+        where: and(
+          eq(roadmaps.id, input.id),
+          eq(roadmaps.organizationId, organizationId),
+        ),
+        with: {
+          repositories: true,
+        },
+      });
+
+      if (!roadmap) {
+        throw new TRPCError({ code: 'NOT_FOUND' });
       }
 
-      return roadmap[0];
+      return roadmap;
     }),
 
-  getBySlug: protectedProcedure
+  create: organizationProcedure
     .input(
       z.object({
-        slug: z.string(),
-      })
-    )
-    .query(async ({ input }) => {
-      const db = await getDb();
-      const roadmap = await db
-        .select()
-        .from(roadmaps)
-        .where(eq(roadmaps.slug, input.slug))
-        .limit(1);
-
-      if (roadmap.length === 0) {
-        throw new TRPCError({ code: "NOT_FOUND" });
-      }
-
-      return roadmap[0];
-    }),
-
-  create: protectedProcedure
-    .input(
-      z.object({
-        organizationId: z.string(),
         name: z.string().min(1),
         description: z.string().optional(),
         slug: z.string().min(1),
@@ -124,16 +59,10 @@ export const roadmapRouter = router({
         plannedTag: z.string().optional(),
         inProgressTag: z.string().optional(),
         doneTag: z.string().optional(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
-      const hasAccess = await verifyOrganizationAccess(
-        ctx.user.id,
-        input.organizationId
-      );
-      if (!hasAccess) {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
+      const organizationId = ctx.activeOrganizationId;
 
       const db = await getDb();
 
@@ -146,8 +75,8 @@ export const roadmapRouter = router({
 
       if (existingRoadmap.length > 0) {
         throw new TRPCError({
-          code: "CONFLICT",
-          message: "A roadmap with this slug already exists",
+          code: 'CONFLICT',
+          message: 'A roadmap with this slug already exists',
         });
       }
 
@@ -155,25 +84,24 @@ export const roadmapRouter = router({
         .insert(roadmaps)
         .values({
           id: nanoid(),
-          organizationId: input.organizationId,
+          organizationId,
           name: input.name,
           description: input.description,
           slug: input.slug,
           tag: input.tag,
-          plannedTag: input.plannedTag || "planned",
-          inProgressTag: input.inProgressTag || "in progress",
-          doneTag: input.doneTag || "done",
+          plannedTag: input.plannedTag || 'planned',
+          inProgressTag: input.inProgressTag || 'in progress',
+          doneTag: input.doneTag || 'done',
         })
         .returning();
 
       return newRoadmap[0];
     }),
 
-  update: protectedProcedure
+  update: organizationProcedure
     .input(
       z.object({
         id: z.string(),
-        organizationId: z.string(),
         name: z.string().min(1).optional(),
         description: z.string().optional(),
         slug: z.string().min(1).optional(),
@@ -181,16 +109,10 @@ export const roadmapRouter = router({
         plannedTag: z.string().optional(),
         inProgressTag: z.string().optional(),
         doneTag: z.string().optional(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
-      const hasAccess = await verifyOrganizationAccess(
-        ctx.user.id,
-        input.organizationId
-      );
-      if (!hasAccess) {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
+      const organizationId = ctx.activeOrganizationId;
 
       const db = await getDb();
 
@@ -200,14 +122,14 @@ export const roadmapRouter = router({
           .select()
           .from(roadmaps)
           .where(
-            and(eq(roadmaps.slug, input.slug), not(eq(roadmaps.id, input.id)))
+            and(eq(roadmaps.slug, input.slug), not(eq(roadmaps.id, input.id))),
           )
           .limit(1);
 
         if (existingRoadmap.length > 0) {
           throw new TRPCError({
-            code: "CONFLICT",
-            message: "A roadmap with this slug already exists",
+            code: 'CONFLICT',
+            message: 'A roadmap with this slug already exists',
           });
         }
       }
@@ -230,33 +152,26 @@ export const roadmapRouter = router({
         .where(
           and(
             eq(roadmaps.id, input.id),
-            eq(roadmaps.organizationId, input.organizationId)
-          )
+            eq(roadmaps.organizationId, organizationId),
+          ),
         )
         .returning();
 
       if (updatedRoadmap.length === 0) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+        throw new TRPCError({ code: 'NOT_FOUND' });
       }
 
       return updatedRoadmap[0];
     }),
 
-  delete: protectedProcedure
+  delete: organizationProcedure
     .input(
       z.object({
         id: z.string(),
-        organizationId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
-      const hasAccess = await verifyOrganizationAccess(
-        ctx.user.id,
-        input.organizationId
-      );
-      if (!hasAccess) {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
+      const organizationId = ctx.activeOrganizationId;
 
       const db = await getDb();
 
@@ -270,67 +185,34 @@ export const roadmapRouter = router({
         .where(
           and(
             eq(roadmaps.id, input.id),
-            eq(roadmaps.organizationId, input.organizationId)
-          )
+            eq(roadmaps.organizationId, organizationId),
+          ),
         )
         .returning();
 
       if (deletedRoadmap.length === 0) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+        throw new TRPCError({ code: 'NOT_FOUND' });
       }
 
       return { success: true };
     }),
 
-  getRepositories: protectedProcedure
+  updateRepositories: organizationProcedure
     .input(
       z.object({
         roadmapId: z.string(),
-        organizationId: z.string(),
-      })
-    )
-    .query(async ({ input, ctx }) => {
-      const hasAccess = await verifyOrganizationAccess(
-        ctx.user.id,
-        input.organizationId
-      );
-      if (!hasAccess) {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
-
-      const db = await getDb();
-      const repositories = await db
-        .select()
-        .from(roadmapRepositories)
-        .where(eq(roadmapRepositories.roadmapId, input.roadmapId))
-        .orderBy(roadmapRepositories.createdAt);
-
-      return repositories;
-    }),
-
-  updateRepositories: protectedProcedure
-    .input(
-      z.object({
-        roadmapId: z.string(),
-        organizationId: z.string(),
         repositories: z
           .array(
             z.object({
               owner: z.string(),
               repo: z.string(),
-            })
+            }),
           )
           .max(5),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
-      const hasAccess = await verifyOrganizationAccess(
-        ctx.user.id,
-        input.organizationId
-      );
-      if (!hasAccess) {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
+      const organizationId = ctx.activeOrganizationId;
 
       const db = await getDb();
 
@@ -341,13 +223,13 @@ export const roadmapRouter = router({
         .where(
           and(
             eq(roadmaps.id, input.roadmapId),
-            eq(roadmaps.organizationId, input.organizationId)
-          )
+            eq(roadmaps.organizationId, organizationId),
+          ),
         )
         .limit(1);
 
       if (roadmap.length === 0) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+        throw new TRPCError({ code: 'NOT_FOUND' });
       }
 
       // Delete existing repositories
@@ -387,11 +269,11 @@ export const roadmapRouter = router({
       });
 
       if (!roadmap) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+        throw new TRPCError({ code: 'NOT_FOUND' });
       }
 
       const installation = installationClient(
-        roadmap.organization.githubInstallation.installationId
+        roadmap.organization.githubInstallation.installationId,
       );
 
       const [issues, voteCounts] = await Promise.all([
@@ -407,7 +289,7 @@ export const roadmapRouter = router({
             // TODO: Sanitize issues
 
             return issues.data;
-          })
+          }),
         ),
         // Get aggregated vote counts for all issues
         db
@@ -422,14 +304,14 @@ export const roadmapRouter = router({
 
       // Create a plain object of issueId to vote count
       const voteCountObject = Object.fromEntries(
-        voteCounts.map((vote) => [vote.issueId, vote.count])
+        voteCounts.map((vote) => [vote.issueId, vote.count]),
       );
 
       const standardizedIssues = issues.flatMap((issueArray) =>
         issueArray.map((issue) => ({
           ...issue,
           voteCount: voteCountObject[issue.id] || 0,
-        }))
+        })),
       );
 
       return {
@@ -445,7 +327,7 @@ export const roadmapRouter = router({
         roadmapId: z.string(),
         issueId: z.string(),
         organizationId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -457,13 +339,13 @@ export const roadmapRouter = router({
         .where(
           and(
             eq(roadmaps.id, input.roadmapId),
-            eq(roadmaps.organizationId, input.organizationId)
-          )
+            eq(roadmaps.organizationId, input.organizationId),
+          ),
         )
         .limit(1);
 
       if (roadmap.length === 0) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+        throw new TRPCError({ code: 'NOT_FOUND' });
       }
 
       // Create the vote
@@ -484,7 +366,7 @@ export const roadmapRouter = router({
     .input(
       z.object({
         voteId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -496,7 +378,7 @@ export const roadmapRouter = router({
         .returning();
 
       if (deletedVote.length === 0) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+        throw new TRPCError({ code: 'NOT_FOUND' });
       }
 
       return { success: true };

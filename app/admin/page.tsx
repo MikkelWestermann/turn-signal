@@ -40,21 +40,15 @@ export default function AdminPage() {
   const [isSigningOut, setIsSigningOut] = useState(false);
 
   const { data: roadmaps, isLoading: isLoadingRoadmaps } = useQuery(
-    trpc.roadmap.getAll.queryOptions({
-      organizationId: activeOrganization?.id || '',
-    }),
+    trpc.roadmap.getAll.queryOptions(),
   );
 
   const { data: githubInstallation, isLoading: isLoadingGithub } = useQuery(
-    trpc.github.getInstallation.queryOptions({
-      organizationId: activeOrganization?.id || '',
-    }),
+    trpc.github.getInstallation.queryOptions(),
   );
 
   const { data: githubRepos, isLoading: isLoadingRepos } = useQuery(
-    trpc.github.getRepositories.queryOptions({
-      organizationId: activeOrganization?.id || '',
-    }),
+    trpc.github.getRepositories.queryOptions(),
   );
 
   const handleSignOut = async () => {

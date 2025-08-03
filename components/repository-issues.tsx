@@ -22,16 +22,11 @@ import {
 import { ExternalLink, User, Calendar, RefreshCw } from 'lucide-react';
 
 interface RepositoryIssuesProps {
-  organizationId: string;
   owner: string;
   repo: string;
 }
 
-export function RepositoryIssues({
-  organizationId,
-  owner,
-  repo,
-}: RepositoryIssuesProps) {
+export function RepositoryIssues({ owner, repo }: RepositoryIssuesProps) {
   const [state, setState] = useState<'open' | 'closed' | 'all'>('open');
   const [page, setPage] = useState(1);
   const trpc = useTRPC();
@@ -42,7 +37,6 @@ export function RepositoryIssues({
     refetch,
   } = useQuery(
     trpc.github.getIssues.queryOptions({
-      organizationId,
       owner,
       repo,
       state,

@@ -4,7 +4,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useTRPC } from '@/lib/client';
 import { useQuery } from '@tanstack/react-query';
-import { authClient } from '@/auth/client';
 import {
   Card,
   CardContent,
@@ -31,7 +30,6 @@ export default function RoadmapAdminPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
-  const { data: organization } = authClient.useActiveOrganization();
   const trpc = useTRPC();
 
   const [showAllIssues, setShowAllIssues] = useState(false);
@@ -44,7 +42,6 @@ export default function RoadmapAdminPage() {
   } = useQuery(
     trpc.roadmap.getById.queryOptions({
       id,
-      organizationId: organization?.id || '',
     }),
   );
 

@@ -14,38 +14,23 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, Github, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
-import { authClient } from '@/auth/client';
 
 export default function GitHubOverviewPage() {
   const [isConnecting, setIsConnecting] = useState(false);
-  const { data: activeOrganization } = authClient.useActiveOrganization();
   const trpc = useTRPC();
 
   const {
     data: repositories,
     isLoading: repositoriesLoading,
     refetch: refetchRepositories,
-  } = useQuery(
-    trpc.github.getRepositories.queryOptions({
-      organizationId: activeOrganization!.id,
-    }),
-  );
+  } = useQuery(trpc.github.getRepositories.queryOptions());
 
   const { data: installation } = useQuery(
-    trpc.github.getInstallation.queryOptions({
-      organizationId: activeOrganization!.id,
-    }),
+    trpc.github.getInstallation.queryOptions(),
   );
 
   const { data: installationUrl } = useQuery(
-    trpc.github.getInstallationUrl.queryOptions(
-      {
-        organizationId: activeOrganization!.id,
-      },
-      {
-        enabled: !installation,
-      },
-    ),
+    trpc.github.getInstallationUrl.queryOptions(),
   );
 
   return (
