@@ -586,6 +586,83 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="bg-muted/50 py-16 lg:py-24 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div className="relative">
+              <div className="relative">
+                <div className="relative overflow-hidden border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+                  <img
+                    src="/driver.png"
+                    alt="First-person view from inside a car driving on a highway"
+                    className="w-full h-auto animate-pulse-blur"
+                    style={{
+                      animation: "blur-unblur 4s ease-in-out infinite",
+                    }}
+                  />
+                </div>
+
+                <style jsx>{`
+                  @keyframes blur-unblur {
+                    0%,
+                    100% {
+                      filter: blur(0px);
+                      transform: scale(1);
+                    }
+                    25% {
+                      filter: blur(3px);
+                      transform: scale(1.02);
+                    }
+                    50% {
+                      filter: blur(6px);
+                      transform: scale(1.05);
+                    }
+                    75% {
+                      filter: blur(3px);
+                      transform: scale(1.02);
+                    }
+                  }
+                `}</style>
+              </div>
+            </div>
+
+            <div className="space-y-8">
+              <div className="space-y-6">
+                <h2 className="text-3xl lg:text-5xl font-black text-black dark:text-white">
+                  Stop Driving Blind
+                </h2>
+                <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400">
+                  Don't build features in the dark. See exactly what your users
+                  want and build what they actually need.
+                </p>
+              </div>
+
+              <div className="space-y-6">
+                <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+                  Let users vote and comment on features so you know exactly
+                  what they're asking for, not just guessing. Prioritize based
+                  on real demand and stop building things nobody asked for. The
+                  result? Features users actually want, higher adoption, and
+                  real impact.
+                </p>
+              </div>
+
+              <div className="pt-4">
+                <Link href="/login">
+                  <Button
+                    size="lg"
+                    className="h-12 px-8 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                  >
+                    Start Building Smarter
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="bg-muted/50 py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
