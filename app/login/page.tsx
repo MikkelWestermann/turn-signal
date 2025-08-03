@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/auth/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -65,6 +65,8 @@ const FloatingElement = ({
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect");
   const { data: session, isPending } = authClient.useSession();
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -72,9 +74,9 @@ export default function LoginPage() {
   // TODO: do this server side
   useEffect(() => {
     if (session?.user && !isPending) {
-      router.push("/admin");
+      router.push(redirectTo || "/admin");
     }
-  }, [session, isPending, router]);
+  }, [session, isPending, router, redirectTo]);
 
   const handleGoogleSignIn = async () => {
     setIsSigningIn(true);
@@ -83,9 +85,9 @@ export default function LoginPage() {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/admin",
+        callbackURL: redirectTo || "/admin",
         errorCallbackURL: "/login",
-        newUserCallbackURL: "/admin",
+        newUserCallbackURL: redirectTo || "/admin",
       });
     } catch (error) {
       console.error("Google sign-in error:", error);
@@ -101,9 +103,9 @@ export default function LoginPage() {
     try {
       await authClient.signIn.social({
         provider: "github",
-        callbackURL: "/admin",
+        callbackURL: redirectTo || "/admin",
         errorCallbackURL: "/login",
-        newUserCallbackURL: "/admin",
+        newUserCallbackURL: redirectTo || "/admin",
       });
     } catch (error) {
       console.error("GitHub sign-in error:", error);
