@@ -16,6 +16,35 @@ import {
 } from "lucide-react";
 
 import { BackgroundGrid } from "@/components/marketing/background-grid";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact - Turn Signal Support",
+  description:
+    "Get support for Turn Signal through GitHub issues. Report bugs, ask for help, or suggest new features. All communication is transparent and community-driven.",
+  keywords: [
+    "support",
+    "contact",
+    "bug report",
+    "feature request",
+    "GitHub issues",
+    "open source support",
+  ],
+  openGraph: {
+    title: "Contact - Turn Signal Support",
+    description:
+      "Get support for Turn Signal through GitHub issues. Report bugs, ask for help, or suggest new features.",
+    type: "website",
+    url: "https://turn-signal.co/contact",
+    siteName: "Turn Signal",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact - Turn Signal Support",
+    description:
+      "Get support for Turn Signal through GitHub issues. Report bugs, ask for help, or suggest new features.",
+  },
+};
 
 const ContactCard = ({
   icon: Icon,

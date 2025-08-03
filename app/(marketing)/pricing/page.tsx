@@ -10,10 +10,39 @@ import {
 import { ArrowRight, Github, Cloud, Server, Check } from "lucide-react";
 
 import { BackgroundGrid } from "@/components/marketing/background-grid";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Pricing - Turn Signal Roadmap Tool",
+  description:
+    "Turn Signal is completely free! Choose between self-hosting for complete control or using our cloud platform for simplicity. Both options are free and open source.",
+  keywords: [
+    "roadmap pricing",
+    "free roadmap tool",
+    "self-host",
+    "cloud platform",
+    "open source",
+    "GitHub integration",
+  ],
+  openGraph: {
+    title: "Pricing - Turn Signal Roadmap Tool",
+    description:
+      "Turn Signal is completely free! Choose between self-hosting for complete control or using our cloud platform for simplicity.",
+    type: "website",
+    url: "https://turn-signal.co/pricing",
+    siteName: "Turn Signal",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Pricing - Turn Signal Roadmap Tool",
+    description:
+      "Turn Signal is completely free! Choose between self-hosting for complete control or using our cloud platform for simplicity.",
+  },
+};
 
 const FeatureItem = ({ children }: { children: React.ReactNode }) => (
   <div className="flex items-center space-x-3">
-    <div className="w-5 h-5 bg-green-500 border-2 shadow-sm flex items-center justify-center flex-shrink-0">
+    <div className="w-5 h-5 bg-green-500 dark:bg-green-600 border-2 shadow-sm flex items-center justify-center flex-shrink-0">
       <Check className="w-3 h-3 text-white" />
     </div>
     <span className="text-gray-700 dark:text-gray-300">{children}</span>

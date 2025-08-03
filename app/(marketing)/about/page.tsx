@@ -2,6 +2,35 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Github } from "lucide-react";
 import { BackgroundGrid } from "@/components/marketing/background-grid";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "The Story Behind Turn Signal",
+  description:
+    "Learn about the story behind Turn Signal, an open source roadmap tool that transforms GitHub issues into beautiful public roadmaps. Built for transparency and community-driven development.",
+  keywords: [
+    "roadmap tool",
+    "GitHub integration",
+    "open source",
+    "product development",
+    "feature requests",
+    "user feedback",
+  ],
+  openGraph: {
+    title: "The Story Behind Turn Signal",
+    description:
+      "Learn about the story behind Turn Signal, an open source roadmap tool that transforms GitHub issues into beautiful public roadmaps.",
+    type: "website",
+    url: "https://turn-signal.co/about",
+    siteName: "Turn Signal",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Story Behind Turn Signal",
+    description:
+      "Learn about the story behind Turn Signal, an open source roadmap tool that transforms GitHub issues into beautiful public roadmaps.",
+  },
+};
 
 export default function AboutPage() {
   return (

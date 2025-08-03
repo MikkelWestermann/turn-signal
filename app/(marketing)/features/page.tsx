@@ -10,6 +10,36 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { BackgroundGrid } from "@/components/marketing/background-grid";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Features - Turn Signal Roadmap Tool",
+  description:
+    "Discover all the features of Turn Signal: GitHub integration, public roadmaps, real-time updates, user engagement, feedback loops, and open source development.",
+  keywords: [
+    "roadmap features",
+    "GitHub integration",
+    "public roadmaps",
+    "user engagement",
+    "real-time updates",
+    "feedback loop",
+    "open source",
+  ],
+  openGraph: {
+    title: "Features - Turn Signal Roadmap Tool",
+    description:
+      "Discover all the features of Turn Signal: GitHub integration, public roadmaps, real-time updates, user engagement, feedback loops, and open source development.",
+    type: "website",
+    url: "https://turn-signal.co/features",
+    siteName: "Turn Signal",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Features - Turn Signal Roadmap Tool",
+    description:
+      "Discover all the features of Turn Signal: GitHub integration, public roadmaps, real-time updates, user engagement, feedback loops, and open source development.",
+  },
+};
 
 export default function FeaturesPage() {
   return (
