@@ -74,6 +74,7 @@ export default async function Image() {
                   background: "#f9f9f9",
                   borderRadius: "0",
                   position: "relative",
+                  display: "flex",
                 }}
               >
                 <div
@@ -110,6 +111,7 @@ export default async function Image() {
                   background: "#f9f9f9",
                   borderRadius: "0",
                   position: "relative",
+                  display: "flex",
                 }}
               >
                 <div
