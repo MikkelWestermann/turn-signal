@@ -17,29 +17,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import {
-  ArrowLeft,
-  Save,
-  Loader2,
-  Check,
-  ChevronsUpDown,
-  X,
-} from "lucide-react";
+import { ArrowLeft, Save, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 
 interface RoadmapFormProps {
   roadmapId?: string;
@@ -69,7 +55,6 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
   const [selectedRepositories, setSelectedRepositories] = useState<
     Repository[]
   >([]);
-  const [repositoryPopoverOpen, setRepositoryPopoverOpen] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     name: "",
     description: "",
@@ -386,92 +371,65 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
                     </div>
                   )}
 
-                  {/* Repository selector */}
                   {availableRepositories?.data?.repositories ? (
-                    selectedRepositories.length < 5 && (
-                      <Popover
-                        open={repositoryPopoverOpen}
-                        onOpenChange={setRepositoryPopoverOpen}
-                      >
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            aria-expanded={repositoryPopoverOpen}
-                            className="w-full justify-between"
-                          >
-                            Select repositories...
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-full p-0">
-                          <Command>
-                            <CommandInput placeholder="Search repositories..." />
-                            <CommandList>
-                              <CommandEmpty>
-                                No repositories found.
-                              </CommandEmpty>
-                              <CommandGroup>
-                                {availableRepositories.data.repositories.map(
-                                  (repo: any) => {
-                                    const isSelected =
-                                      selectedRepositories.some(
-                                        (selected) =>
-                                          selected.owner === repo.owner.login &&
-                                          selected.repo === repo.name
-                                      );
-                                    const isDisabled =
-                                      selectedRepositories.length >= 5 &&
-                                      !isSelected;
+                    <Select
+                      onValueChange={(value) => {
+                        const [owner, repo] = value.split("/");
+                        const newRepo = { owner, repo };
 
-                                    return (
-                                      <CommandItem
-                                        key={`${repo.owner.login}/${repo.name}`}
-                                        onSelect={() => {
-                                          if (isDisabled) return;
+                        // Check if already selected
+                        const isSelected = selectedRepositories.some(
+                          (selected) =>
+                            selected.owner === owner && selected.repo === repo
+                        );
 
-                                          if (isSelected) {
-                                            setSelectedRepositories(
-                                              selectedRepositories.filter(
-                                                (selected) =>
-                                                  !(
-                                                    selected.owner ===
-                                                      repo.owner.login &&
-                                                    selected.repo === repo.name
-                                                  )
-                                              )
-                                            );
-                                          } else {
-                                            setSelectedRepositories([
-                                              ...selectedRepositories,
-                                              {
-                                                owner: repo.owner.login,
-                                                repo: repo.name,
-                                              },
-                                            ]);
-                                          }
-                                        }}
-                                        disabled={isDisabled}
-                                      >
-                                        <Check
-                                          className={cn(
-                                            "mr-2 h-4 w-4",
-                                            isSelected
-                                              ? "opacity-100"
-                                              : "opacity-0"
-                                          )}
-                                        />
-                                        {repo.owner.login}/{repo.name}
-                                      </CommandItem>
-                                    );
-                                  }
-                                )}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                    )
+                        if (isSelected) {
+                          // Remove if already selected
+                          setSelectedRepositories(
+                            selectedRepositories.filter(
+                              (r) => !(r.owner === owner && r.repo === repo)
+                            )
+                          );
+                        } else {
+                          // Add if not selected and under limit
+                          if (selectedRepositories.length < 5) {
+                            setSelectedRepositories([
+                              ...selectedRepositories,
+                              newRepo,
+                            ]);
+                          }
+                        }
+                      }}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select repositories..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableRepositories.data.repositories.map(
+                          (repo: any) => {
+                            const isSelected = selectedRepositories.some(
+                              (selected) =>
+                                selected.owner === repo.owner.login &&
+                                selected.repo === repo.name
+                            );
+                            const isDisabled =
+                              selectedRepositories.length >= 5 && !isSelected;
+
+                            return (
+                              <SelectItem
+                                key={`${repo.owner.login}/${repo.name}`}
+                                value={`${repo.owner.login}/${repo.name}`}
+                                disabled={isDisabled}
+                                className={isSelected ? "bg-accent" : ""}
+                              >
+                                {repo.owner.login}/{repo.name}
+                                {isSelected && " ✓"}
+                              </SelectItem>
+                            );
+                          }
+                        )}
+                      </SelectContent>
+                    </Select>
                   ) : (
                     <div className="text-sm text-muted-foreground">
                       No GitHub repositories available. Please set up GitHub

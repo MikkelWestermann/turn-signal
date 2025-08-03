@@ -19,7 +19,6 @@ export default function AdminLayout({
   const { data: activeOrganization, isPending: isLoadingOrg } =
     authClient.useActiveOrganization();
 
-  // Show loading state
   if (isPending || isLoadingOrg) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -31,12 +30,10 @@ export default function AdminLayout({
     );
   }
 
-  // Redirect if not authenticated
   if (!session?.user) {
     redirect("/login");
   }
 
-  // Show organization selector if no active organization
   if (!activeOrganization) {
     return <OrganizationSelectorPage />;
   }

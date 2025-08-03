@@ -76,7 +76,6 @@ export default function OrganizationPage() {
       toast.success("Organization updated successfully!");
       setEditName("");
       setEditSlug("");
-      // Refresh the page to get updated data
       window.location.reload();
     } catch (error) {
       console.error("Error updating organization:", error);
@@ -96,7 +95,6 @@ export default function OrganizationPage() {
       });
 
       toast.success("Organization deleted successfully!");
-      // Redirect to organization selector
       window.location.href = "/admin";
     } catch (error) {
       console.error("Error deleting organization:", error);
@@ -145,7 +143,6 @@ export default function OrganizationPage() {
     );
   }
 
-  // Get current user's role
   const currentUserRole =
     activeOrganization.members?.find(
       (member) => member.user?.id === session?.user?.id
@@ -156,7 +153,6 @@ export default function OrganizationPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Organization Settings</h1>
@@ -166,7 +162,6 @@ export default function OrganizationPage() {
         </div>
       </div>
 
-      {/* Organization Details */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -308,7 +303,6 @@ export default function OrganizationPage() {
         </CardContent>
       </Card>
 
-      {/* Organization Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

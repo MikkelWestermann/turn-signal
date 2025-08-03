@@ -58,19 +58,6 @@ export default function RoadmapAdminPage() {
     })
   );
 
-  if (!organization) {
-    return (
-      <div className="container mx-auto py-8">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">No organization selected</h1>
-          <p className="text-muted-foreground">
-            Please select an organization to view roadmap details.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   if (isLoading) {
     return (
       <div className="container mx-auto py-8">

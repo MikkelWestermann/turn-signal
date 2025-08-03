@@ -72,22 +72,18 @@ type Role = "member" | "admin" | "owner";
 
 export default function MembersPage() {
   const { data: activeOrganization } = authClient.useActiveOrganization();
-  // Get members and invitations from the active organization
   const members = activeOrganization?.members || [];
   const invitations = activeOrganization?.invitations || [];
 
   const refetchMembers = () => {
-    // Refresh the active organization data
     window.location.reload();
   };
 
   const refetchInvitations = () => {
-    // Refresh the active organization data
     window.location.reload();
   };
   const [isInviting, setIsInviting] = useState(false);
   const [isUpdatingRole, setIsUpdatingRole] = useState(false);
-  const [isRemovingMember, setIsRemovingMember] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<Role>("member");
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
@@ -143,7 +139,6 @@ export default function MembersPage() {
   const handleRemoveMember = async (memberIdOrEmail: string) => {
     if (!activeOrganization) return;
 
-    setIsRemovingMember(true);
     try {
       await authClient.organization.removeMember({
         memberIdOrEmail,
@@ -155,8 +150,6 @@ export default function MembersPage() {
     } catch (error) {
       console.error("Error removing member:", error);
       toast.error("Failed to remove member");
-    } finally {
-      setIsRemovingMember(false);
     }
   };
 
@@ -266,7 +259,6 @@ export default function MembersPage() {
         </Dialog>
       </div>
 
-      {/* Members Table */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -375,7 +367,6 @@ export default function MembersPage() {
         </CardContent>
       </Card>
 
-      {/* Pending Invitations */}
       {invitations && invitations.length > 0 && (
         <Card>
           <CardHeader>
@@ -467,7 +458,6 @@ export default function MembersPage() {
         </Card>
       )}
 
-      {/* Change Role Dialog */}
       <Dialog
         open={!!selectedMemberId}
         onOpenChange={() => setSelectedMemberId(null)}

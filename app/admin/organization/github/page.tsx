@@ -21,7 +21,6 @@ export default function GitHubOverviewPage() {
   const { data: activeOrganization } = authClient.useActiveOrganization();
   const trpc = useTRPC();
 
-  // Get repositories for selected organization
   const {
     data: repositories,
     isLoading: repositoriesLoading,
@@ -48,35 +47,6 @@ export default function GitHubOverviewPage() {
       }
     )
   );
-
-  if (!activeOrganization) {
-    return (
-      <div className="container mx-auto py-8">
-        <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold">GitHub Integration</h1>
-            <p className="text-muted-foreground">
-              Select an organization to view its GitHub repositories and issues.
-            </p>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Select Organization</CardTitle>
-              <CardDescription>
-                Choose an organization to view its GitHub integration status.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Organization selection component will be implemented here.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto py-8">

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTRPC } from "@/lib/client";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -17,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, ExternalLink, Eye } from "lucide-react";
 import { useConfirm } from "@/components/confirm-dialog";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export default function RoadmapsPage() {
   const { data: organization } = authClient.useActiveOrganization();
@@ -57,18 +57,6 @@ export default function RoadmapsPage() {
 
   const handleCreate = () => {
     router.push("/admin/roadmaps/new");
-  };
-
-  const handleEdit = (id: string) => {
-    router.push(`/admin/roadmaps/${id}/edit`);
-  };
-
-  const handleView = (slug: string) => {
-    router.push(`/roadmap/${slug}`);
-  };
-
-  const handleViewDetails = (id: string) => {
-    router.push(`/admin/roadmaps/${id}`);
   };
 
   if (!organization) {
@@ -134,26 +122,27 @@ export default function RoadmapsPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleViewDetails(roadmap.id)}
                       title="View Details"
+                      asChild
                     >
-                      <Eye className="w-4 h-4" />
+                      <Link href={`/admin/roadmaps/${roadmap.id}`}>
+                        <Eye className="w-4 h-4" />
+                      </Link>
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleView(roadmap.slug)}
                       title="View Public"
+                      asChild
                     >
-                      <ExternalLink className="w-4 h-4" />
+                      <Link href={`/roadmap/${roadmap.slug}`}>
+                        <ExternalLink className="w-4 h-4" />
+                      </Link>
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleEdit(roadmap.id)}
-                      title="Edit"
-                    >
-                      <Edit className="w-4 h-4" />
+                    <Button variant="ghost" size="sm" title="Edit" asChild>
+                      <Link href={`/admin/roadmaps/${roadmap.id}/edit`}>
+                        <Edit className="w-4 h-4" />
+                      </Link>
                     </Button>
                     <Button
                       variant="ghost"
