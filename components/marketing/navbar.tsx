@@ -12,7 +12,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { ArrowRight, Menu, X } from "lucide-react";
+import { ArrowRight, Github, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -53,9 +53,8 @@ export function MarketingNavbar() {
     <header className="bg-background/80 backdrop-blur-sm border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
           <div className="flex items-center space-x-3">
-            <Link href="/" className="flex items-center space-x-3">
+            <Link href="/" className="flex items-center space-x-2">
               <Logo className="h-8 w-8" />
               <span className="text-xl font-semibold text-foreground">
                 Turn Signal
@@ -63,7 +62,6 @@ export function MarketingNavbar() {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:block">
             <NavigationMenu>
               <NavigationMenuList>
@@ -82,39 +80,19 @@ export function MarketingNavbar() {
                               Turn Signal
                             </div>
                             <p className="text-sm leading-tight text-muted-foreground">
-                              Modern application with secure authentication and
-                              comprehensive admin dashboard.
+                              Modern, open source roadmap management.
                             </p>
                           </a>
                         </NavigationMenuLink>
                       </li>
                       <ListItem href="/features" title="Features">
-                        Explore our powerful features and capabilities.
+                        Get an overview of the features
                       </ListItem>
                       <ListItem href="/pricing" title="Pricing">
-                        Simple, transparent pricing for all your needs.
+                        TLDR: It's free
                       </ListItem>
                       <ListItem href="/roadmap" title="Roadmap">
-                        See what we're building next.
-                      </ListItem>
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>Resources</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                      <ListItem href="/docs" title="Documentation">
-                        Learn how to use Turn Signal effectively.
-                      </ListItem>
-                      <ListItem href="/api" title="API Reference">
-                        Complete API documentation and examples.
-                      </ListItem>
-                      <ListItem href="/tutorials" title="Tutorials">
-                        Step-by-step guides to get you started.
-                      </ListItem>
-                      <ListItem href="/blog" title="Blog">
-                        Latest updates, tips, and insights.
+                        See what we're building next
                       </ListItem>
                     </ul>
                   </NavigationMenuContent>
@@ -139,7 +117,6 @@ export function MarketingNavbar() {
             </NavigationMenu>
           </div>
 
-          {/* Desktop CTA Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             {session ? (
               <Link href="/admin">
@@ -152,10 +129,14 @@ export function MarketingNavbar() {
                 <Button variant="outline">Sign In</Button>
               </Link>
             )}
+            <Button asChild variant="outline">
+              <Link href="https://github.com/MikkelWestermann/turn-signal">
+                <Github />
+              </Link>
+            </Button>
             <ModeToggle />
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden">
             <Button
               variant="ghost"
@@ -171,7 +152,6 @@ export function MarketingNavbar() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-border py-4">
             <div className="space-y-4">
@@ -195,37 +175,6 @@ export function MarketingNavbar() {
                     className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
                   >
                     Roadmap
-                  </Link>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-foreground">
-                  Resources
-                </h3>
-                <div className="space-y-1">
-                  <Link
-                    href="/docs"
-                    className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    Documentation
-                  </Link>
-                  <Link
-                    href="/api"
-                    className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    API Reference
-                  </Link>
-                  <Link
-                    href="/tutorials"
-                    className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    Tutorials
-                  </Link>
-                  <Link
-                    href="/blog"
-                    className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    Blog
                   </Link>
                 </div>
               </div>

@@ -36,15 +36,15 @@ const FeatureCard = ({
   description: string;
   bgColor: string;
 }) => (
-  <Card className="bg-card border-3 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
+  <Card className="bg-card border-3 border-black dark:border-white shadow-2xl hover:shadow-lg hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
     <CardHeader>
       <div className="flex items-center space-x-3">
         <div
-          className={`w-12 h-12 ${bgColor} border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center`}
+          className={`w-12 h-12 ${bgColor} border-2 border-black dark:border-white shadow-sm flex items-center justify-center`}
         >
-          <Icon className="h-6 w-6 text-black dark:text-white" />
+          <Icon className="h-6 w-6 text-foreground" />
         </div>
-        <CardTitle className="text-xl font-bold text-black dark:text-white">
+        <CardTitle className="text-xl font-bold text-foreground">
           {title}
         </CardTitle>
       </div>
@@ -82,7 +82,7 @@ const features = [
     icon: Users,
     title: "User Engagement",
     description:
-      "Let users vote, comment, and stay engaged with your product development.",
+      "Let users vote and stay engaged with your product development.",
     bgColor: "bg-primary/20 dark:bg-primary/30",
   },
   {
@@ -93,39 +93,15 @@ const features = [
     bgColor: "bg-primary/20 dark:bg-primary/30",
   },
   {
-    icon: Calendar,
-    title: "Timeline Views",
+    icon: TrendingUp,
+    title: "Open Source",
     description:
-      "Organize features by timeline, status, or custom categories that make sense for your team.",
+      "Turn Signal is fully open source. View our code, contribute features, and help us build the future of roadmap management.",
     bgColor: "bg-primary/20 dark:bg-primary/30",
   },
 ];
 
-const BackgroundGrid = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    <div className="absolute inset-0 bg-gradient-to-br from-muted/20 via-muted/10 to-muted/20 opacity-30" />
-    <div
-      className="absolute inset-0"
-      style={{
-        backgroundImage: `
-          linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)
-        `,
-        backgroundSize: "50px 50px",
-      }}
-    />
-    <div
-      className="absolute inset-0 dark:block hidden"
-      style={{
-        backgroundImage: `
-          linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-        `,
-        backgroundSize: "50px 50px",
-      }}
-    />
-  </div>
-);
+import { BackgroundGrid } from "@/components/marketing/background-grid";
 
 const FloatingElement = ({
   children,
@@ -191,13 +167,13 @@ const AnimatedMessagingApp = () => {
   }, [messages.length]);
 
   return (
-    <div className="w-72 h-96 bg-white dark:bg-gray-800 border-3 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] flex flex-col">
+    <div className="w-72 h-96 bg-white dark:bg-gray-800 border-3 border-black dark:border-white shadow-2xl flex flex-col">
       {/* WhatsApp Header */}
       <div className="bg-green-500 border-b-2 border-black dark:border-white px-3 py-2 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-red-500 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)]"></div>
-          <div className="w-3 h-3 bg-yellow-500 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)]"></div>
-          <div className="w-3 h-3 bg-green-500 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)]"></div>
+          <div className="w-3 h-3 bg-red-500 border border-black dark:border-white shadow-xs"></div>
+          <div className="w-3 h-3 bg-yellow-500 border border-black dark:border-white shadow-xs"></div>
+          <div className="w-3 h-3 bg-green-500 border border-black dark:border-white shadow-xs"></div>
         </div>
         <div className="text-sm font-medium text-white">Support Chat</div>
         <div className="w-4"></div>
@@ -211,19 +187,19 @@ const AnimatedMessagingApp = () => {
               {/* User Message */}
               <div className="flex justify-start mb-2">
                 <div
-                  className={`max-w-[200px] p-2 border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] transition-all duration-500 bg-white dark:bg-gray-800 ${
+                  className={`max-w-[200px] p-2 border-2 border-black dark:border-white shadow-sm transition-all duration-500 bg-white dark:bg-gray-800 ${
                     index === currentMessage ? "scale-105" : ""
                   }`}
                 >
                   <div className="flex items-start space-x-1">
-                    <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)] rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-xs font-bold text-black dark:text-white">
+                    <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 border border-black dark:border-white shadow-xs rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-xs font-bold text-foreground">
                         {String.fromCharCode(65 + (index % 26))}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-1 mb-1">
-                        <span className="text-xs font-bold text-black dark:text-white truncate">
+                        <span className="text-xs font-bold text-foreground truncate">
                           User{index + 1}
                         </span>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
@@ -233,7 +209,7 @@ const AnimatedMessagingApp = () => {
                       <p
                         className={`text-xs break-words ${
                           index === currentMessage
-                            ? "text-black dark:text-white"
+                            ? "text-foreground"
                             : "text-gray-800 dark:text-gray-200"
                         }`}
                       >
@@ -247,15 +223,15 @@ const AnimatedMessagingApp = () => {
               {/* Agent Response */}
               <div className="flex justify-end mb-2">
                 <div
-                  className={`max-w-[200px] p-2 border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] transition-all duration-500 bg-green-400 dark:bg-green-600 ${
+                  className={`max-w-[200px] p-2 border-2 border-black dark:border-white shadow-sm transition-all duration-500 bg-green-400 dark:bg-green-600 ${
                     index === currentMessage ? "scale-105" : ""
                   }`}
                 >
                   <p
                     className={`text-xs break-words ${
                       index === currentMessage
-                        ? "text-black dark:text-white"
-                        : "text-black dark:text-white"
+                        ? "text-foreground"
+                        : "text-foreground"
                     }`}
                   >
                     {message.agent}
@@ -270,12 +246,12 @@ const AnimatedMessagingApp = () => {
       {/* Message Input */}
       <div className="p-2 bg-gray-200 dark:bg-gray-700 border-t-2 border-black dark:border-white flex-shrink-0">
         <div className="flex items-center space-x-2">
-          <div className="flex-1 h-7 bg-white dark:bg-gray-800 border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] px-2 flex items-center">
+          <div className="flex-1 h-7 bg-white dark:bg-gray-800 border-2 border-black dark:border-white shadow-sm px-2 flex items-center">
             <span className="text-xs text-gray-500 dark:text-gray-400">
               Type a message...
             </span>
           </div>
-          <div className="w-7 h-7 bg-green-500 border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+          <div className="w-7 h-7 bg-green-500 border-2 border-black dark:border-white shadow-sm flex items-center justify-center">
             <ArrowRight className="w-3 h-3 text-white" />
           </div>
         </div>
@@ -305,24 +281,22 @@ const SimpleNotesApp = () => {
   }, [notes.length]);
 
   return (
-    <div className="w-72 h-96 bg-white dark:bg-gray-800 border-3 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)]">
+    <div className="w-72 h-96 bg-white dark:bg-gray-800 border-3 border-black dark:border-white shadow-2xl">
       {/* Window Title Bar */}
       <div className="bg-gray-200 dark:bg-gray-700 border-b-2 border-black dark:border-white px-3 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-red-500 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)]"></div>
-          <div className="w-3 h-3 bg-yellow-500 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)]"></div>
-          <div className="w-3 h-3 bg-green-500 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)]"></div>
+          <div className="w-3 h-3 bg-red-500 border border-black dark:border-white shadow-xs"></div>
+          <div className="w-3 h-3 bg-yellow-500 border border-black dark:border-white shadow-xs"></div>
+          <div className="w-3 h-3 bg-green-500 border border-black dark:border-white shadow-xs"></div>
         </div>
-        <div className="text-sm font-medium text-black dark:text-white">
-          Notes
-        </div>
+        <div className="text-sm font-medium text-foreground">Notes</div>
         <div className="w-4"></div>
       </div>
 
       {/* App Content */}
       <div className="p-4">
         <div className="mb-4">
-          <h3 className="font-bold text-black dark:text-white text-lg">
+          <h3 className="font-bold text-foreground text-lg">
             Feature Requests
           </h3>
         </div>
@@ -333,7 +307,7 @@ const SimpleNotesApp = () => {
               key={index}
               className={`transition-all duration-500 ${
                 index === currentNote
-                  ? "text-black dark:text-white font-medium"
+                  ? "text-foreground font-medium"
                   : "text-gray-500 dark:text-gray-400"
               }`}
             >
@@ -353,20 +327,20 @@ export default function Home() {
       <section className="relative bg-background overflow-hidden">
         <BackgroundGrid />
         <FloatingElement delay={0} duration={3} className="top-20 left-20">
-          <div className="w-16 h-16 bg-primary/20 dark:bg-primary/30 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-            <Github className="w-8 h-8 text-black dark:text-white" />
+          <div className="w-16 h-16 bg-primary/20 dark:bg-primary/30 border-2 border-black dark:border-white shadow-lg flex items-center justify-center">
+            <Github className="w-8 h-8 text-foreground" />
           </div>
         </FloatingElement>
 
         <FloatingElement delay={1} duration={4} className="top-32 right-32">
-          <div className="w-12 h-12 bg-secondary/20 dark:bg-secondary/30 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-            <Globe className="w-6 h-6 text-black dark:text-white" />
+          <div className="w-12 h-12 bg-secondary/20 dark:bg-secondary/30 border-2 border-black dark:border-white shadow-lg flex items-center justify-center">
+            <Globe className="w-6 h-6 text-foreground" />
           </div>
         </FloatingElement>
 
         <FloatingElement delay={2} duration={3.5} className="bottom-32 left-32">
-          <div className="w-14 h-14 bg-accent/20 dark:bg-accent/30 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-            <TrendingUp className="w-7 h-7 text-black dark:text-white" />
+          <div className="w-14 h-14 bg-accent/20 dark:bg-accent/30 border-2 border-black dark:border-white shadow-lg flex items-center justify-center">
+            <TrendingUp className="w-7 h-7 text-foreground" />
           </div>
         </FloatingElement>
 
@@ -375,7 +349,7 @@ export default function Home() {
             <div className="flex items-center justify-center space-x-4 lg:space-x-8 mb-8">
               <TurnSignal direction="left" autoBlink blinkDelay={0} />
               <div className="text-center">
-                <h1 className="text-5xl lg:text-8xl font-black tracking-wider text-black dark:text-white mb-2 lg:mb-4">
+                <h1 className="text-5xl lg:text-8xl font-black tracking-wider text-foreground mb-2 lg:mb-4">
                   TURN
                 </h1>
                 <h2 className="text-5xl lg:text-8xl font-black tracking-wider text-primary -mt-2 lg:-mt-4">
@@ -398,7 +372,7 @@ export default function Home() {
               <Link href="/login">
                 <Button
                   size="lg"
-                  className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
+                  className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-2xl hover:shadow-lg hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
                 >
                   GET STARTED FREE
                   <ArrowRight className="ml-2 h-5 w-5 lg:h-6 lg:w-6" />
@@ -408,7 +382,7 @@ export default function Home() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold border-3 border-black dark:border-white bg-background hover:bg-muted shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                  className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold border-3 border-black dark:border-white bg-background hover:bg-muted shadow-3xl hover:shadow-lg hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
                 >
                   SEE HOW IT WORKS
                 </Button>
@@ -422,8 +396,8 @@ export default function Home() {
       <section className="bg-muted/50 py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-3xl lg:text-5xl font-black text-black dark:text-white mb-6 lg:mb-8">
-              Are you tired of keeping track of what users want?
+            <h2 className="text-3xl lg:text-5xl font-black text-foreground mb-6 lg:mb-8">
+              Is it hard to keep track of what users want?
             </h2>
             <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
               Feature requests scattered across notes, chats, and emails. It's
@@ -435,10 +409,10 @@ export default function Home() {
             <div className="space-y-6">
               <Card>
                 <CardHeader className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-secondary border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+                  <div className="w-8 h-8 bg-secondary border-black dark:border-white shadow-sm flex items-center justify-center">
                     <X className="w-4 h-4 text-black" />
                   </div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
+                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">
                     Scattered Requests
                   </h3>
                 </CardHeader>
@@ -453,10 +427,10 @@ export default function Home() {
 
               <Card>
                 <CardHeader className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-secondary border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+                  <div className="w-8 h-8 bg-secondary border-black dark:border-white shadow-sm flex items-center justify-center">
                     <X className="w-4 h-4 text-black" />
                   </div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
+                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">
                     No Prioritization
                   </h3>
                 </CardHeader>
@@ -471,10 +445,10 @@ export default function Home() {
 
               <Card>
                 <CardHeader className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-secondary border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+                  <div className="w-8 h-8 bg-secondary border-black dark:border-white shadow-sm flex items-center justify-center">
                     <X className="w-4 h-4 text-black" />
                   </div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
+                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">
                     Manual Updates
                   </h3>
                 </CardHeader>
@@ -488,98 +462,15 @@ export default function Home() {
             <div className="flex flex-col items-center space-y-16">
               <div className="relative">
                 <SimpleNotesApp />
-                <div className="absolute -top-4 -right-4 w-8 h-8 bg-secondary border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center animate-bounce">
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-secondary border-black dark:border-white shadow-sm flex items-center justify-center animate-bounce">
                   <span className="text-xs font-bold text-black">!</span>
                 </div>
               </div>
               <div className="relative">
                 <AnimatedMessagingApp />
-                <div className="absolute -top-4 -right-4 w-8 h-8 bg-secondary border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center animate-bounce">
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-secondary border-black dark:border-white shadow-sm flex items-center justify-center animate-bounce">
                   <span className="text-xs font-bold text-black">!</span>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Avoid Sudden Changes Section */}
-      <section className="bg-background py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-3xl lg:text-5xl font-black text-black dark:text-white mb-6 lg:mb-8">
-              Avoid Sudden Changes
-            </h2>
-            <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-              Just like in driving, sudden changes in your product roadmap can
-              lead to... well, let's just say it's not pretty.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div className="space-y-6 lg:space-y-16">
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-                    <span className="text-sm font-bold text-black dark:text-white">
-                      🚗
-                    </span>
-                  </div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
-                    The Drift Effect
-                  </h3>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400">
-                  When you make sudden changes to your roadmap without warning,
-                  your users go into full drift mode. They're spinning out,
-                  confused, and definitely not happy about the unexpected turn.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-yellow-200 dark:bg-yellow-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-                    <span className="text-sm font-bold text-black dark:text-white">
-                      ⚠️
-                    </span>
-                  </div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
-                    User Whiplash
-                  </h3>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400">
-                  "Wait, I thought you were building the mobile app next month?"
-                  "Why did you suddenly pivot to AI?" Your users need clear
-                  signals, not surprises.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-green-200 dark:bg-green-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-                    <span className="text-sm font-bold text-black dark:text-white">
-                      ✅
-                    </span>
-                  </div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
-                    Smooth Transitions
-                  </h3>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400">
-                  With Turn Signal, you give your users clear visibility into
-                  what's coming. No more sudden lane changes—just smooth,
-                  predictable progress.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex justify-center">
-              <div className="relative">
-                <img
-                  src="/drift.png"
-                  alt="Famous drift meme showing a car in a dramatic drift with smoke"
-                  className="w-full max-w-md border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]"
-                />
               </div>
             </div>
           </div>
@@ -591,7 +482,7 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div className="relative">
               <div className="relative">
-                <div className="relative overflow-hidden border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+                <div className="relative overflow-hidden border-4 border-black dark:border-white shadow-4xl">
                   <img
                     src="/driver.png"
                     alt="First-person view from inside a car driving on a highway"
@@ -628,7 +519,7 @@ export default function Home() {
 
             <div className="space-y-8">
               <div className="space-y-6">
-                <h2 className="text-3xl lg:text-5xl font-black text-black dark:text-white">
+                <h2 className="text-3xl lg:text-5xl font-black text-foreground">
                   Stop Driving Blind
                 </h2>
                 <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400">
@@ -639,11 +530,11 @@ export default function Home() {
 
               <div className="space-y-6">
                 <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Let users vote and comment on features so you know exactly
-                  what they're asking for, not just guessing. Prioritize based
-                  on real demand and stop building things nobody asked for. The
-                  result? Features users actually want, higher adoption, and
-                  real impact.
+                  Let users vote on features so you know exactly what they're
+                  asking for, not just guessing. Prioritize based on real demand
+                  and stop building things nobody asked for. The result?
+                  Features users actually want, higher adoption, and real
+                  impact.
                 </p>
               </div>
 
@@ -651,7 +542,7 @@ export default function Home() {
                 <Link href="/login">
                   <Button
                     size="lg"
-                    className="h-12 px-8 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                    className="h-12 px-8 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-3xl hover:shadow-sm hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
                   >
                     Start Building Smarter
                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -663,12 +554,94 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="bg-background py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-12 lg:mb-16">
+            <h2 className="text-3xl lg:text-5xl font-black text-foreground mb-6 lg:mb-8">
+              Avoid Sudden Changes
+            </h2>
+            <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+              Just like in driving, sudden changes in your product roadmap can
+              lead to... well, let's just say it's not pretty.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div className="space-y-6 lg:space-y-16">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-sm flex items-center justify-center">
+                    <span className="text-sm font-bold text-foreground">
+                      🚗
+                    </span>
+                  </div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">
+                    The Drift Effect
+                  </h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400">
+                  When you make sudden changes to your roadmap without warning,
+                  your users go into full drift mode. They're spinning out,
+                  confused, and definitely not happy about the unexpected turn.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-yellow-200 dark:bg-yellow-800 border-2 border-black dark:border-white shadow-sm flex items-center justify-center">
+                    <span className="text-sm font-bold text-foreground">
+                      ⚠️
+                    </span>
+                  </div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">
+                    User Whiplash
+                  </h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400">
+                  "Wait, I thought you were building the mobile app next month?"
+                  "Why did you suddenly pivot to AI?" Your users need clear
+                  signals, not surprises.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-200 dark:bg-green-800 border-2 border-black dark:border-white shadow-sm flex items-center justify-center">
+                    <span className="text-sm font-bold text-foreground">
+                      ✅
+                    </span>
+                  </div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">
+                    Smooth Transitions
+                  </h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400">
+                  With Turn Signal, you give your users clear visibility into
+                  what's coming. No more sudden lane changes—just smooth,
+                  predictable progress.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-center">
+              <div className="relative">
+                <img
+                  src="/drift.png"
+                  alt="Famous drift meme showing a car in a dramatic drift with smoke"
+                  className="w-full max-w-md border-4 border-black dark:border-white shadow-4xl"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="bg-muted/50 py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <Card className="max-w-4xl mx-auto bg-card border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+          <Card className="max-w-4xl mx-auto bg-card border-4 border-black dark:border-white shadow-4xl">
             <CardHeader className="text-center pb-6">
-              <CardTitle className="text-3xl lg:text-4xl font-black text-black dark:text-white mb-4">
+              <CardTitle className="text-3xl lg:text-4xl font-black text-foreground mb-4">
                 Are you ready to show your users where you're going?
               </CardTitle>
               <CardDescription className="text-lg lg:text-xl text-gray-600 dark:text-gray-400">
@@ -680,7 +653,7 @@ export default function Home() {
               <Link href="/login">
                 <Button
                   size="lg"
-                  className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
+                  className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-2xl hover:shadow-lg hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
                 >
                   START BUILDING YOUR ROADMAP
                   <ArrowRight className="ml-2 h-5 w-5 lg:h-6 lg:w-6" />
@@ -694,7 +667,7 @@ export default function Home() {
       {/* Features Section */}
       <section className="bg-background py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <h2 className="text-3xl lg:text-5xl font-black text-center text-black dark:text-white mb-12 lg:mb-16">
+          <h2 className="text-3xl lg:text-5xl font-black text-center text-foreground mb-12 lg:mb-16">
             Features
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -714,16 +687,16 @@ export default function Home() {
       {/* How It Works Section */}
       <section id="how-it-works" className="bg-muted/50 py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <h2 className="text-3xl lg:text-5xl font-black text-center text-black dark:text-white mb-12 lg:mb-16">
+          <h2 className="text-3xl lg:text-5xl font-black text-center text-foreground mb-12 lg:mb-16">
             How It Works
           </h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
             <div className="text-center">
-              <div className="w-20 h-20 bg-secondary border-3 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-secondary border-3 border-black dark:border-white shadow-3xl flex items-center justify-center mx-auto mb-6">
                 <span className="text-3xl font-black text-black">1</span>
               </div>
-              <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white mb-4">
+              <h3 className="text-xl lg:text-2xl font-bold text-foreground mb-4">
                 Connect GitHub
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
@@ -733,10 +706,10 @@ export default function Home() {
             </div>
 
             <div className="text-center">
-              <div className="w-20 h-20 bg-secondary border-3 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-secondary border-3 border-black dark:border-white shadow-3xl flex items-center justify-center mx-auto mb-6">
                 <span className="text-3xl font-black text-black">2</span>
               </div>
-              <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white mb-4">
+              <h3 className="text-xl lg:text-2xl font-bold text-foreground mb-4">
                 Organize & Customize
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
@@ -746,39 +719,38 @@ export default function Home() {
             </div>
 
             <div className="text-center">
-              <div className="w-20 h-20 bg-secondary border-3 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-secondary border-3 border-black dark:border-white shadow-3xl flex items-center justify-center mx-auto mb-6">
                 <span className="text-3xl font-black text-black">3</span>
               </div>
-              <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white mb-4">
+              <h3 className="text-xl lg:text-2xl font-bold text-foreground mb-4">
                 Share & Engage
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Share your beautiful public roadmap with users and let them
-                vote, comment, and stay engaged.
+                Share your beautiful public roadmap with users and let them vote
+                and stay engaged.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Final CTA Section */}
       <section className="bg-background py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <Card className="max-w-4xl mx-auto bg-card border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+          <Card className="max-w-4xl mx-auto bg-card border-4 border-black dark:border-white shadow-4xl">
             <CardHeader className="text-center pb-6">
-              <CardTitle className="text-3xl lg:text-4xl font-black text-black dark:text-white mb-4">
+              <CardTitle className="text-3xl lg:text-4xl font-black text-foreground mb-4">
                 Ready to turn your GitHub issues into a roadmap?
               </CardTitle>
               <CardDescription className="text-lg lg:text-xl text-gray-600 dark:text-gray-400">
-                Join thousands of developers who are already building better
-                products with Turn Signal.
+                Transform your GitHub issues into beautiful, shareable roadmaps
+                that keep your users engaged and informed.
               </CardDescription>
             </CardHeader>
             <CardContent className="text-center">
               <Link href="/login">
                 <Button
                   size="lg"
-                  className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
+                  className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-2xl hover:shadow-lg hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
                 >
                   START YOUR FREE ROADMAP
                   <ArrowRight className="ml-2 h-5 w-5 lg:h-6 lg:w-6" />

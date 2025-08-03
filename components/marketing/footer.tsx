@@ -17,32 +17,24 @@ export function MarketingFooter() {
               </span>
             </div>
             <p className="text-muted-foreground mb-4 max-w-md">
-              A modern application with secure authentication and comprehensive
-              admin dashboard. Built with Next.js and Better Auth for
-              enterprise-grade security.
+              Transform your GitHub issues into beautiful, public roadmaps that
+              keep your users informed about what's coming next. Open source and
+              free forever.
             </p>
             <div className="flex space-x-4">
               <Link
-                href="https://github.com"
+                href="https://github.com/MikkelWestermann/turn-signal"
                 className="text-muted-foreground hover:text-foreground"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <Github className="h-5 w-5" />
               </Link>
               <Link
-                href="https://twitter.com"
+                href="https://github.com/MikkelWestermann/turn-signal/issues"
                 className="text-muted-foreground hover:text-foreground"
-              >
-                <Twitter className="h-5 w-5" />
-              </Link>
-              <Link
-                href="https://linkedin.com"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <Linkedin className="h-5 w-5" />
-              </Link>
-              <Link
-                href="mailto:contact@turnsignal.com"
-                className="text-muted-foreground hover:text-foreground"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <Mail className="h-5 w-5" />
               </Link>
@@ -57,7 +49,7 @@ export function MarketingFooter() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/features"
+                  href="/"
                   className="text-sm text-muted-foreground hover:text-foreground"
                 >
                   Features
@@ -73,18 +65,18 @@ export function MarketingFooter() {
               </li>
               <li>
                 <Link
-                  href="/roadmap"
+                  href="/about"
                   className="text-sm text-muted-foreground hover:text-foreground"
                 >
-                  Roadmap
+                  About
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/changelog"
+                  href="/contact"
                   className="text-sm text-muted-foreground hover:text-foreground"
                 >
-                  Changelog
+                  Contact
                 </Link>
               </li>
             </ul>
@@ -98,34 +90,42 @@ export function MarketingFooter() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/docs"
+                  href="https://github.com/MikkelWestermann/turn-signal"
                   className="text-sm text-muted-foreground hover:text-foreground"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  Documentation
+                  GitHub Repository
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/api"
+                  href="https://github.com/MikkelWestermann/turn-signal/issues"
                   className="text-sm text-muted-foreground hover:text-foreground"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  API Reference
+                  Issues & Support
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/tutorials"
+                  href="https://github.com/MikkelWestermann/turn-signal/issues/new?template=feature_request.md"
                   className="text-sm text-muted-foreground hover:text-foreground"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  Tutorials
+                  Request Feature
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/blog"
+                  href="https://github.com/MikkelWestermann/turn-signal/issues/new?template=bug_report.md"
                   className="text-sm text-muted-foreground hover:text-foreground"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  Blog
+                  Report Bug
                 </Link>
               </li>
             </ul>
@@ -136,17 +136,24 @@ export function MarketingFooter() {
         <div className="border-t border-border mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-sm text-muted-foreground">
-              <p>&copy; 2024 Turn Signal. All rights reserved.</p>
+              <p>&copy; 2024 Turn Signal. Open source and free forever.</p>
             </div>
             <div className="flex space-x-6 text-sm text-muted-foreground">
-              <Link href="/privacy" className="hover:text-foreground">
-                Privacy Policy
+              <Link
+                href="https://github.com/MikkelWestermann/turn-signal/blob/main/LICENSE"
+                className="hover:text-foreground"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                License
               </Link>
-              <Link href="/terms" className="hover:text-foreground">
-                Terms of Service
-              </Link>
-              <Link href="/cookies" className="hover:text-foreground">
-                Cookie Policy
+              <Link
+                href="https://github.com/MikkelWestermann/turn-signal"
+                className="hover:text-foreground"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Source Code
               </Link>
             </div>
           </div>
