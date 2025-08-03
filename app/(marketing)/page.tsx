@@ -18,43 +18,98 @@ import {
   TrendingUp,
   MessageSquare,
   Calendar,
-  Plus,
-  Check,
   X,
 } from "lucide-react";
-import Logo from "@/components/logo";
-import { ModeToggle } from "@/components/mode-toggle";
 import { useState, useEffect } from "react";
+import { LucideIcon } from "lucide-react";
+import { TurnSignal } from "@/components/turn-signal";
 
-const TurnSignal = ({
-  direction,
-  isBlinking,
+// Feature card component
+const FeatureCard = ({
+  icon: Icon,
+  title,
+  description,
+  bgColor,
 }: {
-  direction: "left" | "right";
-  isBlinking: boolean;
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  bgColor: string;
 }) => (
-  <div className={`relative ${direction === "left" ? "rotate-180" : ""}`}>
-    <div
-      className={`w-6 h-3 sm:w-8 sm:h-4 bg-amber-300 dark:bg-amber-400 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:sm:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] ${
-        isBlinking ? "animate-pulse" : "opacity-30"
-      }`}
-    />
-    <div className="absolute -top-0.5 -left-0.5 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-black dark:bg-white" />
-    <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-black dark:bg-white" />
-    <div className="absolute -bottom-0.5 -left-0.5 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-black dark:bg-white" />
-    <div className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-black dark:bg-white" />
-  </div>
+  <Card className="bg-card border-3 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
+    <CardHeader>
+      <div className="flex items-center space-x-3">
+        <div
+          className={`w-12 h-12 ${bgColor} border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center`}
+        >
+          <Icon className="h-6 w-6 text-black dark:text-white" />
+        </div>
+        <CardTitle className="text-xl font-bold text-black dark:text-white">
+          {title}
+        </CardTitle>
+      </div>
+    </CardHeader>
+    <CardContent>
+      <p className="text-gray-600 dark:text-gray-400">{description}</p>
+    </CardContent>
+  </Card>
 );
+
+// Features data
+const features = [
+  {
+    icon: Github,
+    title: "GitHub Integration",
+    description:
+      "Automatically sync your GitHub issues and pull requests. No manual updates needed.",
+    bgColor: "bg-primary/20 dark:bg-primary/30",
+  },
+  {
+    icon: Globe,
+    title: "Public Roadmaps",
+    description:
+      "Beautiful, customizable roadmaps that your users can view and interact with.",
+    bgColor: "bg-primary/20 dark:bg-primary/30",
+  },
+  {
+    icon: Zap,
+    title: "Real-time Updates",
+    description:
+      "Your roadmap updates automatically as you work on GitHub. Always in sync.",
+    bgColor: "bg-primary/20 dark:bg-primary/30",
+  },
+  {
+    icon: Users,
+    title: "User Engagement",
+    description:
+      "Let users vote, comment, and stay engaged with your product development.",
+    bgColor: "bg-primary/20 dark:bg-primary/30",
+  },
+  {
+    icon: MessageSquare,
+    title: "Feedback Loop",
+    description:
+      "Build better products by understanding what your users want most.",
+    bgColor: "bg-primary/20 dark:bg-primary/30",
+  },
+  {
+    icon: Calendar,
+    title: "Timeline Views",
+    description:
+      "Organize features by timeline, status, or custom categories that make sense for your team.",
+    bgColor: "bg-primary/20 dark:bg-primary/30",
+  },
+];
 
 const BackgroundGrid = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 opacity-15" />
+    <div className="absolute inset-0 bg-gradient-to-br from-muted/20 via-muted/10 to-muted/20 opacity-30" />
     <div
       className="absolute inset-0"
       style={{
         backgroundImage: `
-          linear-gradient(rgba(0,0,0,0.15) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0,0,0,0.15) 1px, transparent 1px)
+          linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)
         `,
         backgroundSize: "50px 50px",
       }}
@@ -63,8 +118,8 @@ const BackgroundGrid = () => (
       className="absolute inset-0 dark:block hidden"
       style={{
         backgroundImage: `
-          linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)
+          linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
         `,
         backgroundSize: "50px 50px",
       }}
@@ -93,88 +148,6 @@ const FloatingElement = ({
     {children}
   </div>
 );
-
-const AnimatedNotesApp = () => {
-  const [currentNote, setCurrentNote] = useState(0);
-  const notes = [
-    "Dark mode support",
-    "Mobile app",
-    "API rate limiting",
-    "User dashboard",
-    "Export functionality",
-    "Real-time notifications",
-    "Custom themes",
-    "Bulk operations",
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentNote((prev) => (prev + 1) % notes.length);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [notes.length]);
-
-  return (
-    <div className="w-64 h-80 bg-white dark:bg-gray-800 border-3 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] p-4">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-black dark:text-white">
-          Feature Requests
-        </h3>
-        <div className="w-6 h-6 bg-orange-200 dark:bg-orange-800 border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-          <Plus className="w-3 h-3 text-black dark:text-white" />
-        </div>
-      </div>
-
-      <div className="space-y-3">
-        {notes.map((note, index) => (
-          <div
-            key={index}
-            className={`p-3 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] transition-all duration-500 ${
-              index === currentNote
-                ? "bg-orange-100 dark:bg-orange-900 scale-105"
-                : "bg-gray-50 dark:bg-gray-700"
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <span
-                className={`text-sm font-medium ${
-                  index === currentNote
-                    ? "text-black dark:text-white"
-                    : "text-gray-600 dark:text-gray-400"
-                }`}
-              >
-                {note}
-              </span>
-              <div className="flex space-x-1">
-                <div className="w-4 h-4 bg-green-200 dark:bg-green-800 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-                  <Check className="w-2 h-2 text-black dark:text-white" />
-                </div>
-                <div className="w-4 h-4 bg-red-200 dark:bg-red-800 border border-black dark:border-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-                  <X className="w-2 h-2 text-black dark:text-white" />
-                </div>
-              </div>
-            </div>
-            <div className="mt-2 flex items-center justify-between">
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                {Math.floor(Math.random() * 50) + 1} votes
-              </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                {Math.floor(Math.random() * 30) + 1}d ago
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-4 text-center">
-        <span className="text-xs text-gray-500 dark:text-gray-400">
-          {notes.length} requests • {Math.floor(Math.random() * 100) + 50} total
-          votes
-        </span>
-      </div>
-    </div>
-  );
-};
 
 const AnimatedMessagingApp = () => {
   const [currentMessage, setCurrentMessage] = useState(0);
@@ -254,7 +227,7 @@ const AnimatedMessagingApp = () => {
                           User{index + 1}
                         </span>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {Math.floor(Math.random() * 60) + 1}m
+                          {(Math.floor(index * 14) % 60) + 1}m
                         </span>
                       </div>
                       <p
@@ -375,74 +348,79 @@ const SimpleNotesApp = () => {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 relative overflow-hidden">
-      <BackgroundGrid />
-      <FloatingElement delay={0} duration={3} className="top-20 left-20">
-        <div className="w-16 h-16 bg-orange-200 dark:bg-orange-800 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-          <Github className="w-8 h-8 text-black dark:text-white" />
-        </div>
-      </FloatingElement>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative bg-background overflow-hidden">
+        <BackgroundGrid />
+        <FloatingElement delay={0} duration={3} className="top-20 left-20">
+          <div className="w-16 h-16 bg-primary/20 dark:bg-primary/30 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+            <Github className="w-8 h-8 text-black dark:text-white" />
+          </div>
+        </FloatingElement>
 
-      <FloatingElement delay={1} duration={4} className="top-32 right-32">
-        <div className="w-12 h-12 bg-amber-200 dark:bg-amber-800 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-          <Globe className="w-6 h-6 text-black dark:text-white" />
-        </div>
-      </FloatingElement>
+        <FloatingElement delay={1} duration={4} className="top-32 right-32">
+          <div className="w-12 h-12 bg-secondary/20 dark:bg-secondary/30 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+            <Globe className="w-6 h-6 text-black dark:text-white" />
+          </div>
+        </FloatingElement>
 
-      <FloatingElement delay={2} duration={3.5} className="bottom-32 left-32">
-        <div className="w-14 h-14 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-          <TrendingUp className="w-7 h-7 text-black dark:text-white" />
-        </div>
-      </FloatingElement>
+        <FloatingElement delay={2} duration={3.5} className="bottom-32 left-32">
+          <div className="w-14 h-14 bg-accent/20 dark:bg-accent/30 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+            <TrendingUp className="w-7 h-7 text-black dark:text-white" />
+          </div>
+        </FloatingElement>
 
-      <section className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
-        <div className="text-center mb-16 lg:mb-24">
-          <div className="flex items-center justify-center space-x-4 lg:space-x-8 mb-8">
-            <TurnSignal direction="left" isBlinking={false} />
-            <div className="text-center">
-              <h1 className="text-5xl lg:text-8xl font-black tracking-wider text-black dark:text-white mb-2 lg:mb-4">
-                TURN
-              </h1>
-              <h2 className="text-5xl lg:text-8xl font-black tracking-wider text-orange-600 dark:text-orange-400 -mt-2 lg:-mt-4">
-                SIGNAL
-              </h2>
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
+          <div className="text-center mb-16 lg:mb-24">
+            <div className="flex items-center justify-center space-x-4 lg:space-x-8 mb-8">
+              <TurnSignal direction="left" autoBlink blinkDelay={0} />
+              <div className="text-center">
+                <h1 className="text-5xl lg:text-8xl font-black tracking-wider text-black dark:text-white mb-2 lg:mb-4">
+                  TURN
+                </h1>
+                <h2 className="text-5xl lg:text-8xl font-black tracking-wider text-primary -mt-2 lg:-mt-4">
+                  SIGNAL
+                </h2>
+              </div>
+              <TurnSignal direction="right" autoBlink blinkDelay={1000} />
             </div>
-            <TurnSignal direction="right" isBlinking={false} />
-          </div>
 
-          <h3 className="text-2xl lg:text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6 lg:mb-8 max-w-4xl mx-auto">
-            Easy public roadmap based on GitHub issues
-          </h3>
+            <h3 className="text-2xl lg:text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6 lg:mb-8 max-w-4xl mx-auto">
+              Easy public roadmap based on GitHub issues
+            </h3>
 
-          <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400 mb-8 lg:mb-12 max-w-3xl mx-auto">
-            Transform your GitHub issues into beautiful, public roadmaps that
-            keep your users informed about what's coming next.
-          </p>
+            <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400 mb-8 lg:mb-12 max-w-3xl mx-auto">
+              Transform your GitHub issues into beautiful, public roadmaps that
+              keep your users informed about what's coming next.
+            </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 justify-center items-center">
-            <Link href="/login">
-              <Button
-                size="lg"
-                className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold bg-orange-600 hover:bg-orange-700 text-white border-2 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
-              >
-                GET STARTED FREE
-                <ArrowRight className="ml-2 h-5 w-5 lg:h-6 lg:w-6" />
-              </Button>
-            </Link>
-            <Link href="#how-it-works">
-              <Button
-                variant="outline"
-                size="lg"
-                className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold border-3 border-black dark:border-white bg-white dark:bg-gray-900 hover:bg-orange-50 dark:hover:bg-orange-950 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
-              >
-                SEE HOW IT WORKS
-              </Button>
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 justify-center items-center">
+              <Link href="/login">
+                <Button
+                  size="lg"
+                  className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
+                >
+                  GET STARTED FREE
+                  <ArrowRight className="ml-2 h-5 w-5 lg:h-6 lg:w-6" />
+                </Button>
+              </Link>
+              <Link href="#how-it-works">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold border-3 border-black dark:border-white bg-background hover:bg-muted shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                >
+                  SEE HOW IT WORKS
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Pain Point Section */}
-        <div className="mb-16 lg:mb-24">
+      {/* Pain Point Section */}
+      <section className="bg-muted/50 py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-12 lg:mb-16">
             <h2 className="text-3xl lg:text-5xl font-black text-black dark:text-white mb-6 lg:mb-8">
               Are you tired of keeping track of what users want?
@@ -455,76 +433,79 @@ export default function Home() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-                    <X className="w-4 h-4 text-black dark:text-white" />
+              <Card>
+                <CardHeader className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-secondary border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+                    <X className="w-4 h-4 text-black" />
                   </div>
                   <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
                     Scattered Requests
                   </h3>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Feature requests buried in support tickets, chat messages, and
-                  random notes. Impossible to track what users actually want.
-                </p>
-              </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Feature requests buried in support tickets, chat messages,
+                    and random notes. Impossible to track what users actually
+                    want.
+                  </p>
+                </CardContent>
+              </Card>
 
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-                    <X className="w-4 h-4 text-black dark:text-white" />
+              <Card>
+                <CardHeader className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-secondary border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+                    <X className="w-4 h-4 text-black" />
                   </div>
                   <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
                     No Prioritization
                   </h3>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Hard to know which features matter most to your users.
-                  Building the wrong things because you can't see the big
-                  picture.
-                </p>
-              </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Hard to know which features matter most to your users.
+                    Building the wrong things because you can't see the big
+                    picture.
+                  </p>
+                </CardContent>
+              </Card>
 
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-                    <X className="w-4 h-4 text-black dark:text-white" />
+              <Card>
+                <CardHeader className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-secondary border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+                    <X className="w-4 h-4 text-black" />
                   </div>
                   <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white">
                     Manual Updates
                   </h3>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400">
+                </CardHeader>
+                <CardContent>
                   Constantly updating spreadsheets and documents. Time wasted on
                   maintenance instead of building features.
-                </p>
-              </div>
+                </CardContent>
+              </Card>
             </div>
 
             <div className="flex flex-col items-center space-y-16">
               <div className="relative">
                 <SimpleNotesApp />
-                <div className="absolute -top-4 -right-4 w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center animate-bounce">
-                  <span className="text-xs font-bold text-black dark:text-white">
-                    !
-                  </span>
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-secondary border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center animate-bounce">
+                  <span className="text-xs font-bold text-black">!</span>
                 </div>
               </div>
               <div className="relative">
                 <AnimatedMessagingApp />
-                <div className="absolute -top-4 -right-4 w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center animate-bounce">
-                  <span className="text-xs font-bold text-black dark:text-white">
-                    !
-                  </span>
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-secondary border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center animate-bounce">
+                  <span className="text-xs font-bold text-black">!</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Avoid Sudden Changes Section */}
-        <div className="mb-16 lg:mb-24">
+      {/* Avoid Sudden Changes Section */}
+      <section className="bg-background py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-12 lg:mb-16">
             <h2 className="text-3xl lg:text-5xl font-black text-black dark:text-white mb-6 lg:mb-8">
               Avoid Sudden Changes
@@ -536,7 +517,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div className="space-y-6">
+            <div className="space-y-6 lg:space-y-16">
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
@@ -599,166 +580,71 @@ export default function Home() {
                   alt="Famous drift meme showing a car in a dramatic drift with smoke"
                   className="w-full max-w-md border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]"
                 />
-                <div className="absolute -top-4 -right-4 w-12 h-12 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center animate-bounce">
-                  <span className="text-lg font-bold text-black dark:text-white">
-                    💨
-                  </span>
-                </div>
               </div>
             </div>
           </div>
         </div>
+      </section>
 
-        <Card className="max-w-4xl mx-auto mb-16 lg:mb-24 bg-white dark:bg-gray-900 border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
-          <CardHeader className="text-center pb-6">
-            <CardTitle className="text-3xl lg:text-4xl font-black text-black dark:text-white mb-4">
-              Are you ready to show your users where you're going?
-            </CardTitle>
-            <CardDescription className="text-lg lg:text-xl text-gray-600 dark:text-gray-400">
-              Stop the endless "when will this be ready?" questions. Give your
-              users visibility into your development roadmap.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-center">
-            <Link href="/login">
-              <Button
-                size="lg"
-                className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold bg-orange-600 hover:bg-orange-700 text-white border-2 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
-              >
-                START BUILDING YOUR ROADMAP
-                <ArrowRight className="ml-2 h-5 w-5 lg:h-6 lg:w-6" />
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 lg:mb-24">
-          <Card className="bg-white dark:bg-gray-900 border-3 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
-            <CardHeader>
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-orange-200 dark:bg-orange-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-                  <Github className="h-6 w-6 text-black dark:text-white" />
-                </div>
-                <CardTitle className="text-xl font-bold text-black dark:text-white">
-                  GitHub Integration
-                </CardTitle>
-              </div>
+      {/* CTA Section */}
+      <section className="bg-muted/50 py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <Card className="max-w-4xl mx-auto bg-card border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+            <CardHeader className="text-center pb-6">
+              <CardTitle className="text-3xl lg:text-4xl font-black text-black dark:text-white mb-4">
+                Are you ready to show your users where you're going?
+              </CardTitle>
+              <CardDescription className="text-lg lg:text-xl text-gray-600 dark:text-gray-400">
+                Stop the endless "when will this be ready?" questions. Give your
+                users visibility into your development roadmap.
+              </CardDescription>
             </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 dark:text-gray-400">
-                Automatically sync your GitHub issues and pull requests. No
-                manual updates needed.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white dark:bg-gray-900 border-3 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
-            <CardHeader>
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-amber-200 dark:bg-amber-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-                  <Globe className="h-6 w-6 text-black dark:text-white" />
-                </div>
-                <CardTitle className="text-xl font-bold text-black dark:text-white">
-                  Public Roadmaps
-                </CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 dark:text-gray-400">
-                Beautiful, customizable roadmaps that your users can view and
-                interact with.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white dark:bg-gray-900 border-3 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
-            <CardHeader>
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-                  <Zap className="h-6 w-6 text-black dark:text-white" />
-                </div>
-                <CardTitle className="text-xl font-bold text-black dark:text-white">
-                  Real-time Updates
-                </CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 dark:text-gray-400">
-                Your roadmap updates automatically as you work on GitHub. Always
-                in sync.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white dark:bg-gray-900 border-3 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
-            <CardHeader>
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-green-200 dark:bg-green-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-                  <Users className="h-6 w-6 text-black dark:text-white" />
-                </div>
-                <CardTitle className="text-xl font-bold text-black dark:text-white">
-                  User Engagement
-                </CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 dark:text-gray-400">
-                Let users vote, comment, and stay engaged with your product
-                development.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white dark:bg-gray-900 border-3 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
-            <CardHeader>
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-purple-200 dark:bg-purple-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-                  <MessageSquare className="h-6 w-6 text-black dark:text-white" />
-                </div>
-                <CardTitle className="text-xl font-bold text-black dark:text-white">
-                  Feedback Loop
-                </CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 dark:text-gray-400">
-                Build better products by understanding what your users want
-                most.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white dark:bg-gray-900 border-3 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
-            <CardHeader>
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-blue-200 dark:bg-blue-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
-                  <Calendar className="h-6 w-6 text-black dark:text-white" />
-                </div>
-                <CardTitle className="text-xl font-bold text-black dark:text-white">
-                  Timeline Views
-                </CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 dark:text-gray-400">
-                Organize features by timeline, status, or custom categories that
-                make sense for your team.
-              </p>
+            <CardContent className="text-center">
+              <Link href="/login">
+                <Button
+                  size="lg"
+                  className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
+                >
+                  START BUILDING YOUR ROADMAP
+                  <ArrowRight className="ml-2 h-5 w-5 lg:h-6 lg:w-6" />
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>
+      </section>
 
-        <div id="how-it-works" className="mb-16 lg:mb-24">
+      {/* Features Section */}
+      <section className="bg-background py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <h2 className="text-3xl lg:text-5xl font-black text-center text-black dark:text-white mb-12 lg:mb-16">
+            Features
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <FeatureCard
+                key={index}
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+                bgColor={feature.bgColor}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section id="how-it-works" className="bg-muted/50 py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <h2 className="text-3xl lg:text-5xl font-black text-center text-black dark:text-white mb-12 lg:mb-16">
             How It Works
           </h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
             <div className="text-center">
-              <div className="w-20 h-20 bg-orange-200 dark:bg-orange-800 border-3 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center mx-auto mb-6">
-                <span className="text-3xl font-black text-black dark:text-white">
-                  1
-                </span>
+              <div className="w-20 h-20 bg-secondary border-3 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center mx-auto mb-6">
+                <span className="text-3xl font-black text-black">1</span>
               </div>
               <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white mb-4">
                 Connect GitHub
@@ -770,10 +656,8 @@ export default function Home() {
             </div>
 
             <div className="text-center">
-              <div className="w-20 h-20 bg-amber-200 dark:bg-amber-800 border-3 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center mx-auto mb-6">
-                <span className="text-3xl font-black text-black dark:text-white">
-                  2
-                </span>
+              <div className="w-20 h-20 bg-secondary border-3 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center mx-auto mb-6">
+                <span className="text-3xl font-black text-black">2</span>
               </div>
               <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white mb-4">
                 Organize & Customize
@@ -785,10 +669,8 @@ export default function Home() {
             </div>
 
             <div className="text-center">
-              <div className="w-20 h-20 bg-red-200 dark:bg-red-800 border-3 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center mx-auto mb-6">
-                <span className="text-3xl font-black text-black dark:text-white">
-                  3
-                </span>
+              <div className="w-20 h-20 bg-secondary border-3 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center mx-auto mb-6">
+                <span className="text-3xl font-black text-black">3</span>
               </div>
               <h3 className="text-xl lg:text-2xl font-bold text-black dark:text-white mb-4">
                 Share & Engage
@@ -800,29 +682,34 @@ export default function Home() {
             </div>
           </div>
         </div>
+      </section>
 
-        <Card className="max-w-4xl mx-auto bg-white dark:bg-gray-900 border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
-          <CardHeader className="text-center pb-6">
-            <CardTitle className="text-3xl lg:text-4xl font-black text-black dark:text-white mb-4">
-              Ready to turn your GitHub issues into a roadmap?
-            </CardTitle>
-            <CardDescription className="text-lg lg:text-xl text-gray-600 dark:text-gray-400">
-              Join thousands of developers who are already building better
-              products with Turn Signal.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-center">
-            <Link href="/login">
-              <Button
-                size="lg"
-                className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold bg-orange-600 hover:bg-orange-700 text-white border-2 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
-              >
-                START YOUR FREE ROADMAP
-                <ArrowRight className="ml-2 h-5 w-5 lg:h-6 lg:w-6" />
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
+      {/* Final CTA Section */}
+      <section className="bg-background py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <Card className="max-w-4xl mx-auto bg-card border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+            <CardHeader className="text-center pb-6">
+              <CardTitle className="text-3xl lg:text-4xl font-black text-black dark:text-white mb-4">
+                Ready to turn your GitHub issues into a roadmap?
+              </CardTitle>
+              <CardDescription className="text-lg lg:text-xl text-gray-600 dark:text-gray-400">
+                Join thousands of developers who are already building better
+                products with Turn Signal.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-center">
+              <Link href="/login">
+                <Button
+                  size="lg"
+                  className="h-14 lg:h-16 px-8 lg:px-12 text-lg lg:text-xl font-bold bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
+                >
+                  START YOUR FREE ROADMAP
+                  <ArrowRight className="ml-2 h-5 w-5 lg:h-6 lg:w-6" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
       </section>
     </div>
   );

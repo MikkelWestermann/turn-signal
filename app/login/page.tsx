@@ -15,36 +15,17 @@ import { Loader2, ArrowLeft, Zap, Car } from "lucide-react";
 import Link from "next/link";
 import { ModeToggle } from "@/components/mode-toggle";
 import Logo from "@/components/logo";
-
-const TurnSignal = ({
-  direction,
-  isBlinking,
-}: {
-  direction: "left" | "right";
-  isBlinking: boolean;
-}) => (
-  <div className={`relative ${direction === "left" ? "rotate-180" : ""}`}>
-    <div
-      className={`w-6 h-3 sm:w-8 sm:h-4 bg-amber-300 dark:bg-amber-400 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:sm:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] ${
-        isBlinking ? "animate-pulse" : "opacity-30"
-      }`}
-    />
-    <div className="absolute -top-0.5 -left-0.5 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-black dark:bg-white" />
-    <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-black dark:bg-white" />
-    <div className="absolute -bottom-0.5 -left-0.5 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-black dark:bg-white" />
-    <div className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-black dark:bg-white" />
-  </div>
-);
+import { TurnSignal } from "@/components/turn-signal";
 
 const BackgroundGrid = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 opacity-15" />
+    <div className="absolute inset-0 bg-gradient-to-br from-muted/20 via-muted/10 to-muted/20 opacity-30" />
     <div
       className="absolute inset-0"
       style={{
         backgroundImage: `
-          linear-gradient(rgba(0,0,0,0.15) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0,0,0,0.15) 1px, transparent 1px)
+          linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)
         `,
         backgroundSize: "50px 50px",
       }}
@@ -53,8 +34,8 @@ const BackgroundGrid = () => (
       className="absolute inset-0 dark:block hidden"
       style={{
         backgroundImage: `
-          linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)
+          linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
         `,
         backgroundSize: "50px 50px",
       }}
@@ -87,20 +68,6 @@ export default function LoginPage() {
   const { data: session, isPending } = authClient.useSession();
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
-  const [leftBlinking, setLeftBlinking] = useState(false);
-  const [rightBlinking, setRightBlinking] = useState(false);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLeftBlinking(true);
-      setTimeout(() => setLeftBlinking(false), 500);
-      setTimeout(() => {
-        setRightBlinking(true);
-        setTimeout(() => setRightBlinking(false), 500);
-      }, 1000);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
 
   // TODO: do this server side
   useEffect(() => {
@@ -147,10 +114,10 @@ export default function LoginPage() {
 
   if (isPending) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 relative overflow-hidden px-4">
+      <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden px-4">
         <BackgroundGrid />
-        <div className="relative z-10 flex items-center space-x-4 bg-white dark:bg-gray-900 border-2 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] px-6 py-4 sm:px-8 sm:py-6">
-          <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-orange-500" />
+        <div className="relative z-10 flex items-center space-x-4 bg-card border-2 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] px-6 py-4 sm:px-8 sm:py-6">
+          <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-primary" />
           <span className="text-lg sm:text-xl font-bold tracking-wider text-black dark:text-white">
             LOADING...
           </span>
@@ -160,7 +127,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 relative overflow-hidden px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden px-4">
       <BackgroundGrid />
 
       <div className="absolute top-4 left-4 sm:top-8 sm:left-8 z-20">
@@ -172,37 +139,35 @@ export default function LoginPage() {
       </div>
 
       <FloatingElement delay={0} duration={3}>
-        <div className="top-20 left-20 w-16 h-16 bg-orange-200 dark:bg-orange-800 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+        <div className="top-20 left-20 w-16 h-16 bg-primary/20 dark:bg-primary/30 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
           <Zap className="w-8 h-8 text-black dark:text-white" />
         </div>
       </FloatingElement>
 
       <FloatingElement delay={1} duration={4}>
-        <div className="top-32 right-32 w-12 h-12 bg-amber-200 dark:bg-amber-800 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
+        <div className="top-32 right-32 w-12 h-12 bg-secondary/20 dark:bg-secondary/30 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center">
           <Car className="w-6 h-6 text-black dark:text-white" />
         </div>
       </FloatingElement>
 
       <div className="relative z-10 w-full max-w-sm sm:max-w-lg">
-        <Card className="bg-white dark:bg-gray-900 border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+        <Card className="bg-card border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
           <CardHeader className="text-center pb-6 sm:pb-8">
             <div className="flex items-center justify-center space-x-4 sm:space-x-8 mb-4 sm:mb-6">
-              <TurnSignal direction="left" isBlinking={leftBlinking} />
+              <TurnSignal direction="left" autoBlink={true} blinkDelay={0} />
               <div className="text-center">
-                <h1
-                  className="text-4xl sm:text-6xl font-black tracking-wider text-black dark:text-white mb-1 sm:mb-2"
-                  style={{ textShadow: "4px 4px 0px rgba(0,0,0,0.3)" }}
-                >
+                <h1 className="text-4xl sm:text-6xl font-black tracking-wider text-black dark:text-white mb-1 sm:mb-2">
                   TURN
                 </h1>
-                <h2
-                  className="text-4xl sm:text-6xl font-black tracking-wider text-orange-600 dark:text-orange-400 -mt-1 sm:-mt-2"
-                  style={{ textShadow: "4px 4px 0px rgba(0,0,0,0.3)" }}
-                >
+                <h2 className="text-4xl sm:text-6xl font-black tracking-wider text-primary -mt-1 sm:-mt-2">
                   SIGNAL
                 </h2>
               </div>
-              <TurnSignal direction="right" isBlinking={rightBlinking} />
+              <TurnSignal
+                direction="right"
+                autoBlink={true}
+                blinkDelay={1000}
+              />
             </div>
 
             <CardDescription className="text-lg sm:text-xl font-semibold text-gray-700 dark:text-gray-300 px-4 sm:px-8">
@@ -225,7 +190,7 @@ export default function LoginPage() {
             <div className="space-y-3 sm:space-y-4">
               <Button
                 variant="outline"
-                className="w-full h-12 sm:h-14 text-base sm:text-lg font-bold border-3 border-black dark:border-white bg-white dark:bg-gray-900 hover:bg-orange-50 dark:hover:bg-orange-950 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200 text-black dark:text-white"
+                className="w-full h-12 sm:h-14 text-base sm:text-lg font-bold border-3 border-black dark:border-white bg-background hover:bg-muted shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200 text-black dark:text-white"
                 onClick={handleGoogleSignIn}
                 disabled={isSigningIn}
               >
@@ -259,7 +224,7 @@ export default function LoginPage() {
 
               <Button
                 variant="outline"
-                className="w-full h-12 sm:h-14 text-base sm:text-lg font-bold border-3 border-black dark:border-white bg-white dark:bg-gray-900 hover:bg-orange-50 dark:hover:bg-orange-950 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200 text-black dark:text-white"
+                className="w-full h-12 sm:h-14 text-base sm:text-lg font-bold border-3 border-black dark:border-white bg-background hover:bg-muted shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200 text-black dark:text-white"
                 onClick={handleGitHubSignIn}
                 disabled={isSigningIn}
               >
@@ -283,7 +248,7 @@ export default function LoginPage() {
             <div className="mt-6 sm:mt-8 text-center">
               <Link
                 href="/"
-                className="inline-flex items-center text-base sm:text-lg font-bold text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 bg-white dark:bg-gray-900 border-2 border-orange-600 dark:border-orange-400 px-4 sm:px-6 py-2 sm:py-3 shadow-[4px_4px_0px_0px_rgba(234,88,12,0.3)] dark:shadow-[4px_4px_0px_0px_rgba(251,146,60,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(234,88,12,0.3)] dark:hover:shadow-[2px_2px_0px_0px_rgba(251,146,60,0.3)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                className="inline-flex items-center text-base sm:text-lg font-bold text-primary hover:text-primary/80 bg-background border-2 border-primary px-4 sm:px-6 py-2 sm:py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] dark:hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
               >
                 <ArrowLeft className="mr-1 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden sm:inline">BACK TO HOME</span>
@@ -295,15 +260,15 @@ export default function LoginPage() {
       </div>
 
       <div className="absolute bottom-8 left-8 hidden sm:flex space-x-4">
-        <div className="w-8 h-8 bg-orange-300 dark:bg-orange-700 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
-        <div className="w-8 h-8 bg-amber-300 dark:bg-amber-700 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
-        <div className="w-8 h-8 bg-red-300 dark:bg-red-700 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
+        <div className="w-8 h-8 bg-primary/30 dark:bg-primary/40 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
+        <div className="w-8 h-8 bg-secondary/30 dark:bg-secondary/40 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
+        <div className="w-8 h-8 bg-accent/30 dark:bg-accent/40 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
       </div>
 
       <div className="absolute bottom-8 right-8 hidden sm:flex space-x-4">
-        <div className="w-8 h-8 bg-red-300 dark:bg-red-700 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
-        <div className="w-8 h-8 bg-amber-300 dark:bg-amber-700 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
-        <div className="w-8 h-8 bg-orange-300 dark:bg-orange-700 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
+        <div className="w-8 h-8 bg-accent/30 dark:bg-accent/40 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
+        <div className="w-8 h-8 bg-secondary/30 dark:bg-secondary/40 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
+        <div className="w-8 h-8 bg-primary/30 dark:bg-primary/40 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" />
       </div>
     </div>
   );

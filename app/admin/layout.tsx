@@ -5,10 +5,10 @@ import { AppSidebar } from "@/components/nav/menu";
 import { BreadcrumbNav } from "@/components/nav/breadcrumb";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { OrganizationSelector } from "@/components/organization-selector";
-import { Loader2, AlertCircle } from "lucide-react";
+import { OrganizationSelectorPage } from "@/components/organization-selector-page";
+import { Loader2 } from "lucide-react";
 import { redirect } from "next/navigation";
 import { ModeToggle } from "@/components/mode-toggle";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function AdminLayout({
   children,
@@ -38,29 +38,7 @@ export default function AdminLayout({
 
   // Show organization selector if no active organization
   if (!activeOrganization) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <div className="w-full max-w-md space-y-6">
-          <div className="text-center space-y-2">
-            <h1 className="text-2xl font-bold">Select Organization</h1>
-            <p className="text-muted-foreground">
-              You need to select or create an organization to access the admin
-              panel.
-            </p>
-          </div>
-
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              Admin pages are only accessible through an organization. Please
-              select an existing organization or create a new one.
-            </AlertDescription>
-          </Alert>
-
-          <OrganizationSelector />
-        </div>
-      </div>
-    );
+    return <OrganizationSelectorPage />;
   }
 
   return (
