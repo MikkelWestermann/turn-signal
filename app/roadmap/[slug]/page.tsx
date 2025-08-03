@@ -109,7 +109,7 @@ export default function RoadmapPage() {
         </div>
 
         {roadmap.issues && roadmap.issues.length > 0 ? (
-          <KanbanBoard issues={roadmap.issues} roadmap={roadmap} />
+          <KanbanBoard roadmap={roadmap} />
         ) : (
           <Card>
             <CardHeader>

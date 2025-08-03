@@ -89,7 +89,6 @@ export const issueVotes = sqliteTable("issue_votes", {
   organizationId: text("organization_id").notNull(),
   roadmapId: text("roadmap_id").notNull(),
   issueId: text("issue_id").notNull(),
-  ipAddress: text("ip_address").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),

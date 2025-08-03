@@ -2,8 +2,13 @@ import { z } from "zod";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { getDb } from "../../db";
-import { roadmaps, members, roadmapRepositories } from "../../db/schema";
-import { eq, and, inArray, not } from "drizzle-orm";
+import {
+  roadmaps,
+  members,
+  roadmapRepositories,
+  issueVotes,
+} from "../../db/schema";
+import { eq, and, not, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { installationClient } from "@/lib/github";
 
@@ -389,23 +394,111 @@ export const roadmapRouter = router({
         roadmap.organization.githubInstallation.installationId
       );
 
-      const issues = await Promise.all(
-        roadmap.repositories.map(async (repository) => {
-          const issues = await installation.rest.issues.listForRepo({
-            owner: repository.owner,
-            repo: repository.repo,
-            labels: roadmap.tag,
-          });
+      const [issues, voteCounts] = await Promise.all([
+        // Get all issues from github
+        Promise.all(
+          roadmap.repositories.map(async (repository) => {
+            const issues = await installation.rest.issues.listForRepo({
+              owner: repository.owner,
+              repo: repository.repo,
+              labels: roadmap.tag,
+            });
 
-          return issues.data;
-        })
+            // TODO: Sanitize issues
+
+            return issues.data;
+          })
+        ),
+        // Get aggregated vote counts for all issues
+        db
+          .select({
+            issueId: issueVotes.issueId,
+            count: sql<number>`count(*)`,
+          })
+          .from(issueVotes)
+          .where(eq(issueVotes.roadmapId, roadmap.id))
+          .groupBy(issueVotes.issueId),
+      ]);
+
+      // Create a plain object of issueId to vote count
+      const voteCountObject = Object.fromEntries(
+        voteCounts.map((vote) => [vote.issueId, vote.count])
       );
 
-      // TODO: Sanitize issues
+      const standardizedIssues = issues.flatMap((issueArray) =>
+        issueArray.map((issue) => ({
+          ...issue,
+          voteCount: voteCountObject[issue.id] || 0,
+        }))
+      );
 
       return {
         ...roadmap,
-        issues,
+        issues: standardizedIssues,
+        timestamp: Date.now(),
       };
+    }),
+
+  createVote: publicProcedure
+    .input(
+      z.object({
+        roadmapId: z.string(),
+        issueId: z.string(),
+        organizationId: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+
+      // Verify the roadmap exists and belongs to the organization
+      const roadmap = await db
+        .select()
+        .from(roadmaps)
+        .where(
+          and(
+            eq(roadmaps.id, input.roadmapId),
+            eq(roadmaps.organizationId, input.organizationId)
+          )
+        )
+        .limit(1);
+
+      if (roadmap.length === 0) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      // Create the vote
+      const vote = await db
+        .insert(issueVotes)
+        .values({
+          id: nanoid(),
+          organizationId: input.organizationId,
+          roadmapId: input.roadmapId,
+          issueId: input.issueId,
+        })
+        .returning();
+
+      return vote[0];
+    }),
+
+  deleteVote: publicProcedure
+    .input(
+      z.object({
+        voteId: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+
+      // Delete the vote
+      const deletedVote = await db
+        .delete(issueVotes)
+        .where(eq(issueVotes.id, input.voteId))
+        .returning();
+
+      if (deletedVote.length === 0) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      return { success: true };
     }),
 });

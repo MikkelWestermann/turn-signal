@@ -1,10 +1,20 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, User, Calendar, MessageSquare } from "lucide-react";
+import {
+  ExternalLink,
+  User,
+  Calendar,
+  MessageSquare,
+  ThumbsUp,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useVotes, type Vote } from "@/hooks/use-votes";
+import { useTRPC } from "@/lib/client";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 interface Issue {
   id: number;
@@ -18,31 +28,32 @@ interface Issue {
   assignees?: Array<{ login: string; avatar_url: string }> | null;
   labels: Array<string | { name?: string; color?: string | null; id?: number }>;
   comments?: number;
+  voteCount?: number;
   [key: string]: any; // Allow additional GitHub API fields
 }
 
 interface KanbanBoardProps {
-  issues: Issue[][];
   roadmap: {
+    id: string;
+    organizationId: string;
     tag: string;
     plannedTag: string | null;
     inProgressTag: string | null;
     doneTag: string | null;
+    timestamp: number;
+    issues: Issue[];
   };
 }
 
 function categorizeIssues(
-  issues: Issue[][],
+  issues: Issue[],
   roadmap: KanbanBoardProps["roadmap"]
 ) {
   const planned: Issue[] = [];
   const inProgress: Issue[] = [];
   const done: Issue[] = [];
 
-  // Flatten the issues array from multiple repositories
-  const allIssues = issues.flat();
-
-  allIssues.forEach((issue) => {
+  issues.forEach((issue) => {
     const labelNames = issue.labels.map((label) =>
       typeof label === "string" ? label : label.name
     );
@@ -68,7 +79,75 @@ function categorizeIssues(
   return { planned, inProgress, done };
 }
 
-function IssueCard({ issue }: { issue: Issue }) {
+function IssueCard({
+  issue,
+  roadmapId,
+  organizationId,
+  vote,
+  addVote,
+  removeVote,
+  timestamp,
+}: {
+  issue: Issue;
+  roadmapId: string;
+  organizationId: string;
+  vote: Vote | null;
+  addVote: (issueId: string, voteId: string) => void;
+  removeVote: (issueId: string) => void;
+  timestamp: number;
+}) {
+  const trpc = useTRPC();
+
+  const createVoteMutation = useMutation(
+    trpc.roadmap.createVote.mutationOptions({
+      onSuccess: (data) => {
+        addVote(issue.id.toString(), data.id);
+        toast.success("Vote recorded!");
+      },
+      onError: (error) => {
+        toast.error("Failed to record vote. Please try again.");
+        console.error("Vote error:", error);
+      },
+    })
+  );
+
+  const deleteVoteMutation = useMutation(
+    trpc.roadmap.deleteVote.mutationOptions({
+      onSuccess: () => {
+        removeVote(issue.id.toString());
+        toast.success("Vote removed!");
+      },
+      onError: (error) => {
+        toast.error("Failed to remove vote. Please try again.");
+        console.error("Vote error:", error);
+      },
+    })
+  );
+
+  const handleVote = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const issueId = issue.id.toString();
+
+    if (vote) {
+      deleteVoteMutation.mutate({
+        voteId: vote.id,
+      });
+    } else {
+      createVoteMutation.mutate({
+        roadmapId,
+        issueId,
+        organizationId,
+      });
+    }
+  };
+
+  const userHasVoted = !!vote;
+  const isLoading =
+    createVoteMutation.isPending || deleteVoteMutation.isPending;
+
+  const voteCount =
+    (issue.voteCount || 0) + (vote && vote.timestamp > timestamp ? 1 : 0);
+
   return (
     <Card className="mb-3 hover:shadow-md transition-shadow cursor-pointer">
       <CardContent className="p-4">
@@ -79,21 +158,35 @@ function IssueCard({ issue }: { issue: Issue }) {
                 #{issue.number} {issue.title}
               </h4>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              asChild
-              className="flex-shrink-0 ml-2"
-            >
-              <a
-                href={issue.html_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
+            <div className="flex items-center space-x-1">
+              <Button
+                variant={userHasVoted ? "default" : "ghost"}
+                size="sm"
+                onClick={handleVote}
+                disabled={isLoading}
+                className="flex-shrink-0"
               >
-                <ExternalLink className="h-3 w-3" />
-              </a>
-            </Button>
+                <ThumbsUp className="h-3 w-3" />
+                {voteCount > 0 && (
+                  <span className="ml-1 text-xs">{voteCount}</span>
+                )}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                asChild
+                className="flex-shrink-0"
+              >
+                <a
+                  href={issue.html_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </Button>
+            </div>
           </div>
 
           {issue.body && (
@@ -152,8 +245,12 @@ function IssueCard({ issue }: { issue: Issue }) {
   );
 }
 
-export function KanbanBoard({ issues, roadmap }: KanbanBoardProps) {
-  const { planned, inProgress, done } = categorizeIssues(issues, roadmap);
+export function KanbanBoard({ roadmap }: KanbanBoardProps) {
+  const { planned, inProgress, done } = categorizeIssues(
+    roadmap.issues,
+    roadmap
+  );
+  const { getVote, addVote, removeVote } = useVotes();
 
   const columns = [
     {
@@ -195,7 +292,16 @@ export function KanbanBoard({ issues, roadmap }: KanbanBoardProps) {
             {column.issues.length > 0 ? (
               <div className="space-y-0">
                 {column.issues.map((issue) => (
-                  <IssueCard key={issue.id} issue={issue} />
+                  <IssueCard
+                    key={issue.id}
+                    issue={issue}
+                    roadmapId={roadmap.id}
+                    organizationId={roadmap.organizationId}
+                    vote={getVote(issue.id.toString())}
+                    addVote={addVote}
+                    removeVote={removeVote}
+                    timestamp={roadmap.timestamp}
+                  />
                 ))}
               </div>
             ) : (
