@@ -562,7 +562,7 @@ export default function Home() {
             </h2>
             <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
               Just like in driving, sudden changes in your product roadmap can
-              lead to... well, let's just say it's not pretty.
+              lead to yelling, crying, and unkind gestures
             </p>
           </div>
 
@@ -570,29 +570,7 @@ export default function Home() {
             <div className="space-y-6 lg:space-y-16">
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-sm flex items-center justify-center">
-                    <span className="text-sm font-bold text-foreground">
-                      🚗
-                    </span>
-                  </div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">
-                    The Drift Effect
-                  </h3>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400">
-                  When you make sudden changes to your roadmap without warning,
-                  your users go into full drift mode. They're spinning out,
-                  confused, and definitely not happy about the unexpected turn.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-yellow-200 dark:bg-yellow-800 border-2 border-black dark:border-white shadow-sm flex items-center justify-center">
-                    <span className="text-sm font-bold text-foreground">
-                      ⚠️
-                    </span>
-                  </div>
+                  <div className="w-8 h-8 bg-red-200 dark:bg-red-800 border-2 border-black dark:border-white shadow-sm flex items-center justify-center"></div>
                   <h3 className="text-xl lg:text-2xl font-bold text-foreground">
                     User Whiplash
                   </h3>
@@ -606,11 +584,22 @@ export default function Home() {
 
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-green-200 dark:bg-green-800 border-2 border-black dark:border-white shadow-sm flex items-center justify-center">
-                    <span className="text-sm font-bold text-foreground">
-                      ✅
-                    </span>
-                  </div>
+                  <div className="w-8 h-8 bg-yellow-200 dark:bg-yellow-800 border-2 border-black dark:border-white shadow-sm flex items-center justify-center"></div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">
+                    Builder Mentality
+                  </h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Ever spent weeks building a feature, only to see it gather
+                  dust? Without user input, it's easy to waste time on things
+                  nobody wants. Turn Signal helps you focus on what matters so
+                  you build features your users will actually use.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-200 dark:bg-green-800 border-2 border-black dark:border-white shadow-sm flex items-center justify-center"></div>
                   <h3 className="text-xl lg:text-2xl font-bold text-foreground">
                     Smooth Transitions
                   </h3>
