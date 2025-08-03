@@ -14,7 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, ExternalLink } from "lucide-react";
+import { Plus, Edit, Trash2, ExternalLink, Eye } from "lucide-react";
 import { useConfirm } from "@/components/confirm-dialog";
 import { toast } from "sonner";
 
@@ -65,6 +65,10 @@ export default function RoadmapsPage() {
 
   const handleView = (slug: string) => {
     router.push(`/roadmap/${slug}`);
+  };
+
+  const handleViewDetails = (id: string) => {
+    router.push(`/admin/roadmaps/${id}`);
   };
 
   if (!organization) {
@@ -130,7 +134,16 @@ export default function RoadmapsPage() {
                     <Button
                       variant="ghost"
                       size="sm"
+                      onClick={() => handleViewDetails(roadmap.id)}
+                      title="View Details"
+                    >
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={() => handleView(roadmap.slug)}
+                      title="View Public"
                     >
                       <ExternalLink className="w-4 h-4" />
                     </Button>
@@ -138,6 +151,7 @@ export default function RoadmapsPage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleEdit(roadmap.id)}
+                      title="Edit"
                     >
                       <Edit className="w-4 h-4" />
                     </Button>
@@ -145,6 +159,7 @@ export default function RoadmapsPage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleDelete(roadmap.id)}
+                      title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>

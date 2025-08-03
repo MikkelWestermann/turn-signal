@@ -149,12 +149,12 @@ function IssueCard({
     (issue.voteCount || 0) + (vote && vote.timestamp > timestamp ? 1 : 0);
 
   return (
-    <Card className="mb-3 hover:shadow-md transition-shadow cursor-pointer">
+    <Card className="mb-3 hover:shadow-md transition-shadow cursor-pointer border-border">
       <CardContent className="p-4">
         <div className="space-y-3">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
-              <h4 className="font-medium text-sm leading-tight line-clamp-2">
+              <h4 className="font-medium text-sm leading-tight line-clamp-2 text-foreground">
                 #{issue.number} {issue.title}
               </h4>
             </div>
@@ -223,14 +223,19 @@ function IssueCard({
             <div className="flex flex-wrap gap-1">
               {issue.labels.map((label) => {
                 if (typeof label === "string") return null;
+                const labelColor = label.color ? `#${label.color}` : undefined;
+
                 return (
                   <Badge
                     key={label.id || label.name}
                     variant="outline"
                     className="text-xs px-1 py-0"
                     style={{
-                      borderColor: `#${label.color}`,
-                      color: `#${label.color}`,
+                      borderColor: labelColor,
+                      color: labelColor,
+                      backgroundColor: labelColor
+                        ? `${labelColor}20`
+                        : undefined,
                     }}
                   >
                     {label.name}
@@ -256,19 +261,22 @@ export function KanbanBoard({ roadmap }: KanbanBoardProps) {
     {
       title: "Planned",
       issues: planned,
-      color: "border-blue-200 bg-blue-50",
+      color:
+        "border-blue-200 bg-blue-50/50 dark:border-blue-800 dark:bg-blue-950/30",
       count: planned.length,
     },
     {
       title: "In Progress",
       issues: inProgress,
-      color: "border-yellow-200 bg-yellow-50",
+      color:
+        "border-yellow-200 bg-yellow-50/50 dark:border-yellow-800 dark:bg-yellow-950/30",
       count: inProgress.length,
     },
     {
       title: "Done",
       issues: done,
-      color: "border-green-200 bg-green-50",
+      color:
+        "border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/30",
       count: done.length,
     },
   ];
@@ -278,7 +286,9 @@ export function KanbanBoard({ roadmap }: KanbanBoardProps) {
       {columns.map((column) => (
         <div key={column.title} className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-lg">{column.title}</h3>
+            <h3 className="font-semibold text-lg text-foreground">
+              {column.title}
+            </h3>
             <Badge variant="secondary" className="text-xs">
               {column.count}
             </Badge>
