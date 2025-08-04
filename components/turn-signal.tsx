@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ArrowBigRight, ArrowBigLeft } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface TurnSignalProps {
   direction: 'left' | 'right';
@@ -38,16 +39,18 @@ export const TurnSignal = ({
       {direction === 'left' ? (
         <ArrowBigLeft
           fill="currentColor"
-          className={`h-12 w-12 text-amber-400 drop-shadow-[3px_3px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] dark:drop-shadow-[3px_3px_0px_rgba(255,255,255,1)] dark:sm:drop-shadow-[4px_4px_0px_rgba(255,255,255,1)] ${
-            shouldBlink ? 'animate-pulse' : 'opacity-40'
-          }`}
+          className={cn(
+            'h-12 w-12 text-amber-400 drop-shadow-[3px_3px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] dark:drop-shadow-[3px_3px_0px_rgba(255,255,255,1)] dark:sm:drop-shadow-[4px_4px_0px_rgba(255,255,255,1)]',
+            shouldBlink ? 'animate-pulse' : 'opacity-40',
+          )}
         />
       ) : (
         <ArrowBigRight
           fill="currentColor"
-          className={`h-12 w-12 text-amber-400 drop-shadow-[3px_3px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] dark:drop-shadow-[3px_3px_0px_rgba(255,255,255,1)] dark:sm:drop-shadow-[4px_4px_0px_rgba(255,255,255,1)] ${
-            shouldBlink ? 'animate-pulse' : 'opacity-40'
-          }`}
+          className={cn(
+            'h-12 w-12 text-amber-400 drop-shadow-[3px_3px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] dark:drop-shadow-[3px_3px_0px_rgba(255,255,255,1)] dark:sm:drop-shadow-[4px_4px_0px_rgba(255,255,255,1)]',
+            shouldBlink ? 'animate-pulse' : 'opacity-40',
+          )}
         />
       )}
     </div>
