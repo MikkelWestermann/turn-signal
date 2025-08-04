@@ -10,3 +10,9 @@ export const installationClient = (installationId: string) =>
       installationId,
     },
   });
+
+export const userClient = (accessToken: string) => {
+  return new Octokit({
+    auth: accessToken,
+  });
+};

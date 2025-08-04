@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/db';
 import { githubInstallations } from '@/db/schema';
-import { Octokit } from '@octokit/rest';
-import { createAppAuth } from '@octokit/auth-app';
+import { auth } from '@/auth';
+import { userClient } from '@/lib/github';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -18,6 +18,14 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    const session = await auth.api.getSession(request);
+
+    if (!session?.user) {
+      return NextResponse.redirect(
+        `${process.env.BETTER_AUTH_URL}/login?redirect=${encodeURIComponent(request.url)}`,
+      );
+    }
+
     // Decode state to get organization info
     let organizationId: string;
     let userId: string;
@@ -27,45 +35,77 @@ export async function GET(request: NextRequest) {
       organizationId = decoded.organizationId;
       userId = decoded.userId;
     } else {
-      // Handle case where state is not provided
       return NextResponse.redirect(
-        `${process.env.BETTER_AUTH_URL}/organizations?github_setup=error`,
+        `${process.env.BETTER_AUTH_URL}/admin/organization/github?github_setup=error`,
       );
     }
 
-    const octokit = new Octokit({
-      authStrategy: createAppAuth,
-      auth: {
-        appId: process.env.GITHUB_APP_ID,
-        clientId: process.env.GITHUB_CLIENT_ID,
-        privateKey: process.env.GITHUB_PRIVATE_KEY,
-        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    // @ts-ignore - Type is broken: Fix this
+    if (organizationId !== session.session.activeOrganizationId) {
+      return NextResponse.redirect(
+        `${process.env.BETTER_AUTH_URL}/admin/organization/github?github_setup=error&reason=organization_mismatch`,
+      );
+    }
+
+    if (userId !== session.user.id) {
+      return NextResponse.redirect(
+        `${process.env.BETTER_AUTH_URL}/admin/organization/github?github_setup=error&reason=user_mismatch`,
+      );
+    }
+
+    const db = await getDb();
+    const { accessToken } = await auth.api.getAccessToken({
+      body: {
+        providerId: 'github',
+        userId: session.user.id,
       },
     });
+    if (!accessToken) {
+      return NextResponse.redirect(
+        `${process.env.BETTER_AUTH_URL}/admin/organization/github?github_setup=error&reason=no_github_token`,
+      );
+    }
 
-    // TODO: Better verification of the installation - also verify the user
+    const userOctokit = userClient(accessToken);
+
+    try {
+      const installations =
+        await userOctokit.rest.apps.listInstallationsForAuthenticatedUser();
+
+      if (
+        !installations.data.installations ||
+        installations.data.installations.length === 0 ||
+        !installations.data.installations.some(
+          (installation: any) => installation.id === Number(installationId),
+        )
+      ) {
+        return NextResponse.redirect(
+          `${process.env.BETTER_AUTH_URL}/admin/organization/github?github_setup=error&reason=no_access`,
+        );
+      }
+    } catch (error) {
+      console.error('Error verifying installation access:', error);
+      return NextResponse.redirect(
+        `${process.env.BETTER_AUTH_URL}/admin/organization/github?github_setup=error&reason=verification_failed`,
+      );
+    }
 
     if (setupAction === 'install') {
-      // Verify installation exists on GitHub (optional validation)
+      try {
+        await db.insert(githubInstallations).values({
+          installationId: installationId,
+          organizationId,
+        });
 
-      const installation = await octokit.apps.getInstallation({
-        installation_id: Number(installationId),
-      });
-
-      if (!installation) {
-        throw new Error('Failed to verify installation');
+        return NextResponse.redirect(
+          `${process.env.BETTER_AUTH_URL}/admin/organization/github?github_setup=success`,
+        );
+      } catch (error) {
+        console.error('Installation failed:', error);
+        return NextResponse.redirect(
+          `${process.env.BETTER_AUTH_URL}/admin/organization/github?github_setup=error&reason=installation_failed`,
+        );
       }
-
-      const db = await getDb();
-      await db.insert(githubInstallations).values({
-        installationId: installationId,
-        organizationId,
-      });
-
-      // Redirect to success page
-      return NextResponse.redirect(
-        `${process.env.BETTER_AUTH_URL}/admin/organization/github?github_setup=success`,
-      );
     }
 
     return NextResponse.redirect(
@@ -73,8 +113,20 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     console.error('GitHub setup error:', error);
+
+    let errorReason = 'unknown';
+    if (error instanceof Error) {
+      if (error.message.includes('401')) {
+        errorReason = 'unauthorized';
+      } else if (error.message.includes('404')) {
+        errorReason = 'not_found';
+      } else if (error.message.includes('403')) {
+        errorReason = 'forbidden';
+      }
+    }
+
     return NextResponse.redirect(
-      `${process.env.BETTER_AUTH_URL}/organizations?github_setup=error`,
+      `${process.env.BETTER_AUTH_URL}/admin/organization/github?github_setup=error&reason=${errorReason}`,
     );
   }
 }

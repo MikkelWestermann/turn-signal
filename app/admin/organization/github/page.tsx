@@ -30,7 +30,9 @@ function GitHubOverviewPage() {
   const searchParams = useSearchParams();
 
   const githubSetup = searchParams.get('github_setup');
+  const errorReason = searchParams.get('reason');
   let setupMessage: any = null;
+
   if (githubSetup === 'success') {
     setupMessage = {
       type: 'success',
@@ -43,10 +45,52 @@ function GitHubOverviewPage() {
       message: 'GitHub setup completed successfully.',
     };
   } else if (githubSetup === 'error') {
+    let errorMessage =
+      'Failed to complete GitHub setup. Please try again or contact support.';
+
+    // Provide more specific error messages
+    switch (errorReason) {
+      case 'user_mismatch':
+        errorMessage =
+          'User authentication mismatch. Please try logging in again.';
+        break;
+      case 'no_github_token':
+        errorMessage =
+          'GitHub account not linked. Please sign in with GitHub first.';
+        break;
+      case 'no_access':
+        errorMessage =
+          'You do not have access to this GitHub installation. Please contact your organization administrator.';
+        break;
+      case 'verification_failed':
+        errorMessage =
+          'Failed to verify GitHub installation access. Please try again.';
+        break;
+      case 'installation_failed':
+        errorMessage =
+          'GitHub installation verification failed. Please try again or contact support.';
+        break;
+      case 'unauthorized':
+        errorMessage =
+          'Unauthorized access. Please check your GitHub permissions.';
+        break;
+      case 'forbidden':
+        errorMessage =
+          'Access forbidden. You may not have the required permissions.';
+        break;
+      case 'not_found':
+        errorMessage =
+          'GitHub installation not found. Please try the setup process again.';
+        break;
+      case 'organization_mismatch':
+        errorMessage =
+          'Organization mismatch. Please try logging in again and select the correct organization.';
+        break;
+    }
+
     setupMessage = {
       type: 'error',
-      message:
-        'Failed to complete GitHub setup. Please try again or contact support.',
+      message: errorMessage,
     };
   }
 
