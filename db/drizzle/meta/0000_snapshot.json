@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "8f0e6e23-b805-4910-95b1-2c296a01f15e",
+  "id": "e50362be-2abb-48c3-8ea5-595ba3781e01",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "accounts": {
@@ -503,7 +503,8 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'roadmap'"
         },
         "planned_tag": {
           "name": "planned_tag",

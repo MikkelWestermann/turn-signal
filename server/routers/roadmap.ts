@@ -254,9 +254,22 @@ export const roadmapRouter = router({
 
   getRoadmap: publicProcedure
     .input(z.object({ slug: z.string() }))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
+      const organizationId = ctx.activeOrganizationId;
+
       const db = await getDb();
       const roadmap = await db.query.roadmaps.findFirst({
+        columns: {
+          id: true,
+          name: true,
+          description: true,
+          slug: true,
+          tag: true,
+          plannedTag: true,
+          inProgressTag: true,
+          doneTag: true,
+          organizationId: true,
+        },
         where: eq(roadmaps.slug, input.slug),
         with: {
           repositories: true,
@@ -272,6 +285,8 @@ export const roadmapRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND' });
       }
 
+      const isMember = roadmap.organizationId === organizationId;
+
       const installation = installationClient(
         roadmap.organization.githubInstallation.installationId,
       );
@@ -286,9 +301,19 @@ export const roadmapRouter = router({
               labels: roadmap.tag,
             });
 
-            // TODO: Sanitize issues
-
-            return issues.data;
+            return issues.data.map((issue) => ({
+              id: issue.id,
+              number: issue.number,
+              title: issue.title,
+              body: issue.body,
+              state: issue.state,
+              updated_at: issue.updated_at,
+              created_at: issue.created_at,
+              labels: issue.labels,
+              ...(isMember && {
+                html_url: issue.html_url,
+              }),
+            }));
           }),
         ),
         // Get aggregated vote counts for all issues

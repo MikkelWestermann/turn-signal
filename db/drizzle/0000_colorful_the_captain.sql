@@ -75,7 +75,7 @@ CREATE TABLE `roadmaps` (
 	`name` text NOT NULL,
 	`description` text,
 	`slug` text NOT NULL,
-	`tag` text NOT NULL,
+	`tag` text DEFAULT 'roadmap' NOT NULL,
 	`planned_tag` text DEFAULT 'planned',
 	`in_progress_tag` text DEFAULT 'in progress',
 	`done_tag` text DEFAULT 'done',

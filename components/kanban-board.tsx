@@ -22,7 +22,7 @@ interface Issue {
   title: string;
   body?: string | null;
   state: string;
-  html_url: string;
+  html_url?: string;
   created_at: string;
   updated_at: string;
   assignees?: Array<{ login: string; avatar_url: string }> | null;
@@ -120,6 +120,8 @@ function IssueCard({
       onError: (error) => {
         toast.error('Failed to remove vote. Please try again.');
         console.error('Vote error:', error);
+        // Remove the vote from the cache
+        removeVote(issue.id.toString());
       },
     }),
   );
@@ -171,21 +173,23 @@ function IssueCard({
                   <span className="ml-1 text-xs">{voteCount}</span>
                 )}
               </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                asChild
-                className="flex-shrink-0"
-              >
-                <a
-                  href={issue.html_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
+              {issue.html_url && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="flex-shrink-0"
                 >
-                  <ExternalLink className="h-3 w-3" />
-                </a>
-              </Button>
+                  <a
+                    href={issue.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </Button>
+              )}
             </div>
           </div>
 

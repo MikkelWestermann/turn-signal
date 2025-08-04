@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ExternalLink, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
@@ -27,7 +26,14 @@ export default function RoadmapPage() {
     isLoading,
     error,
     refetch,
-  } = useQuery(trpc.roadmap.getRoadmap.queryOptions({ slug }));
+  } = useQuery(
+    trpc.roadmap.getRoadmap.queryOptions(
+      { slug },
+      {
+        refetchOnWindowFocus: false,
+      },
+    ),
+  );
 
   if (isLoading) {
     return (
@@ -46,7 +52,8 @@ export default function RoadmapPage() {
         <div className="text-center">
           <h1 className="mb-4 text-2xl font-bold">Roadmap Not Found</h1>
           <p className="mb-6 text-muted-foreground">
-            The roadmap you're looking for doesn't exist or has been removed.
+            We couldn't find the roadmap you're looking for. It may have been
+            moved or is no longer available.
           </p>
           <Button asChild>
             <Link href="/">
@@ -58,8 +65,6 @@ export default function RoadmapPage() {
       </div>
     );
   }
-
-  const totalIssues = roadmap.issues?.flat().length || 0;
 
   return (
     <div className="container mx-auto py-8">
@@ -93,18 +98,6 @@ export default function RoadmapPage() {
                 Refresh
               </Button>
             </div>
-
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary">Label: {roadmap.tag}</Badge>
-              <Badge variant="outline">Planned: {roadmap.plannedTag}</Badge>
-              <Badge variant="outline">
-                In Progress: {roadmap.inProgressTag}
-              </Badge>
-              <Badge variant="outline">Done: {roadmap.doneTag}</Badge>
-              {totalIssues > 0 && (
-                <Badge variant="default">{totalIssues} issues</Badge>
-              )}
-            </div>
           </div>
         </div>
 
@@ -115,7 +108,8 @@ export default function RoadmapPage() {
             <CardHeader>
               <CardTitle>No Issues Found</CardTitle>
               <CardDescription>
-                GitHub issues with the "{roadmap.tag}" label will appear here.
+                This roadmap tracks GitHub issues from the repository. Issues
+                will appear here automatically once they're added.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -124,14 +118,15 @@ export default function RoadmapPage() {
                   <div className="text-6xl">🚀</div>
                   <h3 className="text-lg font-semibold">Coming Soon</h3>
                   <p className="mx-auto max-w-md text-muted-foreground">
-                    This roadmap will display GitHub issues automatically. Add
-                    the "{roadmap.tag}" label to your GitHub issues to see them
-                    here.
+                    This roadmap automatically displays GitHub issues from the
+                    repository. When issues are added to the project on GitHub,
+                    they'll appear here to show the project's development
+                    progress.
                   </p>
                   <Button variant="outline" asChild>
                     <Link href="https://github.com" target="_blank">
                       <ExternalLink className="mr-2 h-4 w-4" />
-                      View on GitHub
+                      Explore on GitHub
                     </Link>
                   </Button>
                 </div>

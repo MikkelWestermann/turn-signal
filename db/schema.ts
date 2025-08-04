@@ -1,7 +1,7 @@
-import { relations } from "drizzle-orm";
-import * as authSchema from "./auth.schema";
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
-import { z } from "zod";
+import { relations } from 'drizzle-orm';
+import * as authSchema from './auth.schema';
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { z } from 'zod';
 
 // ********************************************************
 // Auth Schema
@@ -19,10 +19,10 @@ export const invitations = authSchema.invitations;
 // GitHub Integration
 // ********************************************************
 
-export const githubInstallations = sqliteTable("github_installations", {
-  installationId: text("installation_id").primaryKey(),
-  organizationId: text("organization_id").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" })
+export const githubInstallations = sqliteTable('github_installations', {
+  installationId: text('installation_id').primaryKey(),
+  organizationId: text('organization_id').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
     .$defaultFn(() => new Date()),
 });
@@ -45,7 +45,7 @@ export const githubInstallationRelations = relations(
       fields: [githubInstallations.organizationId],
       references: [organizations.id],
     }),
-  })
+  }),
 );
 
 export const organizationRelations = relations(organizations, ({ one }) => ({
@@ -59,37 +59,37 @@ export const organizationRelations = relations(organizations, ({ one }) => ({
 // Roadmap
 // ********************************************************
 
-export const roadmaps = sqliteTable("roadmaps", {
-  id: text("id").primaryKey(),
-  organizationId: text("organization_id").notNull(),
-  name: text("name").notNull(),
-  description: text("description"),
-  slug: text("slug").notNull().unique(),
-  tag: text("tag").notNull(),
-  plannedTag: text("planned_tag").default("planned"),
-  inProgressTag: text("in_progress_tag").default("in progress"),
-  doneTag: text("done_tag").default("done"),
-  createdAt: integer("created_at", { mode: "timestamp" })
+export const roadmaps = sqliteTable('roadmaps', {
+  id: text('id').primaryKey(),
+  organizationId: text('organization_id').notNull(),
+  name: text('name').notNull(),
+  description: text('description'),
+  slug: text('slug').notNull().unique(),
+  tag: text('tag').default('roadmap').notNull(),
+  plannedTag: text('planned_tag').default('planned'),
+  inProgressTag: text('in_progress_tag').default('in progress'),
+  doneTag: text('done_tag').default('done'),
+  createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
     .$defaultFn(() => new Date()),
 });
 
-export const roadmapRepositories = sqliteTable("roadmap_repositories", {
-  id: text("id").primaryKey(),
-  roadmapId: text("roadmap_id").notNull(),
-  owner: text("owner").notNull(),
-  repo: text("repo").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" })
+export const roadmapRepositories = sqliteTable('roadmap_repositories', {
+  id: text('id').primaryKey(),
+  roadmapId: text('roadmap_id').notNull(),
+  owner: text('owner').notNull(),
+  repo: text('repo').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
     .$defaultFn(() => new Date()),
 });
 
-export const issueVotes = sqliteTable("issue_votes", {
-  id: text("id").primaryKey(),
-  organizationId: text("organization_id").notNull(),
-  roadmapId: text("roadmap_id").notNull(),
-  issueId: text("issue_id").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" })
+export const issueVotes = sqliteTable('issue_votes', {
+  id: text('id').primaryKey(),
+  organizationId: text('organization_id').notNull(),
+  roadmapId: text('roadmap_id').notNull(),
+  issueId: text('issue_id').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
     .$defaultFn(() => new Date()),
 });
@@ -110,7 +110,7 @@ export const roadmapRepositoryRelations = relations(
       fields: [roadmapRepositories.roadmapId],
       references: [roadmaps.id],
     }),
-  })
+  }),
 );
 
 export const issueVotesRelations = relations(issueVotes, ({ one }) => ({
