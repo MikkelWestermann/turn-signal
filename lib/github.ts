@@ -1,5 +1,5 @@
-import { Octokit } from "@octokit/rest";
-import { createAppAuth } from "@octokit/auth-app";
+import { Octokit } from '@octokit/rest';
+import { createAppAuth } from '@octokit/auth-app';
 
 export const installationClient = (installationId: string) =>
   new Octokit({

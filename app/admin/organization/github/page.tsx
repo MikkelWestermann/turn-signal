@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useTRPC } from '@/lib/client';
 import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
 import {
   Card,
   CardContent,
@@ -12,12 +13,42 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Github, RefreshCw } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  ExternalLink,
+  Github,
+  RefreshCw,
+  AlertCircle,
+  CheckCircle,
+} from 'lucide-react';
 import Link from 'next/link';
 
-export default function GitHubOverviewPage() {
+function GitHubOverviewPage() {
   const [isConnecting, setIsConnecting] = useState(false);
+
   const trpc = useTRPC();
+  const searchParams = useSearchParams();
+
+  const githubSetup = searchParams.get('github_setup');
+  let setupMessage: any = null;
+  if (githubSetup === 'success') {
+    setupMessage = {
+      type: 'success',
+      message:
+        'GitHub App successfully installed! Your repositories are now connected.',
+    };
+  } else if (githubSetup === 'complete') {
+    setupMessage = {
+      type: 'success',
+      message: 'GitHub setup completed successfully.',
+    };
+  } else if (githubSetup === 'error') {
+    setupMessage = {
+      type: 'error',
+      message:
+        'Failed to complete GitHub setup. Please try again or contact support.',
+    };
+  }
 
   const {
     data: repositories,
@@ -42,6 +73,19 @@ export default function GitHubOverviewPage() {
             View repositories and issues for your organization.
           </p>
         </div>
+
+        {setupMessage?.type && (
+          <Alert
+            variant={setupMessage.type === 'error' ? 'destructive' : 'default'}
+          >
+            {setupMessage.type === 'error' ? (
+              <AlertCircle className="h-4 w-4" />
+            ) : (
+              <CheckCircle className="h-4 w-4" />
+            )}
+            <AlertDescription>{setupMessage.message}</AlertDescription>
+          </Alert>
+        )}
 
         {!installation ? (
           <Card>
@@ -95,6 +139,11 @@ export default function GitHubOverviewPage() {
                   {new Date(installation.createdAt).toLocaleDateString()}
                 </CardDescription>
               </CardHeader>
+              <CardContent>
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={installationUrl || ''}>Manage GitHub App</Link>
+                </Button>
+              </CardContent>
             </Card>
 
             <Card>
@@ -187,5 +236,13 @@ export default function GitHubOverviewPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function GitHubOverviewPageWrapper() {
+  return (
+    <Suspense fallback={null}>
+      <GitHubOverviewPage />
+    </Suspense>
   );
 }

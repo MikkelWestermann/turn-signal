@@ -115,7 +115,6 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Profile</h1>
@@ -172,9 +171,7 @@ export default function ProfilePage() {
         </Dialog>
       </div>
 
-      {/* Profile Information */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Main Profile Card */}
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
@@ -311,7 +308,6 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          {/* Account Security */}
           <Card className="mt-6">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -319,16 +315,14 @@ export default function ProfilePage() {
                 Security
               </CardTitle>
               <CardDescription>
-                Your account is secured through Google OAuth.
+                Your account is secured through Github OAuth.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium">Authentication Method</p>
-                  <p className="text-xs text-muted-foreground">
-                    Google OAuth (recommended)
-                  </p>
+                  <p className="text-xs text-muted-foreground">Github OAuth</p>
                 </div>
                 <Badge variant="default">Active</Badge>
               </div>
@@ -336,12 +330,9 @@ export default function ProfilePage() {
                 <div>
                   <p className="text-sm font-medium">Account Security</p>
                   <p className="text-xs text-muted-foreground">
-                    Managed by Google account settings
+                    Managed by Github account settings
                   </p>
                 </div>
-                <Button variant="outline" size="sm" disabled>
-                  View Settings
-                </Button>
               </div>
             </CardContent>
           </Card>

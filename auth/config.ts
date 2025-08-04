@@ -1,14 +1,10 @@
-import type { BetterAuthOptions } from "better-auth";
-import { organization } from "better-auth/plugins";
-import { renderEmail, sendEmail } from "@/lib/email";
-import { OrganizationInviteEmail } from "@/email/emails/org-invite";
+import type { BetterAuthOptions } from 'better-auth';
+import { organization } from 'better-auth/plugins';
+import { renderEmail, sendEmail } from '@/lib/email';
+import { OrganizationInviteEmail } from '@/email/emails/org-invite';
 
 export const authConfig: BetterAuthOptions = {
   socialProviders: {
-    google: {
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    },
     github: {
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
@@ -17,7 +13,7 @@ export const authConfig: BetterAuthOptions = {
   plugins: [
     organization({
       allowUserToCreateOrganization: true,
-      creatorRole: "owner",
+      creatorRole: 'owner',
       membershipLimit: 100,
       invitationExpiresIn: 48 * 60 * 60, // 48 hours in seconds
       sendInvitationEmail: async (data) => {
