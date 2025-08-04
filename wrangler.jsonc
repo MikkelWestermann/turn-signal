@@ -14,5 +14,13 @@
 	"observability": {
 		"enabled": true
 	},
-	"keep_vars": true
+	"keep_vars": true,
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "turn-signal",
+			"database_id": "268605f3-43c5-45c6-b43c-6575e285d1e4",
+			"migrations_dir": "db/drizzle"
+		}
+	],
 }
