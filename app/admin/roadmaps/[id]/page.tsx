@@ -253,17 +253,19 @@ export default function RoadmapAdminPage() {
                               <h3 className="mb-2 line-clamp-2 text-sm font-medium">
                                 {issue.title}
                               </h3>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                asChild
-                                className="w-fit"
-                              >
-                                <Link href={issue.html_url} target="_blank">
-                                  <ExternalLink className="mr-1 h-3 w-3" />
-                                  View on GitHub
-                                </Link>
-                              </Button>
+                              {issue.html_url && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  asChild
+                                  className="w-fit"
+                                >
+                                  <Link href={issue.html_url} target="_blank">
+                                    <ExternalLink className="mr-1 h-3 w-3" />
+                                    View on GitHub
+                                  </Link>
+                                </Button>
+                              )}
                             </div>
                           </div>
                         </div>

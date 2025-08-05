@@ -373,32 +373,28 @@ export default function AdminPage() {
                 ) : githubRepos && githubRepos.data.repositories.length > 0 ? (
                   <div className="space-y-2">
                     <h4 className="text-sm font-medium">Recent Repositories</h4>
-                    {githubRepos.data.repositories
-                      .slice(0, 3)
-                      .map((repo: any) => (
-                        <div
-                          key={repo.id}
-                          className="flex items-center justify-between rounded border p-2 text-sm"
-                        >
-                          <div>
-                            <span className="font-medium">
-                              {repo.full_name}
-                            </span>
-                            <p className="text-xs text-muted-foreground">
-                              {repo.private ? 'Private' : 'Public'}
-                            </p>
-                          </div>
-                          <Button asChild variant="ghost" size="sm">
-                            <a
-                              href={repo.html_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <ExternalLink className="h-3 w-3" />
-                            </a>
-                          </Button>
+                    {githubRepos.data.repositories.slice(0, 3).map((repo) => (
+                      <div
+                        key={repo.id}
+                        className="flex items-center justify-between rounded border p-2 text-sm"
+                      >
+                        <div>
+                          <span className="font-medium">{repo.full_name}</span>
+                          <p className="text-xs text-muted-foreground">
+                            {repo.private ? 'Private' : 'Public'}
+                          </p>
                         </div>
-                      ))}
+                        <Button asChild variant="ghost" size="sm">
+                          <a
+                            href={repo.html_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        </Button>
+                      </div>
+                    ))}
                     {githubRepos.data.repositories.length > 3 && (
                       <Button
                         asChild
