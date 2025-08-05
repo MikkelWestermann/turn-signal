@@ -1,39 +1,25 @@
-import { render } from '@react-email/components';
-import nodemailer from 'nodemailer';
+import React from 'react';
+import { Resend } from 'resend';
 
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST!,
-  port: parseInt(process.env.EMAIL_PORT || '587'),
-  secure: parseInt(process.env.EMAIL_PORT || '587') === 465, // true for 465, false for other ports
-  auth: {
-    user: process.env.EMAIL_USER!,
-    pass: process.env.EMAIL_PASSWORD!,
-  },
-  tls: {
-    rejectUnauthorized: false, // Allow self-signed certificates
-  },
-});
-
-// TODO: Type
-export const renderEmail = async (Email: any, props: any) => {
-  const html = await render(<Email {...props} />);
-  const text = await render(<Email {...props} />, { plainText: true });
-  return { html, text };
-};
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendEmail = async (
   email: string,
   subject: string,
-  html: string,
-  text: string,
+  EmailComponent: React.ComponentType<any>,
+  props: any,
 ) => {
-  const options = {
-    from: process.env.EMAIL_FROM,
-    to: email,
+  const { data, error } = await resend.emails.send({
+    from: process.env.EMAIL_FROM || 'Turn Signal <noreply@turn-signal.co>',
+    to: [email],
     subject,
-    html,
-    text,
-  };
+    react: React.createElement(EmailComponent, props),
+  });
 
-  await transporter.sendMail(options);
+  if (error) {
+    console.log('🚀 ~ sendEmail ~ error:', error);
+    throw new Error(`Failed to send email: ${error.message}`);
+  }
+
+  return data;
 };

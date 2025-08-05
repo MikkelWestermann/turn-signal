@@ -367,7 +367,6 @@ export default function MembersPage() {
                 <TableRow>
                   <TableHead>Email</TableHead>
                   <TableHead>Role</TableHead>
-                  <TableHead>Invited</TableHead>
                   <TableHead>Expires</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
@@ -383,7 +382,6 @@ export default function MembersPage() {
                           {invitation.role}
                         </Badge>
                       </TableCell>
-                      <TableCell>Unknown</TableCell>
                       <TableCell>
                         {invitation.expiresAt
                           ? new Date(invitation.expiresAt).toLocaleDateString()
