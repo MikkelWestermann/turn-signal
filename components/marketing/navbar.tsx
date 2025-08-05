@@ -97,7 +97,7 @@ export function MarketingNavbar() {
                       >
                         TLDR: It's free
                       </ListItem>
-                      <ListItem href="/roadmap" title="Roadmap">
+                      <ListItem href="/roadmap/turn-signal" title="Roadmap">
                         See what we're building next
                       </ListItem>
                     </ul>
@@ -171,7 +171,7 @@ export function MarketingNavbar() {
                     Pricing
                   </Link>
                   <Link
-                    href="/roadmap"
+                    href="/roadmap/turn-signal"
                     className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
                   >
                     Roadmap
