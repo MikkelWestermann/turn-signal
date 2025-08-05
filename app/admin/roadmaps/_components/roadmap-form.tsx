@@ -281,45 +281,67 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
                   required
                 />
                 <p className="text-xs text-muted-foreground">
-                  GitHub issues with this label will appear in the roadmap
+                  <strong>Required:</strong> GitHub issues must have this label
+                  to appear in the roadmap at all. This is the main filter that
+                  determines which issues show up in your roadmap.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                <div className="space-y-2">
-                  <Label htmlFor="plannedTag">Planned Label</Label>
-                  <Input
-                    id="plannedTag"
-                    value={formData.plannedTag}
-                    onChange={(e) =>
-                      handleInputChange('plannedTag', e.target.value)
-                    }
-                    placeholder="planned"
-                  />
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-base font-medium">Column Labels</Label>
+                  <p className="mb-3 text-xs text-muted-foreground">
+                    These labels determine which column each issue appears in.
+                    Issues with these labels will be automatically sorted into
+                    the corresponding columns.
+                  </p>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="inProgressTag">In Progress Label</Label>
-                  <Input
-                    id="inProgressTag"
-                    value={formData.inProgressTag}
-                    onChange={(e) =>
-                      handleInputChange('inProgressTag', e.target.value)
-                    }
-                    placeholder="in progress"
-                  />
-                </div>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="plannedTag">Planned Label</Label>
+                    <Input
+                      id="plannedTag"
+                      value={formData.plannedTag}
+                      onChange={(e) =>
+                        handleInputChange('plannedTag', e.target.value)
+                      }
+                      placeholder="planned"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Issues with this label go to "Planned" column
+                    </p>
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="doneTag">Done Label</Label>
-                  <Input
-                    id="doneTag"
-                    value={formData.doneTag}
-                    onChange={(e) =>
-                      handleInputChange('doneTag', e.target.value)
-                    }
-                    placeholder="done"
-                  />
+                  <div className="space-y-2">
+                    <Label htmlFor="inProgressTag">In Progress Label</Label>
+                    <Input
+                      id="inProgressTag"
+                      value={formData.inProgressTag}
+                      onChange={(e) =>
+                        handleInputChange('inProgressTag', e.target.value)
+                      }
+                      placeholder="in progress"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Issues with this label go to "In Progress" column
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="doneTag">Done Label</Label>
+                    <Input
+                      id="doneTag"
+                      value={formData.doneTag}
+                      onChange={(e) =>
+                        handleInputChange('doneTag', e.target.value)
+                      }
+                      placeholder="done"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Issues with this label go to "Done" column
+                    </p>
+                  </div>
                 </div>
               </div>
 

@@ -119,9 +119,14 @@ export default function RoadmapAdminPage() {
     ) || 0;
   const averageVotes =
     totalIssues > 0 ? Math.round((totalVotes / totalIssues) * 10) / 10 : 0;
-  const mostVotedIssue = roadmapWithIssues?.issues?.reduce((max, issue) =>
-    (issue.voteCount || 0) > (max?.voteCount || 0) ? issue : max,
-  );
+  const mostVotedIssue =
+    roadmapWithIssues?.issues && roadmapWithIssues.issues.length > 0
+      ? roadmapWithIssues.issues.reduce(
+          (max, issue) =>
+            (issue.voteCount || 0) > (max?.voteCount || 0) ? issue : max,
+          roadmapWithIssues.issues[0],
+        )
+      : undefined;
 
   const handleRefresh = () => {
     refetch();
@@ -378,18 +383,68 @@ export default function RoadmapAdminPage() {
                 <div className="py-12 text-center">
                   <div className="space-y-4">
                     <div className="text-6xl">🚀</div>
-                    <h3 className="text-lg font-semibold">Coming Soon</h3>
-                    <p className="mx-auto max-w-md text-muted-foreground">
-                      This roadmap will display GitHub issues automatically. Add
-                      the "{roadmap.tag}" label to your GitHub issues to see
-                      them here.
-                    </p>
-                    <Button variant="outline" asChild>
-                      <Link href="https://github.com" target="_blank">
-                        <ExternalLink className="mr-2 h-4 w-4" />
-                        View on GitHub
-                      </Link>
-                    </Button>
+                    <h3 className="text-lg font-semibold">Getting Started</h3>
+                    <div className="mx-auto max-w-2xl space-y-4 text-left">
+                      <p className="text-muted-foreground">
+                        To see issues in your roadmap, you need to:
+                      </p>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex items-start gap-3">
+                          <div className="mt-1 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+                            1
+                          </div>
+                          <div>
+                            <p className="font-medium">
+                              Add the "{roadmap.tag}" label to GitHub issues
+                            </p>
+                            <p className="text-muted-foreground">
+                              This is the main filter - only issues with this
+                              label will appear in your roadmap
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="mt-1 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+                            2
+                          </div>
+                          <div>
+                            <p className="font-medium">
+                              Optionally add column labels for organization
+                            </p>
+                            <p className="text-muted-foreground">
+                              Add "{roadmap.plannedTag || 'planned'}", "
+                              {roadmap.inProgressTag || 'in progress'}", or "
+                              {roadmap.doneTag || 'done'}" labels to
+                              automatically sort issues into columns
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="mt-1 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+                            3
+                          </div>
+                          <div>
+                            <p className="font-medium">Refresh this page</p>
+                            <p className="text-muted-foreground">
+                              Click the refresh button above to pull in new
+                              issues from GitHub
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex justify-center gap-2">
+                      <Button variant="outline" onClick={handleRefresh}>
+                        <RefreshCw className="mr-2 h-4 w-4" />
+                        Refresh Now
+                      </Button>
+                      <Button variant="outline" asChild>
+                        <Link href="https://github.com" target="_blank">
+                          <ExternalLink className="mr-2 h-4 w-4" />
+                          View on GitHub
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardContent>
