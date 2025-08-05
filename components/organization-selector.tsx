@@ -27,8 +27,7 @@ import { toast } from 'sonner';
 export function OrganizationSelector() {
   const { data: organizations, isPending: isLoading } =
     authClient.useListOrganizations();
-  const { data: activeOrganization, refetch: refetchActive } =
-    authClient.useActiveOrganization();
+  const { data: activeOrganization } = authClient.useActiveOrganization();
   const [isCreating, setIsCreating] = useState(false);
   const [newOrgName, setNewOrgName] = useState('');
   const [newOrgSlug, setNewOrgSlug] = useState('');
@@ -64,7 +63,7 @@ export function OrganizationSelector() {
       await authClient.organization.setActive({
         organizationId,
       });
-      await refetchActive();
+      window.location.reload();
       toast.success('Active organization updated');
     } catch (error) {
       console.error('Error setting active organization:', error);
