@@ -1,17 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 
 export interface Vote {
   id: string;
   timestamp: number;
 }
 
-const VOTES_STORAGE_KEY = "turn-signal-votes";
+const VOTES_STORAGE_KEY = 'turn-signal-votes';
 
 export function useVotes() {
-  const [votes, setVotes] = useState<Record<string, Vote>>(() => {
+  const [votes, setVotes] = useState<Record<string, Vote>>({});
+
+  useEffect(() => {
     const storedVotes = localStorage.getItem(VOTES_STORAGE_KEY);
-    return storedVotes ? JSON.parse(storedVotes) : {};
-  });
+    if (storedVotes) {
+      setVotes(JSON.parse(storedVotes));
+    }
+  }, []);
 
   const addVote = (issueId: string, voteId: string) => {
     setVotes((prev) => {

@@ -115,7 +115,7 @@ export default function AdminPage() {
   }
 
   const totalRoadmaps = roadmaps?.length || 0;
-  const totalRepos = githubRepos?.data?.repositories?.length || 0;
+  const totalRepos = githubRepos?.data?.total_count || 0;
   const connectedRepos =
     roadmaps?.reduce((acc: number, roadmap: any) => {
       return acc + (roadmap.repositories?.length || 0);
