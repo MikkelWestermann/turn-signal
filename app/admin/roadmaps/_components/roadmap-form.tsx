@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTRPC } from '@/lib/client';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -61,6 +61,7 @@ interface Repository {
 
 export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
   const trpc = useTRPC();
+  const queryClient = useQueryClient();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRepositories, setSelectedRepositories] = useState<
@@ -91,6 +92,10 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
   const createRoadmap = useMutation(
     trpc.roadmap.create.mutationOptions({
       onSuccess: () => {
+        // Invalidate the roadmaps list query to refresh the data
+        queryClient.invalidateQueries({
+          queryKey: trpc.roadmap.getAll.queryKey(),
+        });
         toast.success('Roadmap created successfully');
         router.push('/admin/roadmaps');
       },
@@ -104,6 +109,14 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
   const updateRoadmap = useMutation(
     trpc.roadmap.update.mutationOptions({
       onSuccess: () => {
+        // Invalidate the roadmaps list query to refresh the data
+        queryClient.invalidateQueries({
+          queryKey: trpc.roadmap.getAll.queryKey(),
+        });
+        // Also invalidate the specific roadmap query
+        queryClient.invalidateQueries({
+          queryKey: trpc.roadmap.getById.queryKey({ id: roadmapId! }),
+        });
         toast.success('Roadmap updated successfully');
         router.push('/admin/roadmaps');
       },
@@ -117,6 +130,10 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
   const updateRepositories = useMutation(
     trpc.roadmap.updateRepositories.mutationOptions({
       onSuccess: () => {
+        // Invalidate the specific roadmap query to refresh repository data
+        queryClient.invalidateQueries({
+          queryKey: trpc.roadmap.getById.queryKey({ id: roadmapId! }),
+        });
         toast.success('Repositories updated successfully');
       },
       onError: (error) => {
