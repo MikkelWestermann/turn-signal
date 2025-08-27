@@ -1,10 +1,11 @@
 import { z } from 'zod';
-import { router, organizationProcedure } from '../trpc';
+import { router, organizationProcedure, publicProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { getDb } from '../../db';
 import { githubInstallations } from '../../db/schema';
 import { eq } from 'drizzle-orm';
 import { installationClient } from '@/lib/github';
+import { roadmaps } from '../../db/schema';
 
 export const githubRouter = router({
   getInstallation: organizationProcedure.query(async ({ ctx }) => {
@@ -151,5 +152,86 @@ export const githubRouter = router({
         repo: input.repo,
         issue_number: input.issueNumber,
       });
+    }),
+
+  getComments: publicProcedure
+    .input(
+      z.object({
+        owner: z.string(),
+        repo: z.string(),
+        issueNumber: z.number(),
+        roadmapSlug: z.string(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const db = await getDb();
+
+      const roadmap = await db.query.roadmaps.findFirst({
+        columns: {
+          id: true,
+          organizationId: true,
+        },
+        where: eq(roadmaps.slug, input.roadmapSlug),
+        with: {
+          organization: {
+            with: {
+              githubInstallation: true,
+            },
+          },
+        },
+      });
+
+      if (!roadmap) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Roadmap not found',
+        });
+      }
+
+      if (!roadmap.organization.githubInstallation) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'GitHub installation not found for this roadmap',
+        });
+      }
+
+      const installation = installationClient(
+        roadmap.organization.githubInstallation.installationId,
+      );
+
+      try {
+        const comments = await installation.rest.issues.listComments({
+          owner: input.owner,
+          repo: input.repo,
+          issue_number: input.issueNumber,
+          per_page: 100,
+        });
+
+        // Sanitize the response to only include relevant information
+        return {
+          ...comments,
+          data: comments.data.map((comment: any) => ({
+            id: comment.id,
+            body: comment.body,
+            created_at: comment.created_at,
+            updated_at: comment.updated_at,
+            // Remove user details and other sensitive information
+          })),
+        };
+      } catch (error) {
+        if (
+          error instanceof Error &&
+          'status' in error &&
+          error.status === 404
+        ) {
+          return {
+            data: [],
+            status: 200,
+            headers: {},
+            url: '',
+          };
+        }
+        throw error;
+      }
     }),
 });

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ import { useVotes, type Vote } from '@/hooks/use-votes';
 import { useTRPC } from '@/lib/client';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { IssueDialog } from './issue-dialog';
 
 interface Issue {
   id: number;
@@ -29,7 +31,10 @@ interface Issue {
   labels: Array<string | { name?: string; color?: string | null; id?: number }>;
   comments?: number;
   voteCount?: number;
-  [key: string]: any; // Allow additional GitHub API fields
+  repository: {
+    owner: string;
+    name: string;
+  };
 }
 
 interface KanbanBoardProps {
@@ -41,6 +46,7 @@ interface KanbanBoardProps {
     doneTag: string | null;
     timestamp: number;
     issues: Issue[];
+    slug: string;
   };
 }
 
@@ -83,6 +89,7 @@ function IssueCard({
   addVote,
   removeVote,
   timestamp,
+  onCardClick,
 }: {
   issue: Issue;
   roadmapId: string;
@@ -91,6 +98,7 @@ function IssueCard({
   addVote: (issueId: string, voteId: string) => void;
   removeVote: (issueId: string) => void;
   timestamp: number;
+  onCardClick: (issue: Issue) => void;
 }) {
   const trpc = useTRPC();
 
@@ -139,6 +147,10 @@ function IssueCard({
     }
   };
 
+  const handleCardClick = () => {
+    onCardClick(issue);
+  };
+
   const userHasVoted = !!vote;
   const isLoading =
     createVoteMutation.isPending || deleteVoteMutation.isPending;
@@ -147,7 +159,10 @@ function IssueCard({
     (issue.voteCount || 0) + (vote && vote.timestamp > timestamp ? 1 : 0);
 
   return (
-    <Card className="mb-3 cursor-pointer border-border transition-shadow hover:shadow-md">
+    <Card
+      className="mb-3 cursor-pointer border-border transition-shadow hover:shadow-md"
+      onClick={handleCardClick}
+    >
       <CardContent className="p-4">
         <div className="space-y-3">
           <div className="flex items-start justify-between">
@@ -257,6 +272,19 @@ export function KanbanBoard({ roadmap }: KanbanBoardProps) {
   );
   const { getVote, addVote, removeVote } = useVotes();
 
+  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleCardClick = (issue: Issue) => {
+    setSelectedIssue(issue);
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+    setSelectedIssue(null);
+  };
+
   const columns = [
     {
       title: 'Planned',
@@ -282,48 +310,60 @@ export function KanbanBoard({ roadmap }: KanbanBoardProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-      {columns.map((column) => (
-        <div key={column.title} className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-foreground">
-              {column.title}
-            </h3>
-            <Badge variant="secondary" className="text-xs">
-              {column.count}
-            </Badge>
+    <>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        {columns.map((column) => (
+          <div key={column.title} className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-foreground">
+                {column.title}
+              </h3>
+              <Badge variant="secondary" className="text-xs">
+                {column.count}
+              </Badge>
+            </div>
+            <div
+              className={cn(
+                'min-h-[400px] rounded-lg border-2 border-dashed p-4',
+                column.color,
+              )}
+            >
+              {column.issues.length > 0 ? (
+                <div className="space-y-0">
+                  {column.issues.map((issue) => (
+                    <IssueCard
+                      key={issue.id}
+                      issue={issue}
+                      roadmapId={roadmap.id}
+                      organizationId={roadmap.organizationId}
+                      vote={getVote(issue.id.toString())}
+                      addVote={addVote}
+                      removeVote={removeVote}
+                      timestamp={roadmap.timestamp}
+                      onCardClick={handleCardClick}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex h-full items-center justify-center">
+                  <p className="text-center text-sm text-muted-foreground">
+                    No issues in {column.title.toLowerCase()}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
-          <div
-            className={cn(
-              'min-h-[400px] rounded-lg border-2 border-dashed p-4',
-              column.color,
-            )}
-          >
-            {column.issues.length > 0 ? (
-              <div className="space-y-0">
-                {column.issues.map((issue) => (
-                  <IssueCard
-                    key={issue.id}
-                    issue={issue}
-                    roadmapId={roadmap.id}
-                    organizationId={roadmap.organizationId}
-                    vote={getVote(issue.id.toString())}
-                    addVote={addVote}
-                    removeVote={removeVote}
-                    timestamp={roadmap.timestamp}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="flex h-full items-center justify-center">
-                <p className="text-center text-sm text-muted-foreground">
-                  No issues in {column.title.toLowerCase()}
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+
+      <IssueDialog
+        issue={selectedIssue}
+        open={dialogOpen}
+        onOpenChange={handleDialogClose}
+        roadmapId={roadmap.id}
+        organizationId={roadmap.organizationId}
+        roadmapSlug={roadmap.slug}
+      />
+    </>
   );
 }

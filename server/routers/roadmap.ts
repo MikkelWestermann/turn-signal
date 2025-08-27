@@ -319,6 +319,12 @@ export const roadmapRouter = router({
               updated_at: issue.updated_at,
               created_at: issue.created_at,
               labels: issue.labels,
+              assignees: issue.assignees,
+              comments: issue.comments,
+              repository: {
+                owner: repository.owner,
+                name: repository.repo,
+              },
               ...(isMember && {
                 html_url: issue.html_url,
               }),
