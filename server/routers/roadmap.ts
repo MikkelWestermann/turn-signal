@@ -58,6 +58,9 @@ export const roadmapRouter = router({
         plannedTag: z.string().optional(),
         inProgressTag: z.string().optional(),
         doneTag: z.string().optional(),
+        showComments: z.boolean().optional(),
+        showCommentProfiles: z.boolean().optional(),
+        closedIssueBehavior: z.enum(['filter', 'label', 'done']).optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -90,6 +93,9 @@ export const roadmapRouter = router({
           plannedTag: input.plannedTag || 'planned',
           inProgressTag: input.inProgressTag || 'in progress',
           doneTag: input.doneTag || 'done',
+          showComments: input.showComments ?? true,
+          showCommentProfiles: input.showCommentProfiles ?? true,
+          closedIssueBehavior: input.closedIssueBehavior || 'filter',
         })
         .returning();
 
@@ -106,6 +112,9 @@ export const roadmapRouter = router({
         plannedTag: z.string().optional(),
         inProgressTag: z.string().optional(),
         doneTag: z.string().optional(),
+        showComments: z.boolean().optional(),
+        showCommentProfiles: z.boolean().optional(),
+        closedIssueBehavior: z.enum(['filter', 'label', 'done']).optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -141,6 +150,12 @@ export const roadmapRouter = router({
       if (input.inProgressTag !== undefined)
         updateData.inProgressTag = input.inProgressTag;
       if (input.doneTag !== undefined) updateData.doneTag = input.doneTag;
+      if (input.showComments !== undefined)
+        updateData.showComments = input.showComments;
+      if (input.showCommentProfiles !== undefined)
+        updateData.showCommentProfiles = input.showCommentProfiles;
+      if (input.closedIssueBehavior !== undefined)
+        updateData.closedIssueBehavior = input.closedIssueBehavior;
 
       const updatedRoadmap = await db
         .update(roadmaps)
@@ -264,6 +279,9 @@ export const roadmapRouter = router({
           inProgressTag: true,
           doneTag: true,
           organizationId: true,
+          showComments: true,
+          showCommentProfiles: true,
+          closedIssueBehavior: true,
         },
         where: eq(roadmaps.slug, input.slug),
         with: {
@@ -302,7 +320,20 @@ export const roadmapRouter = router({
             const labelQuery = allStatusTags
               .map((label) => `"${label}"`)
               .join(',');
-            const searchQuery = `repo:${repository.owner}/${repository.repo} is:issue label:${labelQuery}`;
+
+            // Build search query based on closed issue behavior
+            let searchQuery = `repo:${repository.owner}/${repository.repo} is:issue label:${labelQuery}`;
+
+            if (roadmap.closedIssueBehavior === 'filter') {
+              // Filter out closed issues
+              searchQuery += ' is:open';
+            } else if (roadmap.closedIssueBehavior === 'label') {
+              // Include both open and closed issues, but closed ones will be filtered by label
+              searchQuery += ' is:issue';
+            } else if (roadmap.closedIssueBehavior === 'done') {
+              // Include both open and closed issues, closed ones will go to done column
+              searchQuery += ' is:issue';
+            }
 
             const searchResult =
               await installation.rest.search.issuesAndPullRequests({

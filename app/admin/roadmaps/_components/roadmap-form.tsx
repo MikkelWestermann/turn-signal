@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   Card,
   CardContent,
@@ -52,6 +54,9 @@ interface FormData {
   plannedTag: string;
   inProgressTag: string;
   doneTag: string;
+  showComments: boolean;
+  showCommentProfiles: boolean;
+  closedIssueBehavior: 'filter' | 'label' | 'done';
 }
 
 interface Repository {
@@ -75,6 +80,9 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
     plannedTag: 'planned',
     inProgressTag: 'in progress',
     doneTag: 'done',
+    showComments: true,
+    showCommentProfiles: true,
+    closedIssueBehavior: 'filter',
   });
 
   const { data: roadmap } = useQuery(
@@ -153,6 +161,9 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
         plannedTag: roadmap.plannedTag || 'planned',
         inProgressTag: roadmap.inProgressTag || 'in progress',
         doneTag: roadmap.doneTag || 'done',
+        showComments: roadmap.showComments ?? true,
+        showCommentProfiles: roadmap.showCommentProfiles ?? true,
+        closedIssueBehavior: roadmap.closedIssueBehavior || 'filter',
       });
     }
   }, [roadmap, mode]);
@@ -204,8 +215,24 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
     }
   };
 
-  const handleInputChange = (field: keyof FormData, value: string) => {
+  const handleInputChange = (
+    field: keyof FormData,
+    value: string | boolean | 'filter' | 'label' | 'done',
+  ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleBooleanChange = (
+    field: 'showComments' | 'showCommentProfiles',
+    value: boolean,
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleClosedIssueBehaviorChange = (value: string) => {
+    if (value === 'filter' || value === 'label' || value === 'done') {
+      setFormData((prev) => ({ ...prev, closedIssueBehavior: value }));
+    }
   };
 
   // Auto-generate slug from name
@@ -340,6 +367,121 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
                       Issues with this label go to "Done" column
                     </p>
                   </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-base font-medium">
+                    Comments Configuration
+                  </Label>
+                  <p className="mb-3 text-xs text-muted-foreground">
+                    Control how comments are displayed in the roadmap.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="showComments"
+                      checked={formData.showComments}
+                      onCheckedChange={(checked) =>
+                        handleBooleanChange('showComments', checked === true)
+                      }
+                    />
+                    <Label
+                      htmlFor="showComments"
+                      className="text-sm font-normal"
+                    >
+                      Show comments on issues
+                    </Label>
+                  </div>
+
+                  {formData.showComments && (
+                    <div className="ml-6 flex items-center space-x-2">
+                      <Checkbox
+                        id="showCommentProfiles"
+                        checked={formData.showCommentProfiles}
+                        onCheckedChange={(checked) =>
+                          handleBooleanChange(
+                            'showCommentProfiles',
+                            checked === true,
+                          )
+                        }
+                      />
+                      <Label
+                        htmlFor="showCommentProfiles"
+                        className="text-sm font-normal"
+                      >
+                        Show user profiles in comments
+                      </Label>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-base font-medium">
+                    Closed Issue Behavior
+                  </Label>
+                  <p className="mb-3 text-xs text-muted-foreground">
+                    Choose how closed issues are handled in the roadmap.
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <RadioGroup
+                    value={formData.closedIssueBehavior}
+                    onValueChange={handleClosedIssueBehaviorChange}
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="filter" id="closedFilter" />
+                        <Label
+                          htmlFor="closedFilter"
+                          className="text-sm font-normal"
+                        >
+                          Filter out closed issues
+                        </Label>
+                      </div>
+                      <p className="ml-6 text-xs text-muted-foreground">
+                        All closed issues are hidden from the roadmap
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="label" id="closedLabel" />
+                        <Label
+                          htmlFor="closedLabel"
+                          className="text-sm font-normal"
+                        >
+                          Show in specified tag column
+                        </Label>
+                      </div>
+                      <p className="ml-6 text-xs text-muted-foreground">
+                        Closed issues appear in the column based on their status
+                        label
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="done" id="closedDone" />
+                        <Label
+                          htmlFor="closedDone"
+                          className="text-sm font-normal"
+                        >
+                          Move all to Done column
+                        </Label>
+                      </div>
+                      <p className="ml-6 text-xs text-muted-foreground">
+                        All closed issues automatically appear in the Done
+                        column
+                      </p>
+                    </div>
+                  </RadioGroup>
                 </div>
               </div>
 

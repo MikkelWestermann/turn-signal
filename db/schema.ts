@@ -68,6 +68,13 @@ export const roadmaps = sqliteTable('roadmaps', {
   plannedTag: text('planned_tag').default('planned'),
   inProgressTag: text('in_progress_tag').default('in progress'),
   doneTag: text('done_tag').default('done'),
+  showComments: integer('show_comments', { mode: 'boolean' }).default(true),
+  showCommentProfiles: integer('show_comment_profiles', {
+    mode: 'boolean',
+  }).default(true),
+  closedIssueBehavior: text('closed_issue_behavior')
+    .default('filter')
+    .$type<'filter' | 'label' | 'done'>(),
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
     .$defaultFn(() => new Date()),

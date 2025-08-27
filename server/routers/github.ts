@@ -170,6 +170,8 @@ export const githubRouter = router({
         columns: {
           id: true,
           organizationId: true,
+          showComments: true,
+          showCommentProfiles: true,
         },
         where: eq(roadmaps.slug, input.roadmapSlug),
         with: {
@@ -186,6 +188,15 @@ export const githubRouter = router({
           code: 'NOT_FOUND',
           message: 'Roadmap not found',
         });
+      }
+
+      if (!roadmap.showComments) {
+        return {
+          data: [],
+          status: 200,
+          headers: {},
+          url: '',
+        };
       }
 
       if (!roadmap.organization.githubInstallation) {
@@ -215,7 +226,13 @@ export const githubRouter = router({
             body: comment.body,
             created_at: comment.created_at,
             updated_at: comment.updated_at,
-            // Remove user details and other sensitive information
+            user: roadmap.showCommentProfiles
+              ? {
+                  login: comment.user.login,
+                  avatar_url: comment.user.avatar_url,
+                }
+              : null,
+            // Remove other sensitive information
           })),
         };
       } catch (error) {

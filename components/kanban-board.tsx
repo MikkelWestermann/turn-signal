@@ -44,6 +44,9 @@ interface KanbanBoardProps {
     plannedTag: string | null;
     inProgressTag: string | null;
     doneTag: string | null;
+    showComments: boolean | null;
+    showCommentProfiles: boolean | null;
+    closedIssueBehavior: 'filter' | 'label' | 'done' | null;
     timestamp: number;
     issues: Issue[];
     slug: string;
@@ -62,6 +65,19 @@ function categorizeIssues(
     const labelNames = issue.labels.map((label) =>
       typeof label === 'string' ? label : label.name,
     );
+
+    // Handle closed issues based on configuration
+    if (issue.state === 'closed') {
+      if (roadmap.closedIssueBehavior === 'filter') {
+        // Skip closed issues entirely
+        return;
+      } else if (roadmap.closedIssueBehavior === 'done') {
+        // All closed issues go to done column
+        done.push(issue);
+        return;
+      }
+      // For 'label' behavior, closed issues follow normal label logic
+    }
 
     if (roadmap.doneTag && labelNames.includes(roadmap.doneTag)) {
       done.push(issue);
@@ -90,6 +106,7 @@ function IssueCard({
   removeVote,
   timestamp,
   onCardClick,
+  showComments,
 }: {
   issue: Issue;
   roadmapId: string;
@@ -99,6 +116,7 @@ function IssueCard({
   removeVote: (issueId: string) => void;
   timestamp: number;
   onCardClick: (issue: Issue) => void;
+  showComments: boolean;
 }) {
   const trpc = useTRPC();
 
@@ -226,12 +244,14 @@ function IssueCard({
                 <span>{new Date(issue.created_at).toLocaleDateString()}</span>
               </div>
             </div>
-            {issue.comments !== undefined && issue.comments > 0 && (
-              <div className="flex items-center space-x-1">
-                <MessageSquare className="h-3 w-3" />
-                <span>{issue.comments}</span>
-              </div>
-            )}
+            {showComments &&
+              issue.comments !== undefined &&
+              issue.comments > 0 && (
+                <div className="flex items-center space-x-1">
+                  <MessageSquare className="h-3 w-3" />
+                  <span>{issue.comments}</span>
+                </div>
+              )}
           </div>
 
           {issue.labels.length > 0 && (
@@ -341,6 +361,7 @@ export function KanbanBoard({ roadmap }: KanbanBoardProps) {
                       removeVote={removeVote}
                       timestamp={roadmap.timestamp}
                       onCardClick={handleCardClick}
+                      showComments={roadmap.showComments ?? true}
                     />
                   ))}
                 </div>
@@ -360,9 +381,9 @@ export function KanbanBoard({ roadmap }: KanbanBoardProps) {
         issue={selectedIssue}
         open={dialogOpen}
         onOpenChange={handleDialogClose}
-        roadmapId={roadmap.id}
-        organizationId={roadmap.organizationId}
         roadmapSlug={roadmap.slug}
+        showComments={roadmap.showComments ?? true}
+        showCommentProfiles={roadmap.showCommentProfiles ?? true}
       />
     </>
   );

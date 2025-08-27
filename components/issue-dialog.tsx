@@ -11,7 +11,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { ExternalLink, User, Calendar, MessageSquare } from 'lucide-react';
 
@@ -39,24 +39,28 @@ interface SanitizedComment {
   body: string;
   created_at: string;
   updated_at: string;
+  user?: {
+    login: string;
+    avatar_url: string;
+  } | null;
 }
 
 interface IssueDialogProps {
   issue: Issue | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  roadmapId: string;
-  organizationId: string;
   roadmapSlug: string;
+  showComments?: boolean;
+  showCommentProfiles?: boolean;
 }
 
 export function IssueDialog({
   issue,
   open,
   onOpenChange,
-  roadmapId,
-  organizationId,
   roadmapSlug,
+  showComments,
+  showCommentProfiles,
 }: IssueDialogProps) {
   const trpc = useTRPC();
 
@@ -155,12 +159,14 @@ export function IssueDialog({
                 </div>
               )}
             </div>
-            {issue.comments !== undefined && issue.comments > 0 && (
-              <div className="flex items-center gap-2">
-                <MessageSquare className="h-4 w-4" />
-                <span>{issue.comments} comments</span>
-              </div>
-            )}
+            {showComments &&
+              issue.comments !== undefined &&
+              issue.comments > 0 && (
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  <span>{issue.comments} comments</span>
+                </div>
+              )}
           </div>
 
           {issue.labels.length > 0 && (
@@ -203,70 +209,86 @@ export function IssueDialog({
             </div>
           )}
 
-          {issue.comments !== undefined && issue.comments > 0 && (
-            <div className="space-y-3">
-              <h3 className="text-lg font-medium">Comments</h3>
+          {showComments &&
+            issue.comments !== undefined &&
+            issue.comments > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-lg font-medium">Comments</h3>
 
-              {!repoInfo ? (
-                <p className="text-sm text-muted-foreground">
-                  Comments are not available for this issue.
-                </p>
-              ) : (
-                <div className="space-y-4">
-                  {commentsLoading ? (
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <Skeleton className="h-8 w-8 rounded-full" />
-                          <Skeleton className="h-4 w-32" />
-                          <Skeleton className="h-4 w-24" />
+                {!repoInfo ? (
+                  <p className="text-sm text-muted-foreground">
+                    Comments are not available for this issue.
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    {commentsLoading ? (
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <Skeleton className="h-8 w-8 rounded-full" />
+                            <Skeleton className="h-4 w-32" />
+                            <Skeleton className="h-4 w-24" />
+                          </div>
+                          <Skeleton className="h-4 w-full" />
+                          <Skeleton className="h-4 w-3/4" />
                         </div>
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-3/4" />
                       </div>
-                    </div>
-                  ) : comments?.data ? (
-                    <div className="space-y-4">
-                      {comments.data.map((comment: SanitizedComment) => (
-                        <div key={comment.id} className="space-y-3">
-                          <Separator />
-                          <div className="flex items-start gap-3">
-                            <Avatar className="h-8 w-8">
-                              <AvatarFallback>
-                                <User className="h-4 w-4" />
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1 space-y-2">
-                              <div className="flex items-center gap-2">
-                                <span className="text-sm font-medium text-muted-foreground">
-                                  Anonymous User
-                                </span>
-                                <span className="text-xs text-muted-foreground">
-                                  {new Date(
-                                    comment.created_at,
-                                  ).toLocaleDateString()}
-                                </span>
+                    ) : comments?.data ? (
+                      <div className="space-y-4">
+                        {comments.data.map((comment: SanitizedComment) => (
+                          <div key={comment.id} className="space-y-3">
+                            <Separator />
+                            <div className="flex items-start gap-3">
+                              {showCommentProfiles ? (
+                                <Avatar className="h-8 w-8">
+                                  {comment.user?.avatar_url ? (
+                                    <AvatarImage
+                                      src={comment.user.avatar_url}
+                                      alt={comment.user.login}
+                                    />
+                                  ) : (
+                                    <AvatarFallback>
+                                      <User className="h-4 w-4" />
+                                    </AvatarFallback>
+                                  )}
+                                </Avatar>
+                              ) : null}
+                              <div className="flex-1 space-y-2">
+                                <div className="flex items-center gap-2">
+                                  {showCommentProfiles && comment.user ? (
+                                    <span className="text-sm font-medium text-muted-foreground">
+                                      {comment.user.login}
+                                    </span>
+                                  ) : null}
+                                  <span className="text-xs text-muted-foreground">
+                                    {new Date(
+                                      comment.created_at,
+                                    ).toLocaleDateString()}
+                                  </span>
+                                </div>
+                                <div
+                                  className="prose prose-sm max-w-none"
+                                  dangerouslySetInnerHTML={{
+                                    __html: comment.body.replace(
+                                      /\n/g,
+                                      '<br />',
+                                    ),
+                                  }}
+                                />
                               </div>
-                              <div
-                                className="prose prose-sm max-w-none"
-                                dangerouslySetInnerHTML={{
-                                  __html: comment.body.replace(/\n/g, '<br />'),
-                                }}
-                              />
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      No comments found.
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">
+                        No comments found.
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
 
           {!issue.body && issue.comments === 0 && (
             <p className="py-8 text-center text-sm text-muted-foreground">
