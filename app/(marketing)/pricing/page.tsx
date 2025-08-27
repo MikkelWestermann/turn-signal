@@ -110,7 +110,7 @@ export default function PricingPage() {
                     <Button
                       size="lg"
                       variant="outline"
-                      className="h-14 w-full border-3 border-black bg-background text-lg font-bold shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-muted hover:shadow-lg dark:border-white"
+                      className="h-14 w-full border-3 border-black bg-background text-lg font-bold shadow-3xl transition-all duration-200 hover:bg-muted dark:border-white"
                     >
                       <Github className="mr-2 h-5 w-5" />
                       View on GitHub
@@ -155,7 +155,7 @@ export default function PricingPage() {
                   <Link href="/login">
                     <Button
                       size="lg"
-                      className="h-14 w-full border-2 border-black bg-primary text-lg font-bold text-primary-foreground shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-primary/90 hover:shadow-lg dark:border-white"
+                      className="h-14 w-full border-2 border-black bg-primary text-lg font-bold text-primary-foreground shadow-3xl transition-all duration-200 hover:bg-primary/90 dark:border-white"
                     >
                       Get Started Free
                       <ArrowRight className="ml-2 h-5 w-5" />
@@ -263,7 +263,7 @@ export default function PricingPage() {
                 <Link href="/login">
                   <Button
                     size="lg"
-                    className="h-14 border-2 border-black bg-primary px-8 text-lg font-bold text-primary-foreground shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-primary/90 hover:shadow-lg dark:border-white"
+                    className="h-14 border-2 border-black bg-primary px-8 text-lg font-bold text-primary-foreground shadow-3xl transition-all duration-200 hover:bg-primary/90 dark:border-white"
                   >
                     Try Cloud Free
                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -277,7 +277,7 @@ export default function PricingPage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="h-14 border-3 border-black bg-background px-8 text-lg font-bold shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-muted hover:shadow-lg dark:border-white"
+                    className="h-14 border-3 border-black bg-background px-8 text-lg font-bold shadow-3xl transition-all duration-200 hover:bg-muted dark:border-white"
                   >
                     <Github className="mr-2 h-5 w-5" />
                     Self Host

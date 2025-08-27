@@ -78,7 +78,7 @@ const ContactCard = ({
         <Button
           size="lg"
           variant={variant}
-          className={`h-14 border-2 border-black px-8 text-lg font-bold shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-lg dark:border-white ${
+          className={`h-14 border-2 border-black px-8 text-lg font-bold shadow-3xl transition-all duration-200 hover:shadow-lg dark:border-white ${
             variant === 'outline'
               ? 'bg-background hover:bg-muted'
               : 'bg-primary text-primary-foreground hover:bg-primary/90'
@@ -212,7 +212,7 @@ export default function ContactPage() {
               >
                 <Button
                   size="lg"
-                  className="h-14 border-2 border-black bg-primary px-8 text-lg font-bold text-primary-foreground shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-primary/90 hover:shadow-lg dark:border-white"
+                  className="h-14 border-2 border-black bg-primary px-8 text-lg font-bold text-primary-foreground shadow-3xl transition-all duration-200 hover:bg-primary/90 dark:border-white"
                 >
                   <Github className="mr-2 h-5 w-5" />
                   View All Issues

@@ -36,7 +36,7 @@ const FeatureCard = ({
   description: string;
   bgColor: string;
 }) => (
-  <Card className="border-3 border-black bg-card shadow-2xl transition-all duration-200 hover:translate-x-1 hover:translate-y-1 hover:shadow-lg dark:border-white">
+  <Card className="border-3 border-black bg-card shadow-2xl transition-all duration-200 hover:shadow-lg dark:border-white">
     <CardHeader>
       <div className="flex items-center space-x-3">
         <div
@@ -124,7 +124,7 @@ const CTACard = ({
       <Link href={href}>
         <Button
           size="lg"
-          className="h-14 border-2 border-black bg-primary px-8 text-lg font-bold text-primary-foreground shadow-2xl transition-all duration-200 hover:translate-x-1 hover:translate-y-1 hover:bg-primary/90 hover:shadow-lg lg:h-16 lg:px-12 lg:text-xl dark:border-white"
+          className="h-14 border-2 border-black bg-primary px-8 text-lg font-bold text-primary-foreground shadow-2xl transition-all duration-200 hover:bg-primary/90 lg:h-16 lg:px-12 lg:text-xl dark:border-white"
         >
           {buttonText}
           <ArrowRight className="ml-2 h-5 w-5 lg:h-6 lg:w-6" />
@@ -134,7 +134,7 @@ const CTACard = ({
   </Card>
 );
 
-// Floating element component
+// Floating element component - simplified to remove bounce animation
 const FloatingElement = ({
   children,
   delay,
@@ -147,7 +147,7 @@ const FloatingElement = ({
   className?: string;
 }) => (
   <div
-    className={`absolute hidden animate-bounce lg:block ${className}`}
+    className={`absolute hidden lg:block ${className}`}
     style={{
       animationDelay: `${delay}s`,
       animationDuration: `${duration}s`,
@@ -220,8 +220,8 @@ const AnimatedMessagingApp = () => {
               {/* User Message */}
               <div className="mb-2 flex justify-start">
                 <div
-                  className={`max-w-[200px] border-2 border-black bg-white p-2 shadow-sm transition-all duration-500 dark:border-white dark:bg-gray-800 ${
-                    index === currentMessage ? 'scale-105' : ''
+                  className={`max-w-[200px] border-2 border-black bg-white p-2 shadow-sm transition-opacity duration-200 dark:border-white dark:bg-gray-800 ${
+                    index === currentMessage ? 'opacity-100' : 'opacity-70'
                   }`}
                 >
                   <div className="flex items-start space-x-1">
@@ -256,8 +256,8 @@ const AnimatedMessagingApp = () => {
               {/* Agent Response */}
               <div className="mb-2 flex justify-end">
                 <div
-                  className={`max-w-[200px] border-2 border-black bg-green-400 p-2 shadow-sm transition-all duration-500 dark:border-white dark:bg-green-600 ${
-                    index === currentMessage ? 'scale-105' : ''
+                  className={`max-w-[200px] border-2 border-black bg-green-400 p-2 shadow-sm transition-opacity duration-200 dark:border-white dark:bg-green-600 ${
+                    index === currentMessage ? 'opacity-100' : 'opacity-70'
                   }`}
                 >
                   <p
@@ -277,7 +277,7 @@ const AnimatedMessagingApp = () => {
       </div>
 
       {/* Message Input */}
-      <div className="flex-shrink-0 border-t-2 border-black bg-gray-200 p-2 dark:border-white dark:bg-gray-700">
+      <div className="flex flex-shrink-0 border-t-2 border-black bg-gray-200 p-2 dark:border-white dark:bg-gray-700">
         <div className="flex items-center space-x-2">
           <div className="flex h-7 flex-1 items-center border-2 border-black bg-white px-2 shadow-sm dark:border-white dark:bg-gray-800">
             <span className="text-xs text-gray-500 dark:text-gray-400">
@@ -339,7 +339,7 @@ const SimpleNotesApp = () => {
           {notes.map((note, index) => (
             <div
               key={index}
-              className={`transition-all duration-500 ${
+              className={`transition-opacity duration-200 ${
                 index === currentNote
                   ? 'font-medium text-foreground'
                   : 'text-gray-500 dark:text-gray-400'
@@ -542,7 +542,7 @@ export default function Home() {
               <Link href="/login">
                 <Button
                   size="lg"
-                  className="h-14 border-2 border-black bg-primary px-8 text-lg font-bold text-primary-foreground shadow-2xl transition-all duration-200 hover:translate-x-1 hover:translate-y-1 hover:bg-primary/90 hover:shadow-lg lg:h-16 lg:px-12 lg:text-xl dark:border-white"
+                  className="h-14 border-2 border-black bg-primary px-8 text-lg font-bold text-primary-foreground shadow-2xl transition-all duration-200 hover:bg-primary/90 lg:h-16 lg:px-12 lg:text-xl dark:border-white"
                 >
                   GET STARTED FREE
                   <ArrowRight className="ml-2 h-5 w-5 lg:h-6 lg:w-6" />
@@ -552,7 +552,7 @@ export default function Home() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="h-14 border-3 border-black bg-background px-8 text-lg font-bold shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-muted hover:shadow-lg lg:h-16 lg:px-12 lg:text-xl dark:border-white"
+                  className="h-14 border-3 border-black bg-background px-8 text-lg font-bold shadow-3xl transition-all duration-200 hover:bg-muted lg:h-16 lg:px-12 lg:text-xl dark:border-white"
                 >
                   SEE HOW IT WORKS
                 </Button>
@@ -590,13 +590,13 @@ export default function Home() {
             <div className="flex flex-col items-center space-y-16">
               <div className="relative">
                 <SimpleNotesApp />
-                <div className="absolute -top-4 -right-4 flex h-8 w-8 animate-bounce items-center justify-center border-black bg-secondary shadow-sm dark:border-white">
+                <div className="absolute -top-4 -right-4 flex h-8 w-8 items-center justify-center border-black bg-secondary shadow-sm dark:border-white">
                   <span className="text-xs font-bold text-black">!</span>
                 </div>
               </div>
               <div className="relative">
                 <AnimatedMessagingApp />
-                <div className="absolute -top-4 -right-4 flex h-8 w-8 animate-bounce items-center justify-center border-black bg-secondary shadow-sm dark:border-white">
+                <div className="absolute -top-4 -right-4 flex h-8 w-8 items-center justify-center border-black bg-secondary shadow-sm dark:border-white">
                   <span className="text-xs font-bold text-black">!</span>
                 </div>
               </div>
@@ -614,34 +614,9 @@ export default function Home() {
                   <img
                     src="https://static.turn-signal.co/driver.png"
                     alt="First-person view from inside a car driving on a highway"
-                    className="animate-pulse-blur h-auto w-full"
-                    style={{
-                      animation: 'blur-unblur 4s ease-in-out infinite',
-                    }}
+                    className="h-auto w-full"
                   />
                 </div>
-
-                <style jsx>{`
-                  @keyframes blur-unblur {
-                    0%,
-                    100% {
-                      filter: blur(0px);
-                      transform: scale(1);
-                    }
-                    25% {
-                      filter: blur(3px);
-                      transform: scale(1.02);
-                    }
-                    50% {
-                      filter: blur(6px);
-                      transform: scale(1.05);
-                    }
-                    75% {
-                      filter: blur(3px);
-                      transform: scale(1.02);
-                    }
-                  }
-                `}</style>
               </div>
             </div>
 
@@ -670,7 +645,7 @@ export default function Home() {
                 <Link href="/login">
                   <Button
                     size="lg"
-                    className="h-12 border-2 border-black bg-primary px-8 text-lg font-bold text-primary-foreground shadow-3xl transition-all duration-200 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-primary/90 hover:shadow-sm dark:border-white"
+                    className="h-12 border-2 border-black bg-primary px-8 text-lg font-bold text-primary-foreground shadow-3xl transition-all duration-200 hover:bg-primary/90 dark:border-white"
                   >
                     Start Building Smarter
                     <ArrowRight className="ml-2 h-5 w-5" />
