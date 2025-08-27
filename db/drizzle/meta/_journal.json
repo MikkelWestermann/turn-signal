@@ -8,6 +8,13 @@
       "when": 1754342136812,
       "tag": "0000_colorful_the_captain",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1756324819361,
+      "tag": "0001_absurd_wolfsbane",
+      "breakpoints": true
     }
   ]
 }

@@ -274,11 +274,6 @@ export default function AdminPage() {
                       <p className="text-sm text-muted-foreground">
                         {roadmap.description || 'No description'}
                       </p>
-                      <div className="mt-1 flex items-center gap-2">
-                        <Badge variant="outline" className="text-xs">
-                          {roadmap.tag}
-                        </Badge>
-                      </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <Button asChild variant="ghost" size="sm">

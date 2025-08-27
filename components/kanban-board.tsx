@@ -36,7 +36,6 @@ interface KanbanBoardProps {
   roadmap: {
     id: string;
     organizationId: string;
-    tag: string;
     plannedTag: string | null;
     inProgressTag: string | null;
     doneTag: string | null;
@@ -65,10 +64,7 @@ function categorizeIssues(
       labelNames.includes(roadmap.inProgressTag)
     ) {
       inProgress.push(issue);
-    } else if (
-      (roadmap.plannedTag && labelNames.includes(roadmap.plannedTag)) ||
-      labelNames.includes(roadmap.tag)
-    ) {
+    } else if (roadmap.plannedTag && labelNames.includes(roadmap.plannedTag)) {
       planned.push(issue);
     } else {
       // If no specific status label, put in planned

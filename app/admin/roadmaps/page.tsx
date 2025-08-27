@@ -156,10 +156,6 @@ export default function RoadmapsPage() {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">Tag:</span>
-                    <Badge variant="secondary">{roadmap.tag}</Badge>
-                  </div>
-                  <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">Slug:</span>
                     <code className="rounded bg-muted px-2 py-1 text-xs">
                       {roadmap.slug}

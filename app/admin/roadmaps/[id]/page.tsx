@@ -312,12 +312,6 @@ export default function RoadmapAdminPage() {
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">
-                    Primary Label
-                  </label>
-                  <p className="text-sm">{roadmap.tag}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">
                     Slug
                   </label>
                   <p className="text-sm">{roadmap.slug}</p>
@@ -376,7 +370,7 @@ export default function RoadmapAdminPage() {
               <CardHeader>
                 <CardTitle>No Issues Found</CardTitle>
                 <CardDescription>
-                  GitHub issues with the "{roadmap.tag}" label will appear here.
+                  GitHub issues with any of your column labels will appear here.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -395,11 +389,12 @@ export default function RoadmapAdminPage() {
                           </div>
                           <div>
                             <p className="font-medium">
-                              Add the "{roadmap.tag}" label to GitHub issues
+                              Add column labels to GitHub issues
                             </p>
                             <p className="text-muted-foreground">
-                              This is the main filter - only issues with this
-                              label will appear in your roadmap
+                              Issues with your planned, in progress, or done
+                              labels will automatically appear in the
+                              corresponding columns
                             </p>
                           </div>
                         </div>

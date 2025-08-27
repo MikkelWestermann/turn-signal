@@ -49,7 +49,6 @@ interface FormData {
   name: string;
   description: string;
   slug: string;
-  tag: string;
   plannedTag: string;
   inProgressTag: string;
   doneTag: string;
@@ -72,7 +71,6 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
     name: '',
     description: '',
     slug: '',
-    tag: 'roadmap',
     plannedTag: 'planned',
     inProgressTag: 'in progress',
     doneTag: 'done',
@@ -135,7 +133,6 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
         name: roadmap.name,
         description: roadmap.description || '',
         slug: roadmap.slug,
-        tag: roadmap.tag || 'roadmap',
         plannedTag: roadmap.plannedTag || 'planned',
         inProgressTag: roadmap.inProgressTag || 'in progress',
         doneTag: roadmap.doneTag || 'done',
@@ -268,22 +265,6 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
                 />
                 <p className="text-xs text-muted-foreground">
                   This will be used in the URL: /roadmap/{formData.slug}
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="tag">GitHub Label *</Label>
-                <Input
-                  id="tag"
-                  value={formData.tag}
-                  onChange={(e) => handleInputChange('tag', e.target.value)}
-                  placeholder="roadmap"
-                  required
-                />
-                <p className="text-xs text-muted-foreground">
-                  <strong>Required:</strong> GitHub issues must have this label
-                  to appear in the roadmap at all. This is the main filter that
-                  determines which issues show up in your roadmap.
                 </p>
               </div>
 

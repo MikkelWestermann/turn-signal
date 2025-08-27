@@ -55,7 +55,6 @@ export const roadmapRouter = router({
         name: z.string().min(1),
         description: z.string().optional(),
         slug: z.string().min(1),
-        tag: z.string().min(1),
         plannedTag: z.string().optional(),
         inProgressTag: z.string().optional(),
         doneTag: z.string().optional(),
@@ -88,7 +87,6 @@ export const roadmapRouter = router({
           name: input.name,
           description: input.description,
           slug: input.slug,
-          tag: input.tag,
           plannedTag: input.plannedTag || 'planned',
           inProgressTag: input.inProgressTag || 'in progress',
           doneTag: input.doneTag || 'done',
@@ -105,7 +103,6 @@ export const roadmapRouter = router({
         name: z.string().min(1).optional(),
         description: z.string().optional(),
         slug: z.string().min(1).optional(),
-        tag: z.string().min(1).optional(),
         plannedTag: z.string().optional(),
         inProgressTag: z.string().optional(),
         doneTag: z.string().optional(),
@@ -139,7 +136,6 @@ export const roadmapRouter = router({
       if (input.description !== undefined)
         updateData.description = input.description;
       if (input.slug !== undefined) updateData.slug = input.slug;
-      if (input.tag !== undefined) updateData.tag = input.tag;
       if (input.plannedTag !== undefined)
         updateData.plannedTag = input.plannedTag;
       if (input.inProgressTag !== undefined)
@@ -264,7 +260,6 @@ export const roadmapRouter = router({
           name: true,
           description: true,
           slug: true,
-          tag: true,
           plannedTag: true,
           inProgressTag: true,
           doneTag: true,
@@ -292,16 +287,30 @@ export const roadmapRouter = router({
       );
 
       const [issues, voteCounts] = await Promise.all([
-        // Get all issues from github
         Promise.all(
           roadmap.repositories.map(async (repository) => {
-            const issues = await installation.rest.issues.listForRepo({
-              owner: repository.owner,
-              repo: repository.repo,
-              labels: roadmap.tag,
-            });
+            const allStatusTags = [
+              roadmap.plannedTag,
+              roadmap.inProgressTag,
+              roadmap.doneTag,
+            ].filter(Boolean);
 
-            return issues.data.map((issue) => ({
+            if (allStatusTags.length === 0) {
+              return [];
+            }
+
+            const labelQuery = allStatusTags
+              .map((label) => `"${label}"`)
+              .join(',');
+            const searchQuery = `repo:${repository.owner}/${repository.repo} is:issue label:${labelQuery}`;
+
+            const searchResult =
+              await installation.rest.search.issuesAndPullRequests({
+                q: searchQuery,
+                per_page: 100,
+              });
+
+            return searchResult.data.items.map((issue) => ({
               id: issue.id,
               number: issue.number,
               title: issue.title,
