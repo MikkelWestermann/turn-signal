@@ -21,6 +21,50 @@ export const roadmapRouter = router({
     return roadmapsList;
   }),
 
+  getAllPublic: publicProcedure
+    .input(
+      z.object({
+        page: z.number().min(1).default(1),
+        limit: z.number().min(1).max(50).default(12),
+      }),
+    )
+    .query(async ({ input }) => {
+      const db = await getDb();
+      const offset = (input.page - 1) * input.limit;
+
+      const [roadmapsList, totalCount] = await Promise.all([
+        db
+          .select({
+            id: roadmaps.id,
+            name: roadmaps.name,
+            description: roadmaps.description,
+            slug: roadmaps.slug,
+            createdAt: roadmaps.createdAt,
+            organizationId: roadmaps.organizationId,
+          })
+          .from(roadmaps)
+          .orderBy(roadmaps.createdAt)
+          .limit(input.limit)
+          .offset(offset),
+        db.select({ count: sql<number>`count(*)` }).from(roadmaps),
+      ]);
+
+      const total = totalCount[0]?.count || 0;
+      const totalPages = Math.ceil(total / input.limit);
+
+      return {
+        roadmaps: roadmapsList,
+        pagination: {
+          page: input.page,
+          limit: input.limit,
+          total,
+          totalPages,
+          hasNext: input.page < totalPages,
+          hasPrev: input.page > 1,
+        },
+      };
+    }),
+
   getById: organizationProcedure
     .input(
       z.object({
