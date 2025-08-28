@@ -612,9 +612,34 @@ export default function Home() {
                   <img
                     src="https://static.turn-signal.co/driver.png"
                     alt="First-person view from inside a car driving on a highway"
-                    className="h-auto w-full"
+                    className="animate-pulse-blur h-auto w-full"
+                    style={{
+                      animation: 'blur-unblur 4s ease-in-out infinite',
+                    }}
                   />
                 </div>
+
+                <style jsx>{`
+                  @keyframes blur-unblur {
+                    0%,
+                    100% {
+                      filter: blur(0px);
+                      transform: scale(1);
+                    }
+                    25% {
+                      filter: blur(3px);
+                      transform: scale(1.02);
+                    }
+                    50% {
+                      filter: blur(6px);
+                      transform: scale(1.05);
+                    }
+                    75% {
+                      filter: blur(3px);
+                      transform: scale(1.02);
+                    }
+                  }
+                `}</style>
               </div>
             </div>
 
