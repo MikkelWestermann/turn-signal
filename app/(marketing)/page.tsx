@@ -520,11 +520,9 @@ export default function Home() {
               <TurnSignal direction="left" autoBlink blinkDelay={0} />
               <div className="text-center">
                 <h1 className="mb-2 text-5xl font-black tracking-wider text-foreground lg:mb-4 lg:text-8xl">
-                  TURN
+                  <div>TURN</div>
+                  <div>SIGNAL</div>
                 </h1>
-                <h2 className="-mt-2 text-5xl font-black tracking-wider text-primary lg:-mt-4 lg:text-8xl">
-                  SIGNAL
-                </h2>
               </div>
               <TurnSignal direction="right" autoBlink blinkDelay={1000} />
             </div>
