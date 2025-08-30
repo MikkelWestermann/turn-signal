@@ -91,10 +91,7 @@ export function MarketingNavbar() {
                       >
                         GitHub repository
                       </ListItem>
-                      <ListItem
-                        href="https://github.com/MikkelWestermann/turn-signal#pricing"
-                        title="Pricing"
-                      >
+                      <ListItem href="/pricing" title="Pricing">
                         TLDR: It's free
                       </ListItem>
                       <ListItem href="/roadmap/turn-signal" title="Roadmap">
