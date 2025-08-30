@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { authClient } from '@/auth/client';
 import { Button } from '@/components/ui/button';
 import {
@@ -31,6 +31,20 @@ export function OrganizationSelector() {
   const [isCreating, setIsCreating] = useState(false);
   const [newOrgName, setNewOrgName] = useState('');
   const [newOrgSlug, setNewOrgSlug] = useState('');
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+
+  // Auto-populate slug from name
+  useEffect(() => {
+    if (newOrgName && !slugManuallyEdited) {
+      const generatedSlug = newOrgName
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and hyphens
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+        .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+      setNewOrgSlug(generatedSlug);
+    }
+  }, [newOrgName, slugManuallyEdited]);
 
   const handleCreateOrganization = async () => {
     if (!newOrgName.trim() || !newOrgSlug.trim()) {
@@ -48,6 +62,7 @@ export function OrganizationSelector() {
       toast.success('Organization created successfully!');
       setNewOrgName('');
       setNewOrgSlug('');
+      setSlugManuallyEdited(false);
       // Refresh the organizations list
       window.location.reload();
     } catch (error) {
@@ -129,7 +144,10 @@ export function OrganizationSelector() {
                 <Input
                   id="name"
                   value={newOrgName}
-                  onChange={(e) => setNewOrgName(e.target.value)}
+                  onChange={(e) => {
+                    setNewOrgName(e.target.value);
+                    setSlugManuallyEdited(false); // Reset manual edit flag when name changes
+                  }}
                   placeholder="Enter organization name"
                 />
               </div>
@@ -138,11 +156,12 @@ export function OrganizationSelector() {
                 <Input
                   id="slug"
                   value={newOrgSlug}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    setSlugManuallyEdited(true);
                     setNewOrgSlug(
                       e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
-                    )
-                  }
+                    );
+                  }}
                   placeholder="enter-organization-slug"
                 />
               </div>
