@@ -99,6 +99,7 @@ export const roadmapRouter = router({
         name: z.string().min(1),
         description: z.string().optional(),
         slug: z.string().min(1),
+        link: z.string().url().optional().or(z.literal('')),
         plannedTag: z.string().optional(),
         inProgressTag: z.string().optional(),
         doneTag: z.string().optional(),
@@ -134,6 +135,7 @@ export const roadmapRouter = router({
           name: input.name,
           description: input.description,
           slug: input.slug,
+          link: input.link || null,
           plannedTag: input.plannedTag || 'planned',
           inProgressTag: input.inProgressTag || 'in progress',
           doneTag: input.doneTag || 'done',
@@ -153,6 +155,7 @@ export const roadmapRouter = router({
         name: z.string().min(1).optional(),
         description: z.string().optional(),
         slug: z.string().min(1).optional(),
+        link: z.string().url().optional().or(z.literal('')).optional(),
         plannedTag: z.string().optional(),
         inProgressTag: z.string().optional(),
         doneTag: z.string().optional(),
@@ -189,6 +192,7 @@ export const roadmapRouter = router({
       if (input.description !== undefined)
         updateData.description = input.description;
       if (input.slug !== undefined) updateData.slug = input.slug;
+      if (input.link !== undefined) updateData.link = input.link || null;
       if (input.plannedTag !== undefined)
         updateData.plannedTag = input.plannedTag;
       if (input.inProgressTag !== undefined)
@@ -319,6 +323,7 @@ export const roadmapRouter = router({
           name: true,
           description: true,
           slug: true,
+          link: true,
           plannedTag: true,
           inProgressTag: true,
           doneTag: true,

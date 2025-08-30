@@ -65,6 +65,7 @@ export const roadmaps = sqliteTable('roadmaps', {
   name: text('name').notNull(),
   description: text('description'),
   slug: text('slug').notNull().unique(),
+  link: text('link'),
   plannedTag: text('planned_tag').default('planned'),
   inProgressTag: text('in_progress_tag').default('in progress'),
   doneTag: text('done_tag').default('done'),

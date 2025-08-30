@@ -87,16 +87,30 @@ export function ClientRoadmap() {
                   </p>
                 )}
               </div>
-              <Button
-                variant="outline"
-                onClick={() => refetch()}
-                disabled={isLoading}
-              >
-                <RefreshCw
-                  className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
-                />
-                Refresh
-              </Button>
+              <div className="flex gap-2">
+                {roadmap.link && (
+                  <Button asChild variant="outline">
+                    <Link
+                      href={roadmap.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="mr-2 h-4 w-4" />
+                      Visit Project
+                    </Link>
+                  </Button>
+                )}
+                <Button
+                  variant="outline"
+                  onClick={() => refetch()}
+                  disabled={isLoading}
+                >
+                  <RefreshCw
+                    className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
+                  />
+                  Refresh
+                </Button>
+              </div>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTRPC } from '@/lib/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { UrlInput } from '@/components/url-input';
 import {
   Card,
   CardContent,
@@ -43,14 +44,15 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 interface RoadmapFormProps {
-  roadmapId?: string;
   mode: 'create' | 'edit';
+  roadmap?: any; // The roadmap data for edit mode
 }
 
 interface FormData {
   name: string;
   description: string;
   slug: string;
+  link: string;
   plannedTag: string;
   inProgressTag: string;
   doneTag: string;
@@ -64,38 +66,62 @@ interface Repository {
   repo: string;
 }
 
-export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
+export function RoadmapForm({
+  mode,
+  roadmap: passedRoadmap,
+}: RoadmapFormProps) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRepositories, setSelectedRepositories] = useState<
     Repository[]
-  >([]);
-  const [repositoryPopoverOpen, setRepositoryPopoverOpen] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    description: '',
-    slug: '',
-    plannedTag: 'planned',
-    inProgressTag: 'in progress',
-    doneTag: 'done',
-    showComments: true,
-    showCommentProfiles: true,
-    closedIssueBehavior: 'filter',
+  >(() => {
+    if (passedRoadmap?.repositories && mode === 'edit') {
+      return passedRoadmap.repositories.map(
+        (repo: { owner: string; repo: string }) => ({
+          owner: repo.owner,
+          repo: repo.repo,
+        }),
+      );
+    }
+    return [];
   });
-
-  const { data: roadmap } = useQuery(
-    trpc.roadmap.getById.queryOptions({
-      id: roadmapId!,
-    }),
-  );
+  const [repositoryPopoverOpen, setRepositoryPopoverOpen] = useState(false);
+  const [formData, setFormData] = useState<FormData>(() => {
+    if (passedRoadmap && mode === 'edit') {
+      return {
+        name: passedRoadmap.name,
+        description: passedRoadmap.description || '',
+        slug: passedRoadmap.slug,
+        link: passedRoadmap.link || '',
+        plannedTag: passedRoadmap.plannedTag || 'planned',
+        inProgressTag: passedRoadmap.inProgressTag || 'in progress',
+        doneTag: passedRoadmap.doneTag || 'done',
+        showComments: passedRoadmap.showComments ?? true,
+        showCommentProfiles: passedRoadmap.showCommentProfiles ?? true,
+        closedIssueBehavior: passedRoadmap.closedIssueBehavior || 'filter',
+      };
+    }
+    return {
+      name: '',
+      description: '',
+      slug: '',
+      link: '',
+      plannedTag: 'planned',
+      inProgressTag: 'in progress',
+      doneTag: 'done',
+      showComments: true,
+      showCommentProfiles: true,
+      closedIssueBehavior: 'filter',
+    };
+  });
 
   const { data: availableRepositories } = useQuery(
     trpc.github.getRepositories.queryOptions(),
   );
 
-  const currentRepositories = roadmap?.repositories;
+  const currentRepositories = passedRoadmap?.repositories;
 
   const createRoadmap = useMutation(
     trpc.roadmap.create.mutationOptions({
@@ -123,7 +149,7 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
         });
         // Also invalidate the specific roadmap query
         queryClient.invalidateQueries({
-          queryKey: trpc.roadmap.getById.queryKey({ id: roadmapId! }),
+          queryKey: trpc.roadmap.getById.queryKey({ id: passedRoadmap!.id }),
         });
         toast.success('Roadmap updated successfully');
         router.push('/admin/roadmaps');
@@ -140,7 +166,7 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
       onSuccess: () => {
         // Invalidate the specific roadmap query to refresh repository data
         queryClient.invalidateQueries({
-          queryKey: trpc.roadmap.getById.queryKey({ id: roadmapId! }),
+          queryKey: trpc.roadmap.getById.queryKey({ id: passedRoadmap!.id }),
         });
         toast.success('Repositories updated successfully');
       },
@@ -150,35 +176,6 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
       },
     }),
   );
-
-  // Load roadmap data when editing
-  useEffect(() => {
-    if (roadmap && mode === 'edit') {
-      setFormData({
-        name: roadmap.name,
-        description: roadmap.description || '',
-        slug: roadmap.slug,
-        plannedTag: roadmap.plannedTag || 'planned',
-        inProgressTag: roadmap.inProgressTag || 'in progress',
-        doneTag: roadmap.doneTag || 'done',
-        showComments: roadmap.showComments ?? true,
-        showCommentProfiles: roadmap.showCommentProfiles ?? true,
-        closedIssueBehavior: roadmap.closedIssueBehavior || 'filter',
-      });
-    }
-  }, [roadmap, mode]);
-
-  // Load current repositories when editing
-  useEffect(() => {
-    if (currentRepositories && mode === 'edit') {
-      setSelectedRepositories(
-        currentRepositories.map((repo) => ({
-          owner: repo.owner,
-          repo: repo.repo,
-        })),
-      );
-    }
-  }, [currentRepositories, mode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -200,13 +197,13 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
         }
       } else {
         await updateRoadmap.mutateAsync({
-          id: roadmapId!,
+          id: passedRoadmap!.id,
           ...formData,
         });
 
         // Update repositories for the existing roadmap
         await updateRepositories.mutateAsync({
-          roadmapId: roadmapId!,
+          roadmapId: passedRoadmap!.id,
           repositories: selectedRepositories,
         });
       }
@@ -311,6 +308,14 @@ export function RoadmapForm({ roadmapId, mode }: RoadmapFormProps) {
                   This will be used in the URL: /roadmap/{formData.slug}
                 </p>
               </div>
+
+              <UrlInput
+                label="Link"
+                value={formData.link}
+                onChange={(value) => handleInputChange('link', value)}
+                placeholder="example.com/docs"
+                helpText="Optional link to display on the roadmap page (e.g., project website, documentation)"
+              />
 
               <div className="space-y-4">
                 <div>
