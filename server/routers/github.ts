@@ -251,4 +251,172 @@ export const githubRouter = router({
         throw error;
       }
     }),
+
+  checkLabelsExist: organizationProcedure
+    .input(
+      z.object({
+        repositories: z.array(
+          z.object({
+            owner: z.string(),
+            repo: z.string(),
+          }),
+        ),
+        labels: z.array(z.string()),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const organizationId = ctx.activeOrganizationId;
+      const db = await getDb();
+      const installation = await db
+        .select()
+        .from(githubInstallations)
+        .where(eq(githubInstallations.organizationId, organizationId))
+        .limit(1);
+
+      if (!installation[0]) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'GitHub installation not found',
+        });
+      }
+
+      const client = installationClient(installation[0].installationId);
+
+      const results = await Promise.all(
+        input.repositories.map(async (repo) => {
+          try {
+            const labelsResponse = await client.rest.issues.listLabelsForRepo({
+              owner: repo.owner,
+              repo: repo.repo,
+              per_page: 100,
+            });
+
+            const existingLabels = labelsResponse.data.map(
+              (label) => label.name,
+            );
+            const missingLabels = input.labels.filter(
+              (label) => !existingLabels.includes(label),
+            );
+
+            return {
+              repository: repo,
+              existingLabels,
+              missingLabels,
+              success: true,
+            };
+          } catch (error) {
+            return {
+              repository: repo,
+              existingLabels: [],
+              missingLabels: input.labels,
+              success: false,
+              error: error instanceof Error ? error.message : 'Unknown error',
+            };
+          }
+        }),
+      );
+
+      return {
+        results,
+        allLabelsExist: results.every(
+          (result) => result.missingLabels.length === 0,
+        ),
+      };
+    }),
+
+  createLabels: organizationProcedure
+    .input(
+      z.object({
+        repositories: z.array(
+          z.object({
+            owner: z.string(),
+            repo: z.string(),
+          }),
+        ),
+        labels: z.array(
+          z.object({
+            name: z.string(),
+            color: z.string().optional(),
+            description: z.string().optional(),
+          }),
+        ),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const organizationId = ctx.activeOrganizationId;
+      const db = await getDb();
+      const installation = await db
+        .select()
+        .from(githubInstallations)
+        .where(eq(githubInstallations.organizationId, organizationId))
+        .limit(1);
+
+      if (!installation[0]) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'GitHub installation not found',
+        });
+      }
+
+      const client = installationClient(installation[0].installationId);
+
+      const results = await Promise.all(
+        input.repositories.map(async (repo) => {
+          const repoResults = await Promise.all(
+            input.labels.map(async (label) => {
+              try {
+                const createdLabel = await client.rest.issues.createLabel({
+                  owner: repo.owner,
+                  repo: repo.repo,
+                  name: label.name,
+                  color: label.color || 'ededed', // Default gray color
+                  description: label.description || '',
+                });
+
+                return {
+                  label: label.name,
+                  success: true,
+                  createdLabel: {
+                    id: createdLabel.data.id,
+                    name: createdLabel.data.name,
+                    color: createdLabel.data.color,
+                  },
+                };
+              } catch (error) {
+                // Check if label already exists (422 error)
+                if (
+                  error instanceof Error &&
+                  'status' in error &&
+                  error.status === 422
+                ) {
+                  return {
+                    label: label.name,
+                    success: true,
+                    alreadyExists: true,
+                  };
+                }
+
+                return {
+                  label: label.name,
+                  success: false,
+                  error:
+                    error instanceof Error ? error.message : 'Unknown error',
+                };
+              }
+            }),
+          );
+
+          return {
+            repository: repo,
+            results: repoResults,
+            success: repoResults.every((result) => result.success),
+          };
+        }),
+      );
+
+      return {
+        results,
+        allLabelsCreated: results.every((result) => result.success),
+      };
+    }),
 });

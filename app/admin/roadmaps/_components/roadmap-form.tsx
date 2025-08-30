@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { UrlInput } from '@/components/url-input';
+import { LabelValidationDialog } from '@/components/label-validation-dialog';
 import {
   Card,
   CardContent,
@@ -88,6 +89,10 @@ export function RoadmapForm({
     return [];
   });
   const [repositoryPopoverOpen, setRepositoryPopoverOpen] = useState(false);
+  const [showLabelValidationDialog, setShowLabelValidationDialog] =
+    useState(false);
+  const [isCheckingLabels, setIsCheckingLabels] = useState(false);
+  const [labelCheckResults, setLabelCheckResults] = useState<string[]>([]);
   const [formData, setFormData] = useState<FormData>(() => {
     if (passedRoadmap && mode === 'edit') {
       return {
@@ -131,7 +136,6 @@ export function RoadmapForm({
           queryKey: trpc.roadmap.getAll.queryKey(),
         });
         toast.success('Roadmap created successfully');
-        router.push('/admin/roadmaps');
       },
       onError: (error) => {
         toast.error(error.message || 'Failed to create roadmap');
@@ -152,7 +156,6 @@ export function RoadmapForm({
           queryKey: trpc.roadmap.getById.queryKey({ id: passedRoadmap!.id }),
         });
         toast.success('Roadmap updated successfully');
-        router.push('/admin/roadmaps');
       },
       onError: (error) => {
         toast.error(error.message || 'Failed to update roadmap');
@@ -165,9 +168,11 @@ export function RoadmapForm({
     trpc.roadmap.updateRepositories.mutationOptions({
       onSuccess: () => {
         // Invalidate the specific roadmap query to refresh repository data
-        queryClient.invalidateQueries({
-          queryKey: trpc.roadmap.getById.queryKey({ id: passedRoadmap!.id }),
-        });
+        if (passedRoadmap) {
+          queryClient.invalidateQueries({
+            queryKey: trpc.roadmap.getById.queryKey({ id: passedRoadmap.id }),
+          });
+        }
         toast.success('Repositories updated successfully');
       },
       onError: (error) => {
@@ -195,6 +200,12 @@ export function RoadmapForm({
             repositories: selectedRepositories,
           });
         }
+
+        if (selectedRepositories.length > 0) {
+          checkLabelsInBackground(selectedRepositories);
+        } else {
+          router.push('/admin/roadmaps');
+        }
       } else {
         await updateRoadmap.mutateAsync({
           id: passedRoadmap!.id,
@@ -206,6 +217,12 @@ export function RoadmapForm({
           roadmapId: passedRoadmap!.id,
           repositories: selectedRepositories,
         });
+
+        if (selectedRepositories.length > 0) {
+          checkLabelsInBackground(selectedRepositories);
+        } else {
+          router.push('/admin/roadmaps');
+        }
       }
     } catch (error) {
       setIsLoading(false);
@@ -229,6 +246,54 @@ export function RoadmapForm({
   const handleClosedIssueBehaviorChange = (value: string) => {
     if (value === 'filter' || value === 'label' || value === 'done') {
       setFormData((prev) => ({ ...prev, closedIssueBehavior: value }));
+    }
+  };
+
+  // Handler for when label validation is complete
+  const handleLabelsValidated = () => {
+    setIsLoading(false);
+    router.push('/admin/roadmaps');
+  };
+
+  const getSpecifiedLabels = () => {
+    return [
+      formData.plannedTag,
+      formData.inProgressTag,
+      formData.doneTag,
+    ].filter(Boolean);
+  };
+
+  const checkLabelsInBackground = async (repositories: Repository[]) => {
+    const labels = getSpecifiedLabels();
+    if (repositories.length === 0 || labels.length === 0) {
+      return;
+    }
+
+    setIsCheckingLabels(true);
+    try {
+      const result = await queryClient.fetchQuery(
+        trpc.github.checkLabelsExist.queryOptions({
+          repositories,
+          labels,
+        }),
+      );
+
+      if (!result.allLabelsExist) {
+        const missingLabels = Array.from(
+          new Set(result.results.flatMap((r) => r.missingLabels)),
+        );
+        setLabelCheckResults(missingLabels);
+        setShowLabelValidationDialog(true);
+      } else {
+        setIsLoading(false);
+        router.push('/admin/roadmaps');
+      }
+    } catch (error) {
+      console.error('Error checking labels:', error);
+      setIsLoading(false);
+      router.push('/admin/roadmaps');
+    } finally {
+      setIsCheckingLabels(false);
     }
   };
 
@@ -624,19 +689,27 @@ export function RoadmapForm({
               </div>
 
               <div className="flex gap-4 pt-4">
-                <Button type="submit" disabled={isLoading} className="flex-1">
-                  {isLoading ? (
+                <Button
+                  type="submit"
+                  disabled={isLoading || isCheckingLabels}
+                  className="flex-1"
+                >
+                  {isLoading || isCheckingLabels ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
                     <Save className="mr-2 h-4 w-4" />
                   )}
-                  {mode === 'create' ? 'Create Roadmap' : 'Update Roadmap'}
+                  {isCheckingLabels
+                    ? 'Checking Labels...'
+                    : mode === 'create'
+                      ? 'Create Roadmap'
+                      : 'Update Roadmap'}
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => router.push('/admin/roadmaps')}
-                  disabled={isLoading}
+                  disabled={isLoading || isCheckingLabels}
                 >
                   Cancel
                 </Button>
@@ -645,6 +718,20 @@ export function RoadmapForm({
           </CardContent>
         </Card>
       </div>
+
+      <LabelValidationDialog
+        open={showLabelValidationDialog}
+        onOpenChange={(open) => {
+          setShowLabelValidationDialog(open);
+          if (!open) {
+            // Clear results when dialog closes
+            setLabelCheckResults([]);
+          }
+        }}
+        repositories={selectedRepositories}
+        onLabelsValidated={handleLabelsValidated}
+        missingLabels={labelCheckResults}
+      />
     </div>
   );
 }
