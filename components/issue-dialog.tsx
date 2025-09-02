@@ -24,7 +24,6 @@ interface Issue {
   html_url?: string;
   created_at: string;
   updated_at: string;
-  assignees?: Array<{ login: string; avatar_url: string }> | null;
   labels: Array<string | { name?: string; color?: string | null; id?: number }>;
   comments?: number;
   voteCount?: number;
@@ -135,15 +134,6 @@ export function IssueDialog({
         <div className="space-y-6">
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <div className="flex items-center gap-4">
-              {issue.assignees && issue.assignees.length > 0 && (
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  <span>{issue.assignees[0].login}</span>
-                  {issue.assignees.length > 1 && (
-                    <span>+{issue.assignees.length - 1}</span>
-                  )}
-                </div>
-              )}
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
                 <span>

@@ -27,7 +27,6 @@ interface Issue {
   html_url?: string;
   created_at: string;
   updated_at: string;
-  assignees?: Array<{ login: string; avatar_url: string }> | null;
   labels: Array<string | { name?: string; color?: string | null; id?: number }>;
   comments?: number;
   voteCount?: number;
@@ -230,15 +229,6 @@ function IssueCard({
 
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <div className="flex items-center space-x-3">
-              {issue.assignees && issue.assignees.length > 0 && (
-                <div className="flex items-center space-x-1">
-                  <User className="h-3 w-3" />
-                  <span>{issue.assignees[0].login}</span>
-                  {issue.assignees.length > 1 && (
-                    <span>+{issue.assignees.length - 1}</span>
-                  )}
-                </div>
-              )}
               <div className="flex items-center space-x-1">
                 <Calendar className="h-3 w-3" />
                 <span>{new Date(issue.created_at).toLocaleDateString()}</span>
