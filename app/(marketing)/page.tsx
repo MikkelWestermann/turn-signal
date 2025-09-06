@@ -561,7 +561,7 @@ export default function Home() {
               <div className="flex h-8 w-8 items-center justify-center bg-orange-500 text-2xl text-white">
                 Y
               </div>
-              <div className="text-lg font-bold text-orange-500">
+              <div className="text-lg font-bold tracking-tighter text-orange-500">
                 Continue waiting?
               </div>
             </div>
