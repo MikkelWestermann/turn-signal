@@ -556,6 +556,15 @@ export default function Home() {
                 </Button>
               </Link>
             </div>
+
+            <div className="mt-12 flex items-center justify-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center bg-orange-500 text-2xl text-white">
+                Y
+              </div>
+              <div className="text-lg font-bold text-orange-500">
+                Continue waiting?
+              </div>
+            </div>
           </div>
         </div>
       </section>
